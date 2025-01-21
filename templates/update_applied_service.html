@@ -1,0 +1,89 @@
+{% extends 'admin_dashboard.html' %}
+{% block title %}
+Update Service
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4></h4>
+                <h1></h1>
+            </div>
+            <form method="POST" action="{% url 'update_applied_service' applied_service.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="card-header">
+                            <h1></h1>
+                            <h4 class="card-title text-center">Update service details</h4>
+                        </div>
+                        <hr></hr>
+                        <div class="form-group col-md-6 ">
+                            <label for="service_by">Service By:</label>
+                            <select name="service_by" id="service_by"  class="form-control" required>
+                                {% for user in users %}
+                                    <option value="{{ user.id }}" {% if applied_service.service_by.id == user.id %}selected{% endif %}>
+                                        {{ user.username }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                            <div>
+                        <label for="work_type">Work Type:</label>
+                        <select id="work_type" name="work_type" class="form-control">
+                            <option value="sale" {% if applied_service.work_type == 'sale' %} selected {% endif %}>Sale</option>
+                            <option value="service" {% if applied_service.work_type == 'service' %} selected {% endif %}>Service</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="item_name_or_number">Item Name/Number:</label>
+                        <input type="text" id="item_name_or_number" name="item_name_or_number" class="form-control" value="{{ applied_service.item_name_or_number }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="issue">Issue:</label>
+                        <textarea id="issue" name="issue" class="form-control">{{ applied_service.issue }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="photos_of_item">Photos of Item:</label>
+                        <input type="file" id="photos_of_item" name="photos_of_item" class="form-control">
+                        <small>Current photo:</small>
+                        <img src="{{ applied_service.photos_of_item.url }}" alt="photos_of_item" width="100" height="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estimation_document">Estimation Document:</label>
+                        <input type="file" id="estimation_document" name="estimation_document" class="form-control">
+                        <small>Current document:</small>
+                        <iframe src="{{ applied_service.estimation_document.url }}" width="100" height="100" style="border: none;"></iframe>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estimated_price">Estimated Price:</label>
+                        <input type="text" id="estimated_price" name="estimated_price" class="form-control" value="{{ applied_service.estimated_price }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estimated_date">Estimated Date:</label>
+                        <input type="date" id="estimated_date" name="estimated_date" class="form-control" value="{{ applied_service.estimated_date|date:'Y-m-d' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="any_other_comments">Any Other Comments:</label>
+                        <textarea id="any_other_comments" name="any_other_comments" class="form-control">{{ applied_service.any_other_comments }}</textarea>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-success">Update</button>
+                        <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+from django.urls import path
+from . import views
+
+
+urlpatterns = [
+        path('technician-add-service/',views.technician_add_service,name='technician_add_service'),
+        path('additional-work/<int:apply_id>/',views.extra_work_technician,name='extra_work_technician'),
+        path('fuelcharge/<int:apply_id>/',views.fuelcharge,name='fuelcharge'),
+        path('update-fuelcharge/<int:fuel_id>/',views.update_fuelcharge,name='update_fuelcharge'),
+        path('delete-fuelcharge/<int:fuel_id>/', views.delete_fuelcharge, name='delete_fuelcharge'),
+        path('food-allowance/<int:apply_id>/',views.food_allowance,name='food_allowance'),
+        path('update-food-allowance/<int:food_id>/',views.update_food_allowance,name='update_food_allowance'),
+        path('delete-food-allowance/<int:allowance_id>/', views.delete_food_allowance, name='delete_food_allowance'),
+        path('item-purchased/<int:apply_id>/',views.item_purchased,name='item_purchased'),
+        path('update-item-purchased/<int:item_id>/',views.update_item_purchased,name='update_item_purchased'),
+        path('delete-item-purchased/<int:item_id>/', views.delete_item_purchased, name='delete_item_purchased'),
+        path('vendor-info/<int:apply_id>/',views.vendor_info,name='vendor_info'),
+        path('update-vendor-info/<int:vendor_id>/',views.update_vendor_info,name='update_vendor_info'),
+        path('delete-vendor-info/<int:vendor_id>/', views.delete_vendor_info, name='delete_vendor_info'),
+        path('current-status/<int:apply_id>/',views.current_status,name='current_status'),
+        path('update-current-status/<int:status_id>/',views.update_current_status,name='update_current_status'),
+        path('delete-current-status/<int:status_id>/', views.delete_current_status, name='delete_current_status'),
+        path('technician/pending/', views.pending_tasks, name='pending_tasks'),
+        path('technician/completed/', views.completed_tasks, name='completed_tasks'),
+]

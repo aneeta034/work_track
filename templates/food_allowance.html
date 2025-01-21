@@ -1,0 +1,136 @@
+{% extends 'technician_dashboard.html' %}
+{% block title %}
+updates
+{% endblock %}
+{% block content %}
+<div class="container w-100 mt-8  border rounded shadow ">
+
+  
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+            <h4 class="card-title text-center">Add Food Allowance </h4>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <form action="{% url 'food_allowance' apply.id %}" method="post">
+              {% csrf_token %}
+              <div class="form-group" style="padding-left: 350px;">
+              <div class="form-group col-md-8">
+              <label for="technician_name">Technician Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="technician_name"
+                name="technician_name"
+                placeholder=""
+                value="{{ technician_name }}" 
+              required/>
+              
+              </div>
+              <div class=" form-group col-md-8">
+              <label for="date">Date</label>
+              <input
+                type="date"
+                class="form-control"
+                name="date"
+                id="date"
+                name=""
+              />
+              </div>
+              <div class="form-group col-md-8">
+              <label for="purpose">Purpose</label>
+              <input
+                type="text"
+                class="form-control"
+                id="purpose"
+                name="purpose"
+                placeholder=""
+              />
+              </div>
+  
+              
+              <div class="form-group col-md-8">
+              <label for="cost">Cost</label>
+              <input
+                type="number"
+                class="form-control"
+                id="cost"
+                name="cost"
+                placeholder=""
+              />
+              </div>
+
+            </div>
+  
+              <div class="card-action text-center mt-3"  style="padding-left: 100px;">
+                <button class="btn btn-success" type="submit">Add</button>
+                <a href="{% url 'extra_work_technician' apply.id %}" class="btn btn-secondary">Back</a>
+
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="container">
+    <div class="page-inner">
+      
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Food Allowance Details</h4>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table
+                  id="basic-datatables"
+                  class="display table table-striped table-hover"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">Customer Name</th>
+                      <th scope="col">Issue</th>
+                      <th scope="col">Technician Name</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Purpose</th>
+                      <th scope="col">Cost</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                   
+                  </thead>
+                  {% for d in  food_allowances %}
+                  <tbody>
+                    <tr>
+                    
+                        <tr>
+                          <td>{{ d.customer_name }}</td>
+                          <td>{{ d.issue }}</td>
+                          <td>{{ d.technician_name }}</td>
+                          <td>{{ d.date }}</td>
+                          <td>{{ d.purpose }}</td> 
+                          <td>{{ d.cost }}</td>
+                          <td><a href="{% url 'update_food_allowance' d.id %}" class="btn btn-sm btn-primary">Update</a>
+                            <td>
+                              <form method="post" action="{% url 'delete_food_allowance' d.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                          </td>
+                        </tr>
+                    </tr>
+                    {% endfor %}
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+{% endblock %}
+

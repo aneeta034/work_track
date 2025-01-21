@@ -1,0 +1,241 @@
+{% extends 'admin_dashboard.html' %}
+{% block title %}
+fuel details
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="page-inner">
+      
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title text-center">Fuel Charge Details</h4>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table
+                  id="basic-datatables"
+                  class="display table table-striped table-hover"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">Customer Name</th>
+                      <th scope="col">Issue</th>
+                      <th scope="col">Technician Name</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Purpose</th>
+                      <th scope="col">Kilometer</th>
+                      <th scope="col">Cost</th>
+                    </tr>
+                   
+                  </thead>
+                  {% for d in fuel_charges %}
+                  <tbody>
+                    <tr>
+                        <td>{{ d.customer_name }}</td>
+                        <td>{{ d.issue }}</td>
+                        <td>{{ d.technician_name }}</td>
+                        <td>{{ d.date }}</td>
+                        <td>{{ d.purpose }}</td>
+                        <td>{{ d.kilometers }}</td>
+                        <td>{{ d.cost }}</td>
+                          
+                    </tr>
+                    {% endfor %}
+                    
+                  </tbody>
+                </table>
+              </div>             
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title text-center">Food Allowance Details</h4>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table
+                      id="basic-datatables"
+                      class="display table table-striped table-hover"
+                    >
+                      <thead>
+                        <tr>
+                          <th scope="col">Customer Name</th>
+                          <th scope="col">Issue</th>
+                          <th scope="col">Technician Name</th>
+                          <th scope="col">Date</th>
+                          <th scope="col">Purpose</th>
+                          <th scope="col">Cost</th>
+                        </tr>
+                       
+                      </thead>
+                      {% for d in  food_allowances %}
+                      <tbody>
+                        <tr>
+                        
+                            <tr>
+                              <td>{{ d.customer_name }}</td>
+                              <td>{{ d.issue }}</td>
+                              <td>{{ d.technician_name }}</td>
+                              <td>{{ d.date }}</td>
+                              <td>{{ d.purpose }}</td> 
+                              <td>{{ d.cost }}</td>
+                              
+                            </tr>
+                        </tr>
+                        {% endfor %}
+                        
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <h4 class="card-title text-center">Item Purchased</h4>
+                      </div>
+                      <div class="card-body">
+                        <div class="table-responsive">
+                          <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Customer Name</th>
+                                    <th>Issue</th>
+                                    <th>Date</th>
+                                    <th>Item Purchased</th>
+                                    <th>Price</th>
+                                    <th>Bill Photo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for d in items_purchased %}
+                                <tr>
+                                    <td>{{ d.customer_name }}</td>
+                                    <td>{{ d.issue }}</td>
+                                    <td>{{ d.date }}</td>
+                                    <td>{{ d.item_name }}</td>
+                                    <td>{{ d.price }}</td>
+                                    <td>
+                                        <img src="{{ d.bill_photo.url }}" alt="Bill Photo" width="100" height="100">
+                                    </td>
+                                    
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No items purchased yet.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        </div>
+                      </div>
+                    </div> 
+                  </div>
+
+
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="card">
+                        <div class="card-header">
+                          <h4 class="card-title text-center">Vendor Info</h4>
+                        </div>
+                        <div class="card-body">
+                          <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                              <thead>
+                                  <tr>
+                                      <th>Customer Name</th>
+                                      <th>Issue</th>
+                                      <th>Date</th>
+                                      <th>Vendor Name</th>
+                                      <th>Vendor Bill Photo</th>
+                                      <th>Vendor ETA</th>
+                                      <th>Vendor Cost</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  {% for vendor in vendors_info %}
+                                  <tr>
+                                  <td>{{ vendor.customer_name }}</td>
+                                  <td>{{ vendor.issue }}</td>   
+                                  <td>{{ vendor.date }}</td>
+                                  <td>{{ vendor.vendor_name }}</td>
+                                  <td><img src="{{ vendor.vendor_bill_photo.url }}" alt="Bill Photo" width="100" height="100"></td>
+                                  <td>{{ vendor.vendor_eta }}</td>
+                                  <td>{{ vendor.vendor_cost }}</td>
+                                  
+                                  
+                                  </tr>
+                                  {% empty %}
+                                  <tr>
+                                      <td colspan="6" class="text-center">No vendor info added yet.</td>
+                                  </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          </div>
+                        </div>
+                      </div> 
+                    </div>
+
+
+
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="card">
+                          <div class="card-header">
+                            <h4 class="card-title text-center">Current Status</h4>
+                          </div>
+                          <div class="card-body">
+                            <div class="table-responsive">
+                              <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Customer Name</th>
+                                        <th>Issue</th>
+                                        <th>Date</th>
+                                        <th>Technician Name</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for d in current_status_entries %}
+                                    <tr>
+                                        <td>{{ d.customer_name }}</td>
+                                        <td>{{ d.issue }}</td>
+                                        <td>{{ d.date }}</td>
+                                        <td>{{ d.technician_name }}</td>
+                                        <td>{{ d.status }}</td>
+                                        
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">No current status added yet.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            </div>
+                          </div>
+                        </div> 
+                      </div>
+    
+  
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'technician_dashboard.html' %}
+{% block title %}
+updates
+{% endblock %}
+{% block content %}
+<div class="container w-100 mt-8 border rounded shadow">
+   
+
+    <!-- Form Section -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title text-center">Add Item Purchased </h4>
+                </div>
+                <div class="card-body">
+                    <form action="{% url 'item_purchased' apply.id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div style="padding-left: 350px;">
+                        <div class="form-group col-md-8">
+                            <label for="date">Date</label>
+                            <input type="date" class="form-control" id="date" name="date" required>
+                        </div>
+                    
+                        <div class="form-group col-md-8">
+                            <label for="item_name">Item Purchased</label>
+                            <input type="text" class="form-control" id="item_name" name="item_name" placeholder="Item Name" required>
+                        </div>
+                    
+                        <div class="form-group col-md-8">
+                            <label for="price">Price</label>
+                            <input type="number" class="form-control" id="price" name="price" placeholder="Price" required>
+                        </div>
+                    
+                        <div class="form-group col-md-8">
+                            <label for="bill_photo">Bill Photo</label>
+                            <input type="file" class="form-control" id="bill_photo" name="bill_photo" accept="image/*" required>
+                        </div>
+                        </div>
+                    
+                        <div class="text-center mt-3"  style="padding-left: 100px;">
+                            <button type="submit" class="btn btn-success">Add Item</button>
+                            <a href="{% url 'extra_work_technician' apply.id %}" class="btn btn-secondary">Back</a>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Item Purchased Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Issue</th>
+                                <th>Date</th>
+                                <th>Item Purchased</th>
+                                <th>Price</th>
+                                <th>Bill Photo</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for d in items %}
+                            <tr>
+                                <td>{{ d.customer_name }}</td>
+                                <td>{{ d.issue }}</td>
+                                <td>{{ d.date }}</td>
+                                <td>{{ d.item_name }}</td>
+                                <td>{{ d.price }}</td>
+                                <td>
+                                    <img src="{{ d.bill_photo.url }}" alt="Bill Photo" width="100" height="100">
+                                </td>
+                                <td>
+                                    <a href="{% url 'update_item_purchased' d.id %}" class="btn btn-sm btn-primary">Update</a>
+                                </td>
+                                <td>
+                                    <form method="post" action="{% url 'delete_item_purchased' d.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit"  class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No items purchased yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

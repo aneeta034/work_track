@@ -1,0 +1,62 @@
+{% extends 'admin_dashboard.html' %}
+{% block title %}
+new customer
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+  <div class="page-inner">
+    
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+        
+          <div class="card-header">
+            <div class="ms-md-auto py-2 py-md-0 text-end">
+                <a href="{% url 'add_customer' %}" class="btn text-white" style="background-color: #0d3a5a;">Add Customer</a>
+            </div>
+            <h4 class="card-title">New Customers</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table
+                id="basic-datatables"
+                class="display table table-striped table-hover"
+              >
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Contact Number</th>
+                    <th>WhatsApp Number</th>
+                    <th>Reffered By</th>
+                  </tr>
+                  {% for d in customers %}
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{d.name}}</td>
+                    <td>{{d.address}}</td>
+                    <td>{{d.contact_number}}</td>
+                    <td>{{d.whatsapp_number}}</td>
+                    <td>{{d.reffered_by}}</td>
+                    <td><a href="{% url 'update_customer' d.id %}" class="btn btn-sm btn-primary">Update</a></td>
+                    <form action="{% url 'delete_customer' d.id %}" method="post">
+                      {% csrf_token %}
+                      <td><button type="submit" class="btn btn-sm btn-danger">Delete</button></td>
+                    </form>
+
+
+                  </tr>
+                  {% endfor %}
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+{% endblock %}

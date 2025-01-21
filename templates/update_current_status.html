@@ -1,0 +1,52 @@
+{% extends 'admin_dashboard.html' %}
+{% block title %}
+Update Current Status
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 ></h4>
+            </div>
+            <div class="card-body">
+                <form action="{% url 'update_current_status' status.id %}" method="post">
+                    {% csrf_token %}
+                    
+                    <div class="card-header">
+                        <h3></h3>
+                <h4 class="card-title text-center">Update Current Status</h4>
+            </div>
+            <div style="padding-left: 350px;">
+                    <div class="form-group col-md-8">
+                        <label for="date">Date</label>
+                        <input type="date" class="form-control" id="date" name="date" 
+                               value="{{ status.date|date:'Y-m-d' }}" required>
+                    </div>
+
+                    <div class="form-group col-md-8">
+                        <label for="technician_name">Technician Name</label>
+                        <input type="text" class="form-control" id="technician_name" name="technician_name" 
+                               value="{{ status.technician_name }}" required>
+                    </div>
+
+                    <div class="form-group col-md-8">
+                        <label for="status">Status</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="Pending" {% if status.status == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="Completed" {% if status.status == 'Completed' %}selected{% endif %}>Completed</option>
+                        </select>
+                    </div>
+                    </div>
+
+                    <div class="text-center mt-4" style="padding-left: 100px;">
+                        <button type="submit" class="btn btn-success">Update</button>
+                        <a href="{% url 'current_status' status.id %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

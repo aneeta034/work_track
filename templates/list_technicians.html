@@ -1,0 +1,51 @@
+{% extends 'admin_dashboard.html' %}
+{% block title %}
+new technician
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+  <div class="page-inner">
+    
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+        
+          <div class="card-header">
+            <div class="ms-md-auto py-2 py-md-0 text-end">
+                <a href="{% url 'add_technician' %}" class="btn text-white" style="background-color: #0d3a5a;">Add Technician</a>
+            </div>
+            <h4 class="card-title">New Technician</h4>
+          </div>
+          <div class="card-body">
+            <table
+                id="basic-datatables"
+                class="display table table-striped table-hover"
+              >
+              <thead>
+                <tr>
+                  <th>User Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                 
+                </tr>
+                {% for d in technicians %}
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{d.username}}</td>
+                  <td>{{d.email}}</td>
+                  <td>{{d.role}}</td>
+                  
+                </tr>
+                {% endfor %}
+            </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+{% endblock %}

@@ -1,0 +1,211 @@
+{% extends 'technician_dashboard.html' %}
+{% block title %}
+    Apply
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+{% endblock %}
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+<script>
+    $(function () {
+        $("#contact_number_autocomplete").autocomplete({
+            source: "{% url 'add_customer' %}"
+        });
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card ">
+            <div class="card-header">
+                <div class="card-title">Fetch Customer Details</div>
+            </div>
+            <div class="form-group">
+                <!-- Search Form -->
+                <h6 class="card-title text-center">Apply For Service</h6>
+                <div>
+                    <hr></hr>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-6" style="padding-left:90px;">
+                        <form method="get" class="d-flex flex-column flex-md-row align-items-center">
+                            <input
+                                type="text"
+                                id="contact_number_autocomplete"
+                                name="contact_number"
+                                placeholder="Enter Contact Number..."
+                                class="form-control mb-2 mb-md-0"
+                                style="max-width: 290px;"
+                                value="{{ request.GET.contact_number }}"
+                            />
+                            <button type="submit" class="btn btn-primary ml-md-2 ">Search</button>
+                        </form>
+                    </div>
+                </div>
+
+                {% if details %}
+                <div style="padding-left:360px;">
+                    <div class="card-body">
+                        <div class="form-group col-md-8">
+                            <label for="name"> Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="name"
+                                name="name"
+                               
+                                value="{{ details.name }}"
+                            />
+                        </div>
+                
+                        <div class="form-group col-md-8">
+                            <label for="address">Address</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="address"
+                                name="address"
+                                
+                                value="{{ details.address }}"
+                            />
+                        </div>
+                
+                        <div class="form-group col-md-8">
+                            <label for="contact_number"> Contact Number</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="contact_number"
+                                name="contact_number"
+                                
+                                value="{{ details.contact_number }}"
+                            />
+                        </div>
+                
+                        <div class="form-group col-md-8">
+                            <label for="whatsapp">WhatsApp Number</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="whatsapp"
+                                name="whatsapp"
+                              
+                                value="{{ details.whatsapp_number }}"
+                            />
+                        </div>
+                
+                        <div class="form-group col-md-8">
+                            <label for="referred_by">Referred By</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="referred_by"
+                                name="referred_by"
+                                
+                                value="{{ details.reffered_by }}"
+                            />
+                        </div>
+                        </div>
+                        </div>
+            
+
+            {% endif %}
+
+            <!-- Main Form -->
+            <form action="{% url 'technician_add_service' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div style="padding-left:380px;">
+                <input type="hidden" name="contact_number" value="{{ details.contact_number }}" />
+                <div class="form-group col-md-6 ">
+                <label for="service_by">Service By:</label>
+                <select name="service_by" id="service_by" required>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+                </div>
+                <div class="form-group col-md-8">
+                <label for="work_type">Work Type</label>
+                <select class="form-control" id="work_type" name="work_type">
+                    <option value="sale">Sale</option>
+                    <option value="service">Service</option>
+                </select>
+                </div>
+                <div class="form-group col-md-8">
+                <label for="item_name_or_number">Item Name or Number</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="item_name_or_number"
+                    name="item_name_or_number"
+                    placeholder="Enter Item Name or Number"
+                />
+                </div>
+                <div class="form-group col-md-8">
+                <label for="issue">Issue</label>
+                <textarea
+                    class="form-control"
+                    id="issue"
+                    name="issue"
+                    placeholder="Enter Issue (if any)"
+                ></textarea>
+                </div>
+                <div class="form-group col-md-8">
+                <label for="photos_of_item">Photos of Item</label>
+                <input
+                    type="file"
+                    class="form-control"
+                    id="photos_of_item"
+                    name="photos_of_item"
+                    accept="image/*" required>
+
+                
+                </div>
+                <div class="form-group col-md-8">
+                <label for="estimation_document">Estimation Document</label>
+                <input
+                    type="file"
+                    class="form-control"
+                    id="estimation_document"
+                    name="estimation_document"
+                />
+                </div>
+                <div class="form-group col-md-8">
+                <label for="estimated_price">Estimated Price</label>
+                <input
+                    type="number"
+                    class="form-control"
+                    id="estimated_price"
+                    name="estimated_price"
+                    placeholder="Enter Estimated Price"
+                />
+                </div>
+                <div class="form-group col-md-8">
+                <label for="estimated_date">Estimated Date</label>
+                <input
+                    type="date"
+                    class="form-control"
+                    id="estimated_date"
+                    name="estimated_date"
+                />
+                </div>
+                <div class="form-group col-md-8">
+                <label for="any_other_comments">Any Other Comments</label>
+                <textarea
+                    class="form-control"
+                    id="any_other_comments"
+                    name="any_other_comments"
+                    placeholder="Enter Comments"
+                ></textarea>
+                </div>
+                </div>
+            </div>
+                <div class="card-action text-center">
+                    <button class="btn text-white" style="background-color: #0d3a5a;" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

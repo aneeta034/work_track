@@ -1,0 +1,54 @@
+{% extends 'admin_dashboard.html' %}
+{% block title %}
+Update Customer
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Form Elements</div>
+            </div>
+            <form method="POST" action="{% url 'update_customer' customer.id %}">
+                {% csrf_token %}
+                <div class="card-header">
+                    <h4 class="card-title text-center">Update Customer</h4>
+                </div>
+            <div class="form-group">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" class="form-control" value="{{ customer.name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <textarea id="address" name="address" class="form-control" rows="3">{{ customer.address }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="contact_number">Contact Number:</label>
+                    <input type="text" id="contact_number" name="contact_number" class="form-control" value="{{ customer.contact_number }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="whatsapp">WhatsApp Number:</label>
+                    <input type="text" id="whatsapp" name="whatsapp" class="form-control" value="{{ customer.whatsapp_number }}">
+                </div>
+                <div class="form-group">
+                    <label for="referred_by">Referred By:</label>
+                    <input type="text" id="referred_by" name="referred_by" class="form-control" value="{{ customer.reffered_by }}">
+                </div>
+                <div class="text-center mt-3" style="padding-left: 100px;">
+                    <button class="btn btn-success" type="submit">Update</button>
+                    <a href="{% url 'new_customer'  %}" class="btn btn-secondary">Cancel</a>
+
+                </div>
+            </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
