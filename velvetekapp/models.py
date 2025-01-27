@@ -25,8 +25,8 @@ class Apply(models.Model):
     work_type=models.CharField(max_length=10,choices=WORK_TYPE_CHOICES,default='sale')
     item_name_or_number = models.CharField(max_length=255,null=True)
     issue = models.TextField(blank=True,null=True) #applicable for 'services'
-    photos_of_item =models.ImageField(upload_to='images')#option for 'services'
-    estimation_document =models.FileField(upload_to='pdf')    
+    photos_of_item =models.ImageField(upload_to='images',null=True, blank=True)#option for 'services'
+    estimation_document =models.FileField(upload_to='pdf',null=True,blank=True)    
     estimated_price = models.CharField(max_length=255)
     estimated_date = models.DateField(null=True)
     any_other_comments = models.CharField(max_length=255,null=True,blank=True)

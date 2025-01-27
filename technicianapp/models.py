@@ -1,5 +1,6 @@
 from django.db import models
 from velvetekapp.models import Apply
+from django.utils.timezone import now
 
 # Create your models here.
 
@@ -49,7 +50,16 @@ class VendorInfo(models.Model):
 class CurrentStatus(models.Model):
     date = models.DateField()
     technician_name = models.CharField(max_length=100)
-    status = models.TextField()
+    status = models.CharField(
+        max_length=50, 
+        choices=[('Pending', 'Pending'), ('Completed', 'Completed'), ('Assigned', 'Assigned')], 
+        default='Assigned'  # Default to "Assigned"
+    )
     apply = models.ForeignKey(Apply, on_delete=models.CASCADE, related_name='current_status_entries',blank=True,null=True)
     customer_name = models.CharField(max_length=225)
     issue = models.TextField()
+
+    def update_status_if_due(self):
+        if self.status == "assigned" and self.date < now().date():
+            self.status = "pending"
+            self.save()

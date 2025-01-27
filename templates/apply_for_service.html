@@ -36,7 +36,7 @@
                         {% endfor %}
                     </div>
                     <script>
-                        // Automatically hide messages after 4 seconds
+                        // Automatically hide messages after 2 seconds
                         setTimeout(function() {
                             const messageContainer = document.getElementById('message-container');
                             if (messageContainer) {
@@ -54,7 +54,7 @@
                         <label for="contact_number" class="form-label">Search Customer by Contact Number</label>
                         <input type="text" id="contact_number" name="contact_number" class="form-control" placeholder="Enter contact number" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit" class="btn btn-primary" >Search</button>
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">Add Customer</button>
                 </form>
             </div>
@@ -78,63 +78,70 @@
                         <input type="hidden" name="contact_number" value="{{ details.contact_number }}" />
                     {% endif %}
 
-                    <div style="padding-left:380px;">
-        
-                    <div class="form-group col-md-8">
-                        <label for="work_type" class="form-label">Work Type</label>
-                        <input type="text" id="work_type" name="work_type" class="form-control" placeholder="Enter work type" required>
+                    <div class="row">
+                        <!-- First Column -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="work_type" class="form-label">Work Type</label>
+                              <select id="work_type" name="work_type" class="form-select" required>
+                                  <option value="" disabled selected>Select work type</option>
+                                  <option value="sale">Sale</option>
+                                  <option value="service">Service</option>
+                              </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="item_name" class="form-label">Item Name</label>
+                                <input type="text" id="item_name" name="item_name" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="issue" class="form-label">Issue Description</label>
+                                <textarea id="issue" name="issue" class="form-control" rows="3" ></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="photos_of_item" class="form-label">Upload Photos of Item</label>
+                                <input type="file" id="photos_of_item" name="photos_of_item" class="form-control">
+                            </div>
+                        </div>
+
+                        <!-- Second Column -->
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="estimation_document" class="form-label">Upload Estimation Document</label>
+                            <input type="file" id="estimation_document" name="estimation_document" class="form-control">
+                        </div>
+                            <div class="mb-3">
+                                <label for="estimated_price" class="form-label">Estimated Price</label>
+                                <input type="text" id="estimated_price" name="estimated_price" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="estimated_date" class="form-label">Estimated Date</label>
+                                <input type="date" id="estimated_date" name="estimated_date" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                              <label for="any_other_comments" class="form-label">Additional Comments</label>
+                              <textarea id="any_other_comments" name="any_other_comments" class="form-control" placeholder="Enter any other comments" rows="3"></textarea>
+                          </div>
+                            <div class="mb-3">
+                                <label for="service_by" class="form-label">Service Provider</label>
+                                <select id="service_by" name="service_by" class="form-select" >
+                                    <option value="" disabled selected>Select Service Provider</option>
+                                    {% for user in users %}
+                                    <option value="{{ user.id }}">{{ user.username }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
                     </div>
-        
-                    <div class="form-group col-md-8">
-                        <label for="item_name_or_number" class="form-label">Item Name or Number</label>
-                        <input type="text" id="item_name_or_number" name="item_name_or_number" class="form-control" placeholder="Enter item name or number" required>
-                    </div>
-        
-                    <div class="form-group col-md-8">
-                        <label for="issue" class="form-label">Issue Description</label>
-                        <textarea id="issue" name="issue" class="form-control" placeholder="Describe the issue" rows="3"></textarea>
-                    </div>
-        
-                    <div class="form-group col-md-8">
-                        <label for="photos_of_item" class="form-label">Upload Photos of Item</label>
-                        <input type="file" id="photos_of_item" name="photos_of_item" class="form-control">
-                    </div>
-        
-                    <div class="form-group col-md-8">
-                        <label for="estimation_document" class="form-label">Upload Estimation Document</label>
-                        <input type="file" id="estimation_document" name="estimation_document" class="form-control">
-                    </div>
-        
-                    <div class="form-group col-md-8">
-                        <label for="estimated_price" class="form-label">Estimated Price</label>
-                        <input type="text" id="estimated_price" name="estimated_price" class="form-control" placeholder="Enter estimated price">
-                    </div>
-        
-                    <div class="form-group col-md-8">
-                        <label for="estimated_date" class="form-label">Estimated Date</label>
-                        <input type="date" id="estimated_date" name="estimated_date" class="form-control">
-                    </div>
-        
-                    <div class="form-group col-md-8">
-                        <label for="any_other_comments" class="form-label">Additional Comments</label>
-                        <textarea id="any_other_comments" name="any_other_comments" class="form-control" placeholder="Enter any other comments" rows="3"></textarea>
-                    </div>
-        
-                    <div class="form-group col-md-8">
-                        <label for="service_by" class="form-label">Service Provider</label>
-                        <select id="service_by" name="service_by" class="form-select" required>
-                            <option value="" disabled selected>Select Service Provider</option>
-                            {% for user in users %}
-                                <option value="{{ user.id }}">{{ user.username }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                    <div class="card-action text-center">
-                    <button type="submit" class="btn btn-success">Submit Application</button>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+</div>
+
         
             <!-- Add Customer Modal -->
             <div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">

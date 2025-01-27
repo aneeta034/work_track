@@ -2,45 +2,89 @@ from django.shortcuts import render,redirect,get_object_or_404
 from velvetekapp.models import Apply,Customer
 from loginapp.models import CustomUser
 from django.contrib import messages
+from django.http import JsonResponse
 from .models import Apply,FuelCharge,FoodAllowance,ItemPurchased,VendorInfo,CurrentStatus
+import urllib
+import requests
+from django.core.management.base import BaseCommand
 
 
 # Create your views here.
+
+def update_current_status(request, apply_id):
+    if request.method == 'POST':
+        status_entry = get_object_or_404(CurrentStatus, id=apply_id)
+        status_entry.date = request.POST.get('date')
+        status_entry.status = request.POST.get('status')
+        
+        status_entry.technician_name = request.user.username  
+
+        status_entry.save()
+        return redirect('technician_dashboard')
+    
+
+def tech_pending_services(request):
+    pending_services = CurrentStatus.objects.filter(
+        technician_name=request.user.username, status="Pending"
+    ).order_by('date')
+
+    context = {
+        'pending_services': pending_services,
+    }
+    return render(request, 'tech_pending_services.html', context)
+
+
+
 def technician_add_service(request):
     details = None
-    users = CustomUser.objects.all()
 
-    # Handle GET request
+    # Check for customer via GET request
     if 'contact_number' in request.GET:
         contact_number = request.GET.get('contact_number', '').strip()
         try:
             details = Customer.objects.get(contact_number=contact_number)
         except Customer.DoesNotExist:
-            messages.error(request, "No customer found with this contact number.")
-            return redirect('technician_add_service')
+            messages.info(request, "No customer found with this contact number. You can add their details.")
 
     # Handle POST request
-    if request.method == "POST":
+    if request.method == 'POST':
+        # Extract customer details from POST data
         contact_number = request.POST.get('contact_number')
+        name = request.POST.get('name')
+        address = request.POST.get('address')
+        whatsapp_number = request.POST.get('whatsapp')
+        referred_by = request.POST.get('referred_by')
+
+        # Check if customer exists; if not, create a new one
+        try:
+            customer = Customer.objects.get(contact_number=contact_number)
+        except Customer.DoesNotExist:
+            customer = Customer.objects.create(
+                name=name,
+                address=address,
+                contact_number=contact_number,
+                whatsapp_number=whatsapp_number,
+                reffered_by=referred_by,
+            )
+
+        # Extract service details from POST data
         work_type = request.POST.get('work_type')
         item_name_or_number = request.POST.get('item_name_or_number')
-        issue = request.POST.get('issue', '')
+        issue = request.POST.get('issue', '').strip()
         photos_of_item = request.FILES.get('photos_of_item')
         estimation_document = request.FILES.get('estimation_document')
-        estimated_price = request.POST.get('estimated_price', '')
-        estimated_date = request.POST.get('estimated_date', '')
-        any_other_comments = request.POST.get('any_other_comments', '')
+        estimated_price = request.POST.get('estimated_price', '').strip()
+        estimated_date = request.POST.get('estimated_date', '').strip()
+        any_other_comments = request.POST.get('any_other_comments', '').strip()
         service_by_id = request.POST.get('service_by')
 
-        if not contact_number or not work_type or not item_name_or_number:
-            messages.error(request, "Please fill in all required fields.")
-            return redirect('technician_add_service')
-
         try:
-            customer = get_object_or_404(Customer, contact_number=contact_number)
-            service_by_user = get_object_or_404(CustomUser, id=service_by_id)
+            # Fetch the technician handling the service
+            service_by_user = CustomUser.objects.get(id=service_by_id)
 
-            Apply.objects.create(
+            # Create the service request
+            apply_instance = Apply.objects.create(
+                customer=customer,
                 name=customer.name,
                 address=customer.address,
                 contact_number=customer.contact_number,
@@ -56,16 +100,120 @@ def technician_add_service(request):
                 any_other_comments=any_other_comments,
                 service_by=service_by_user,
             )
-            messages.success(request, "Application submitted successfully!")
-            return redirect('technician_add_service')
-        except Exception as e:
-            messages.error(request, f"Error: {e}")
 
-    context = {
-        'details': details,
-        'users': users,
-    }
-    return render(request, 'technician_add_service.html', context)
+            # Create the current status entry
+            if not apply_instance.current_status_entries.exists():
+                CurrentStatus.objects.create(
+                date=apply_instance.estimated_date,
+                technician_name=service_by_user.username,
+                status="Assigned",
+                apply=apply_instance,
+                customer_name=apply_instance.name,
+                issue=apply_instance.issue,
+    )
+
+            # Send a WhatsApp message if a WhatsApp number is available
+            if customer.whatsapp_number:
+                message = f"Dear {customer.name}, your application for '{work_type}' has been successfully submitted and is currently 'assigned'."
+                encoded_message = urllib.parse.quote(message)
+                whatsapp_url = f"https://whatsapimanagment.onrender.com/send-message?phoneNumber={customer.whatsapp_number}&messageBody={encoded_message}"
+
+                try:
+                    response = requests.get(whatsapp_url)
+                    if response.status_code == 200:
+                        messages.success(request, "Service request submitted and WhatsApp message sent successfully!")
+                    else:
+                        messages.warning(request, "Service request submitted, but failed to send WhatsApp message.")
+                except requests.RequestException as e:
+                    messages.warning(request, f"Service request submitted, but error sending WhatsApp message: {e}")
+            else:
+                messages.success(request, "Service request submitted successfully!")
+
+            return redirect('technician_add_service')
+
+        except CustomUser.DoesNotExist:
+            messages.error(request, "Invalid service provider.")
+
+    # Fetch all technicians for the dropdown list
+    users = CustomUser.objects.all()
+
+    # Render the form
+    return render(request, 'technician_add_service.html', {'details': details, 'users': users})
+
+def technician_add_customer(request):
+    if request.method == "POST":
+            name = request.POST.get('name', '').strip()
+            address = request.POST.get('address', '').strip()
+            contact_number = request.POST.get('contact_number', '').strip()
+            whatsapp_number = request.POST.get('whatsapp_number', '').strip()
+            reffered_by = request.POST.get('reffered_by', '').strip()
+
+            # Validation checks
+            if not name or not contact_number:
+                return JsonResponse({"success": False, "error": "Name and Contact Number are required."}, status=400)
+
+            if Customer.objects.filter(contact_number=contact_number).exists():
+                return JsonResponse({"success": False, "error": "A customer with this contact number already exists."}, status=400)
+
+            # Create the new customer
+            Customer.objects.create(
+                name=name,
+                address=address,
+                contact_number=contact_number,
+                whatsapp_number=whatsapp_number,
+                reffered_by=reffered_by,
+            )
+
+            return JsonResponse({"success": True, "message": "Customer added successfully!"})
+    return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
+
+# def technician_add_customer(request):
+#     if request.method == "POST":
+#         name = request.POST.get('name', '').strip()
+#         address = request.POST.get('address', '').strip()
+#         contact_number = request.POST.get('contact_number', '').strip()
+#         whatsapp = request.POST.get('whatsapp_number', '').strip()
+#         referred_by = request.POST.get('reffered_by', '').strip()
+
+#         if not name or not contact_number:
+#             messages.error(request, "Name and Contact Number are required.")
+#             return redirect('technician_new_customer')
+
+#         if Customer.objects.filter(contact_number=contact_number).exists():
+#             messages.error(request, "A customer with this contact number already exists.")
+#             return redirect('technician_new_customer')
+
+#         try:
+#             Customer.objects.create(
+#                 name=name,
+#                 address=address,
+#                 contact_number=contact_number,
+#                 whatsapp_number=whatsapp,
+#                 reffered_by=referred_by,
+#             )
+#             messages.success(request, "Customer added successfully!")
+#         except Exception as e:
+#             messages.error(request, f"An error occurred: {str(e)}")
+
+#         return redirect('technician_new_customer')
+
+#     return redirect('technician_new_customer')
+
+def technician_new_customer(request):
+    customers = Customer.objects.all()
+    return render(request, 'technician_add_customer.html', {'customers': customers})
+
+def update_customer(request, customer_id):
+    if request.method == 'POST':
+        customer = get_object_or_404(Customer, id=customer_id)
+        customer.name = request.POST.get('name', customer.name)
+        customer.address = request.POST.get('address', customer.address)
+        customer.contact_number = request.POST.get('contact_number', customer.contact_number)
+        customer.whatsapp_number = request.POST.get('whatsapp_number', customer.whatsapp_number)
+        customer.reffered_by = request.POST.get('reffered_by', customer.reffered_by)
+        customer.save()
+        messages.success(request, "Customer updated successfully!")
+    return redirect('technician_new_customer')
 
 def extra_work_technician(request, apply_id):
     try:
@@ -439,60 +587,49 @@ def delete_vendor_info(request, vendor_id):
     messages.error(request, "Invalid request method.")
     return redirect('vendor_info', apply_id=apply_id)
 
-def current_status(request, apply_id):
-    apply_instance = get_object_or_404(Apply, id=apply_id)
+# def current_status(request, apply_id):
+#     apply_instance = get_object_or_404(Apply, id=apply_id)
 
-    technician_name = request.user.get_full_name() or request.user.username
+#     technician_name = request.user.get_full_name() or request.user.username
 
-    if request.method == "POST":
-        date = request.POST.get('date')
-        technician_name = request.POST.get('technician_name', technician_name)
-        status = request.POST.get('status')
+#     if request.method == "POST":
+#         date = request.POST.get('date')
+#         technician_name = request.POST.get('technician_name', technician_name)
+#         status = request.POST.get('status')
 
-        if not all([date, technician_name, status]):
-            messages.error(request, "All fields are required.")
-            return redirect('current_status', apply_id=apply_id)
+#         if not all([date, technician_name, status]):
+#             messages.error(request, "All fields are required.")
+#             return redirect('current_status', apply_id=apply_id)
 
-        try:
-            customer_name = apply_instance.name
-            issue = apply_instance.issue
+#         try:
+#             customer_name = apply_instance.name
+#             issue = apply_instance.issue
 
-            CurrentStatus.objects.create(
-                apply=apply_instance,
-                date=date,
-                technician_name=technician_name,
-                status=status,
-                customer_name=customer_name,
-                issue=issue,
-            )
-            messages.success(request, "Current status successfully added!")
-        except Exception as e:
-            messages.error(request, f"Error: {str(e)}")
-            return redirect('current_status', apply_id=apply_id)
+#             CurrentStatus.objects.create(
+#                 apply=apply_instance,
+#                 date=date,
+#                 technician_name=technician_name,
+#                 status=status,
+#                 customer_name=customer_name,
+#                 issue=issue,
+#             )
+#             messages.success(request, "Current status successfully added!")
+#         except Exception as e:
+#             messages.error(request, f"Error: {str(e)}")
+#             return redirect('current_status', apply_id=apply_id)
 
-        return redirect('current_status', apply_id=apply_id)
+#         return redirect('current_status', apply_id=apply_id)
 
-    status = CurrentStatus.objects.filter(apply=apply_instance)
-    context = {
-        'apply': apply_instance,
-        'status': status,
-        'technician_name': technician_name,
-    }
-    return render(request, 'current_status.html', context)
+#     status = CurrentStatus.objects.filter(apply=apply_instance)
+#     context = {
+#         'apply': apply_instance,
+#         'status': status,
+#         'technician_name': technician_name,
+#     }
+#     return render(request, 'current_status.html', context)
 
-def update_current_status(request, status_id):
-    status = get_object_or_404(CurrentStatus, id=status_id)
 
-    if request.method == "POST":
-        status.date = request.POST.get('date')
-        status.technician_name = request.POST.get('technician_name')
-        status.status = request.POST.get('status')
-        status.save()
-
-        return redirect('current_status', apply_id=status.apply.id)
-
-    return render(request, 'update_current_status.html', {'status': status})
-
+    
 def delete_current_status(request, status_id):
 
     current_status = get_object_or_404(CurrentStatus, id=status_id)
@@ -516,7 +653,7 @@ def pending_tasks(request):
         status='Pending'
     )
 
-    return render(request, 'pending_task.html', {
+    return render(request, 'tech_pending_services.html', {
         'pending_tasks': pending_tasks
     })
 

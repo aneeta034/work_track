@@ -1,4 +1,4 @@
-{% extends 'admin_dashboard.html' %}
+{% extends 'technician_dashboard.html' %}
 {% block title %}
 new customer
 {% endblock %}
@@ -12,7 +12,7 @@ new customer
         <div class="card">
           <div class="card-header">
             <div class="ms-md-auto py-2 py-md-0 text-end">
-              <a href="#" class="btn text-white" style="background-color:#2973B2;" data-bs-toggle="modal" data-bs-target="#addCustomerModal">Add Customer</a>
+              <a href="#" class="btn text-white" style="background-color: #0d3a5a;" data-bs-toggle="modal" data-bs-target="#addCustomerModal">Add Customer</a>
             </div>
             <h4 class="card-title">New Customers</h4>
           </div>
@@ -108,7 +108,7 @@ new customer
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form method="post" action="{% url 'add_customer' %}">
+            <form method="post" action="{% url 'technician_add_customer' %}">
               {% csrf_token %}
               <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
@@ -131,7 +131,7 @@ new customer
                 <input type="text" id="referredBy" name="reffered_by" class="form-control" placeholder="Enter reference">
               </div>
               <div class="text-center">
-                <button type="submit"class="btn text-white" style="background-color:#2973B2;" >Add </button>
+                <button type="submit" class="btn btn-primary">Add Customer</button>
               </div>
             </form>
           </div>
@@ -141,3 +141,6 @@ new customer
   </div>
 </div>
 {% endblock %}
+
+
+
