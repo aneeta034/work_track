@@ -10,6 +10,108 @@ from django.core.management.base import BaseCommand
 
 
 # Create your views here.
+from django.db.models import OuterRef, Subquery
+
+def technician_dashboard(request, status=None):
+    # Subquery to get the latest status for each Apply instance
+    latest_status_subquery = CurrentStatus.objects.filter(
+        apply=OuterRef('pk')
+    ).order_by('-date').values('status')[:1]
+
+    # Base queryset: Get all Apply instances for the logged-in technician
+    services = Apply.objects.filter(service_by=request.user).annotate(
+        latest_status=Subquery(latest_status_subquery)
+    )
+
+    current_filter = status if status is not None else 'all'
+
+    # Filter services based on the status parameter
+    if status and status.lower() != 'all':
+        services = services.filter(latest_status=status)
+
+
+    context = {
+        'technician_customers': services,
+        "current_filter":status,
+    }
+    return render(request, 'technician_dashboard.html', context)
+
+from .forms import AppliedServiceForm
+from django.db.models.functions import Replace
+from django.db.models import Value
+
+from django.views.decorators.csrf import csrf_exempt
+
+# View to handle form submission
+def add_service(request):
+    if request.method == 'POST':
+        form = AppliedServiceForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
+    return render(request, 'admin_dashboard.html')
+
+@csrf_exempt
+def save_customer(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        address = request.POST.get('address')
+        contact_number = request.POST.get('contact_number')
+        whatsapp_number = request.POST.get('whatsapp_number')
+        reffered_by = request.POST.get('reffered_by')
+
+        try:
+            customer = Customer.objects.create(
+                name=name,
+                address=address,
+                contact_number=contact_number,
+                whatsapp_number=whatsapp_number,
+                reffered_by=reffered_by,
+            )
+            return JsonResponse({'success': True, 'message': 'Customer saved successfully!'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+
+# View to handle dynamic customer search
+
+def search_customer(request):
+    query = request.GET.get('q', '').strip()  # Get the query and remove any leading/trailing spaces
+
+    if query:
+        # Normalize the query by removing '+91' if present
+        normalized_query = query.replace('+91', '')
+
+        # Normalize the database values and filter
+        customers = Customer.objects.annotate(
+            normalized_contact_number=Replace('contact_number', Value('+91'), Value(''))
+        ).filter(normalized_contact_number__icontains=normalized_query)
+
+        if customers:
+            results = [
+            {
+                'id': customer.id,
+                'name': customer.name,
+                'address': customer.address,
+                'contact_number': customer.contact_number,
+                'whatsapp_number': customer.whatsapp_number,
+                'reffered_by': customer.reffered_by
+            }
+            for customer in customers]
+            return JsonResponse({'exists': True, 'results': results})
+        else:
+            return JsonResponse({'exists': False, 'message': 'Customer not found. Please enter details manually.'})
+    else:
+        return JsonResponse({'exists': False, 'message': 'No query provided.'})
+    
+def get_users(request):
+    technicians = CustomUser.objects.filter(role='technician').values('id', 'username')
+    return JsonResponse(list(technicians), safe=False)
+
+
 
 def update_current_status(request, apply_id):
     if request.method == 'POST':

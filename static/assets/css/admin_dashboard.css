@@ -125,33 +125,17 @@
     display: flex;
     position: relative;
     align-items: center;
-    padding-left: 20px;
+    padding-left: 10px;
   }
   
   .navbar .nav-left a {
-    margin-right: 15px;
+    margin-right: 12px;
     text-decoration: none;
     color: var(--text-color);
     cursor: pointer;
     transition: font-weight 0.3s ease;
   }
   
-  
-  
-  /* Bold line that will slide under the selected option */
-  .bold-line {
-    position: absolute;
-    height: 2.5px;
-    background-color: black;
-    transition: left 0.3s ease,width 0.3s ease;
-    width: auto;
-    margin-top: 30px; /* Moves line closer to text */
-  }
-  
-  /* Highlight the selected option */
-  .filter-option.selected {
-    font-weight: bold;
-  }
   
   .navbar .nav-right  {
     margin-right: 10px;
@@ -177,8 +161,180 @@
       border-color: #004085 !important;
       color: #fff !important;
     }
-    
+
+    .filter-option.selected {
+      font-weight: bold;
+      color: #2973B2; /* Change to your preferred color */
+      border-bottom: 2.5px solid #2973B2; /* Add a persistent underline */
+      text-decoration: none; /* Remove default underline if any */
+  }
   
+    /* Modal Styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 5% auto; /* Center the modal */
+  padding: 0; /* Remove padding to allow top bar to span full width */
+  border: 1px solid #888;
+  width: 90%; /* Adjust width as needed */
+  max-width: 1200px; /* Limit maximum width */
+  height: 85vh !important; /* Limit height to 90% of viewport height */
+  border-radius: 10px;
+  position: relative;
+}
+
+/* Top Bar */
+.modal-topbar {
+  background-color:var(--primary-color); /* Primary color */
+  color: #fff;
+  padding: 15px 20px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-topbar h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.close {
+  color: #fff;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #ccc;
+  text-decoration: none;
+}
+
+/* Modal Grid Layout */
+.modal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+  gap: 20px; /* Space between columns */
+  padding: 20px; /* Add padding inside the modal */
+}
+
+.modal-column {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between form groups */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-group textarea {
+  resize: vertical; /* Allow vertical resizing */
+}
+
+/* Checkbox Styling */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-direction: row;
+  margin-top: -10px;
+  margin-bottom: 0px !important;
+  padding-bottom: 0 !important;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.checkbox-group label {
+  font-weight: normal;
+  font-size: 14px;
+  margin: 0;
+}
+
+#customer_results {
+  position: absolute;
+  z-index: 1000;
+  background: white;
+  border: 1px  #ccc;
+  border-radius: 8px; 
+  max-height: 150px;
+  overflow-y: auto;
+  width: 31%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 70px;
+}
+
+#customer_results div {
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition: background-color 0.2s ease; /* Smooth transition for hover effect */
+}
+
+#customer_results div:hover {
+  background-color: #f0f0f0; /* Light gray background on hover */
+}
+
+#customer_not_found {
+  margin-top: 5px; /* Add some space between the input field and the message */
+  font-size: 14px; /* Adjust font size */
+  color: #dc3545; /* Red color for error messages */
+}
+
+/* Comments Field */
+#any_other_comments {
+  height: 68px; /* Increase height of comments field */
+}
+
+/* Submit Button */
+.form-submit {
+  text-align: right;
+  padding: 5px;
+  margin-right: 10px;
+}
+.form-submit .btn.btn-primary {
+  background-color: #2973B2 !important;
+  border-color: var(--primary-color) !important; /* Update the border color as well */
+  color: #fff !important; /* Ensure text remains visible */
+  height: 50px !important;
+}
+
+.form-submit .btn.btn-primary:hover {
+  background-color: #004085 !important; /* Replace with a darker shade of your primary color */
+  border-color: #004085 !important;
+  color: #fff !important;
+}
+
   /* Styled Table */
   .table-responsive {
     overflow-x: auto; /* Enable horizontal scroll */

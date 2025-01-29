@@ -27,4 +27,11 @@ urlpatterns = [
         path('delete-current-status/<int:status_id>/', views.delete_current_status, name='delete_current_status'),
         path('technician/pending/', views.pending_tasks, name='pending_tasks'),
         path('technician/completed/', views.completed_tasks, name='completed_tasks'),
+        path('technician-dashboard/', views.technician_dashboard, name='technician_dashboard'),
+        path('technician-dashboard/filter/<str:status>/', views.technician_dashboard, name='technician_dashboard_filter'),
+        path('add_service/', views.add_service, name='add_service'),
+        path('search_customer/', views.search_customer, name='search_customer'),
+        path('get_users/', views.get_users, name='get_users'),
+        path('save_customer/', views.save_customer, name='save_customer'),
+
 ]

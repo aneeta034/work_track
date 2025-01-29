@@ -89,21 +89,117 @@
     <h3 class="mt-0 mb-2">Tasks</h3>
     <div class="navbar">
       <div class="nav-left">
-        <a href="{% url 'technician_dashboard' %}" class="filter-option" id="all-tasks" onclick="updateSelection('all')">All Tasks</a>
-        <a href="#" class="filter-option" id="pending" onclick="updateSelection('pending')">Assigned</a>
-        <a href="#" class="filter-option" id="completed" onclick="updateSelection('completed')">Completed</a>
-        <a href="#" class="filter-option" id="completed" onclick="updateSelection('completed')">pending</a>
-
+          <a href="{% url 'technician_dashboard' %}" class="filter-option {% if not current_filter or current_filter == 'all'  %}selected{% endif %}">All Tasks</a>
+          <a href="{% url 'technician_dashboard_filter' status='Assigned' %}" class="filter-option {% if current_filter == 'Assigned' %}selected{% endif %}">Assigned</a>
+          <a href="{% url 'technician_dashboard_filter' status='Pending' %}" class="filter-option {% if current_filter == 'Pending' %}selected{% endif %}">Pending</a>
+          <a href="{% url 'technician_dashboard_filter' status='Completed' %}" class="filter-option {% if current_filter == 'Completed' %}selected{% endif %}">Completed</a>
       </div>
       <div class="nav-right">
         <input type="search" class="form-control custom-search" placeholder="Search tasks">
         <button class="btn btn-secondary btn-sm">Export Data</button>
-        <button class="btn btn-primary btn-sm">Add Service</button>
+        <button class="btn btn-primary btn-sm" onclick="openModal()">Add Service</button>
       </div>
-      <div class="bold-line" id="bold-line"></div>
-
     </div>
-    
+  
+  <!-- Add Service Modal -->
+<div id="addServiceModal" class="modal">
+  <div class="modal-content">
+    <!-- Top Bar -->
+    <div class="modal-topbar">
+      <h2>Add Service</h2>
+      <span class="close" onclick="closeModal()">&times;</span>
+    </div>
+
+    <form id="addServiceForm" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="modal-grid">
+        <!-- Column 1 -->
+        <div class="modal-column">
+          <div class="form-group">
+            <label for="customer_number">Customer Number</label>
+            <input type="text" id="customer_number" name="customer_number" oninput="searchCustomer()">
+            <div id="customer_results"></div>
+            <div id="customer_not_found" class="text-danger" style="display: none;">Customer not found. Please enter details manually.</div>
+            <small id="customer_error" class="text-danger"></small>
+          </div>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" readonly>
+          </div>
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" readonly>
+          </div>
+          <div class="form-group">
+            <label for="whatsapp_number">WhatsApp Number</label>
+            <input type="text" id="whatsapp_number" name="whatsapp_number" readonly>
+          </div>
+          <div class="form-group checkbox-group">
+            <input type="checkbox" id="same_as_contact" onchange="copyContactToWhatsApp()">
+            <label for="same_as_contact">Same as Contact Number</label>
+          </div>
+          <div class="form-group">
+            <label for="reffered_by">Referred By</label>
+            <input type="text" id="reffered_by" name="reffered_by" readonly>
+          </div>
+        </div>
+
+        <!-- Column 2 -->
+        <div class="modal-column">
+          <div class="form-group">
+            <label for="service_by">Service By</label>
+            <select id="service_by" name="service_by">
+              <option value="">Select a technician</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="work_type">Work Type</label>
+            <select id="work_type" name="work_type">
+              <option value="sale">Sale</option>
+              <option value="service">Service</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="item_name_or_number">Item Name/Number</label>
+            <input type="text" id="item_name_or_number" name="item_name_or_number">
+          </div>
+          <div class="form-group">
+            <label for="issue">Issue Description</label>
+            <textarea id="issue" name="issue" rows="7"></textarea>
+          </div>
+        </div>
+
+        <!-- Column 3 -->
+        <div class="modal-column">
+          <div class="form-group">
+            <label for="photos_of_item">Upload Photo</label>
+            <input type="file" id="photos_of_item" name="photos_of_item">
+          </div>
+          <div class="form-group">
+            <label for="estimation_document">Upload Document</label>
+            <input type="file" id="estimation_document" name="estimation_document">
+          </div>
+          <div class="form-group">
+            <label for="estimated_price">Estimated Price</label>
+            <input type="text" id="estimated_price" name="estimated_price">
+          </div>
+          <div class="form-group">
+            <label for="estimated_date">Estimated Date</label>
+            <input type="date" id="estimated_date" name="estimated_date">
+          </div>
+          <div class="form-group">
+            <label for="any_other_comments">Comments</label>
+            <textarea id="any_other_comments" name="any_other_comments"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 
   <!-- Table Section -->
   <div class="table-responsive mt-2">
@@ -383,39 +479,185 @@ document.addEventListener('DOMContentLoaded', function () {
      const sidebar = document.querySelector('.sidebar');
      sidebar.classList.toggle('show');
    }
+   const notFoundDiv = document.getElementById('customer_not_found');
+  const resultsDiv = document.getElementById('customer_results'); 
 
-   document.addEventListener('DOMContentLoaded', function() {
- const filterOptions = document.querySelectorAll('.filter-option');
- const boldLine = document.getElementById('bold-line');
+function searchCustomer() {
+  const query = document.getElementById('customer_number').value;
 
- // Function to update bold line position
- function updateBoldLine(selectedOption) {
-   // Get the position and width of the selected option
-   const optionRect = selectedOption.getBoundingClientRect();
-   
-   // Set the width and position of the bold line
-   boldLine.style.width = `${optionRect.width}px`;
-   boldLine.style.left = `${optionRect.left - document.querySelector('.navbar').getBoundingClientRect().left}px`;
- }
+  console.log('Search query:', query); // Debugging
+  
+  resultsDiv.innerHTML = ''; // Clear previous results
+  notFoundDiv.style.display = 'none'; 
 
- // Add click event listeners to all filter options
- filterOptions.forEach(option => {
-   option.addEventListener('click', function() {
-     // Remove selected class from all filter options
-     filterOptions.forEach(item => item.classList.remove('selected'));
-     // Add selected class to the clicked option
-     this.classList.add('selected');
-     
-     // Update bold line position and width
-     updateBoldLine(this);
-   });
- });
+  fetch(`/technicianapp/search_customer/?q=${query}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log('Search results:', data);
+      if (data.exists) {
+                // Autofill the fields if the customer exists
+                data.results.forEach(customer => {
+                    const div = document.createElement('div');
+                    div.textContent = `${customer.name} - ${customer.contact_number}`;
+                    div.onclick = () => selectCustomer(customer);
+                    resultsDiv.appendChild(div);
+                });
+            } else {
+                // Enable the fields for manual input if the customer doesn't exist
+                enableManualInput();
+                notFoundDiv.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching customer data:', error);
+            resultsDiv.innerHTML = '<div>Error loading results. Please try again later.</div>';
+            notFoundDiv.style.display = 'none'; 
+        });
+}
 
- // Default selection on page load
- const defaultSelection = document.getElementById('all-tasks');
- defaultSelection.classList.add('selected');
- updateBoldLine(defaultSelection); // Set the initial position of the bold line
+function enableManualInput() {
+    // Enable the fields for manual input
+    document.getElementById('name').readOnly = false;
+    document.getElementById('address').readOnly = false;
+    document.getElementById('whatsapp_number').readOnly = false;
+    document.getElementById('reffered_by').readOnly = false;
+}
+
+function copyContactToWhatsApp() {
+    const sameAsContact = document.getElementById('same_as_contact');
+    const customerNumber = document.getElementById('customer_number'); // Use customer_number
+    const whatsappNumber = document.getElementById('whatsapp_number');
+
+    if (sameAsContact.checked) {
+        whatsappNumber.value = customerNumber.value; // Copy customer number to WhatsApp number
+    } else {
+        whatsappNumber.value = ''; // Clear WhatsApp number if unchecked
+    }
+}
+
+function selectCustomer(customer) {
+    // Autofill the fields when a customer is selected
+    document.getElementById('customer_number').value = customer.contact_number;
+    document.getElementById('name').value = customer.name;
+    document.getElementById('address').value = customer.address;
+    document.getElementById('whatsapp_number').value = customer.whatsapp_number;
+    document.getElementById('reffered_by').value = customer.reffered_by;
+
+    // Make the fields read-only again
+    document.getElementById('name').readOnly = true;
+    document.getElementById('address').readOnly = true;
+    document.getElementById('whatsapp_number').readOnly = true;
+    document.getElementById('reffered_by').readOnly = true;
+
+    
+    // Clear the search results and hide the "not found" message
+  document.getElementById('customer_results').innerHTML = '';
+  document.getElementById('customer_not_found').style.display = 'none';
+
+}
+      
+    $(document).ready(function() {
+        // Fetch technicians via AJAX
+        $.ajax({
+            url: '/technicianapp/get_users/',  // URL to the API endpoint
+            method: 'GET',
+            success: function(data) {
+                // Populate the dropdown
+                const dropdown = $('#service_by');
+                dropdown.empty();  // Clear existing options
+                dropdown.append('<option value="">Select a technician</option>');  // Add default option
+                data.forEach(function(technician) {
+                    dropdown.append(`<option value="${technician.id}">${technician.username}</option>`);
+                });
+            },
+            error: function(error) {
+                console.error('Error fetching technicians:', error);
+            }
+        });
+    });
+ 
+    function saveCustomerManually() {
+    const form = document.getElementById('addServiceForm'); // Use the main form
+    const formData = new FormData(form);
+
+    fetch('/technicianapp/save_customer/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),  // Include CSRF token for Django
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Customer saved successfully!');
+                // Optionally, refresh the page or update the UI
+            } else {
+                alert('Error saving customer: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error saving customer:', error);
+            alert('Error saving customer. Please try again later.');
+        });
+}
+
+    // Handle form submission
+    document.getElementById('addServiceForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const formData = new FormData(this);
+      fetch('/technicianapp/add_service/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Service added successfully!');
+          window.location.reload();
+        } else {
+          alert('Error: ' + JSON.stringify(data.errors));
+        }
+      });
+    });
+
+    // Modal handling
+    const modal = document.getElementById('addServiceModal');
+
+    // Open the modal
+function openModal() {
+  document.getElementById('addServiceForm').reset();
+  document.getElementById('customer_results').innerHTML = '';
+  document.getElementById('name').readOnly = false;
+  document.getElementById('address').readOnly = false;
+  document.getElementById('whatsapp_number').readOnly = false;
+  document.getElementById('reffered_by').readOnly = false;
+  document.getElementById('addServiceModal').style.display = 'flex';
+}
+
+// Close the modal
+function closeModal() {
+  notFoundDiv.style.display = 'none'; 
+  document.getElementById('addServiceModal').style.display = 'none';
+}
+
+// Prevent closing when clicking outside the modal
+document.getElementById('addServiceModal').addEventListener('click', function (event) {
+  if (event.target === this) {
+    event.stopPropagation(); // Prevent closing
+  }
 });
+
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        closeModal();
+      }
+    }
+  
+   
  </script>
 </body>
 </html>
