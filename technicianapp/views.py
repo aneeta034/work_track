@@ -7,7 +7,7 @@ from .models import Apply,FuelCharge,FoodAllowance,ItemPurchased,VendorInfo,Curr
 import urllib
 import requests
 from django.core.management.base import BaseCommand
-
+import json
 
 # Create your views here.
 
@@ -21,6 +21,33 @@ def update_current_status(request, apply_id):
 
         status_entry.save()
         return redirect('technician_dashboard')
+    
+# def update_current_status(request, apply_id):
+#     if request.method == 'POST':
+#         try:
+#             # Since apply_id is now coming from the URL, no need to extract it from the request body
+#             status = json.loads(request.body).get('status')  # Get the status from the request body
+
+#             # Ensure the status is a valid one
+#             if status not in ['Pending', 'Assigned', 'Completed']:
+#                 return JsonResponse({'success': False, 'message': 'Invalid status'}, status=400)
+
+#             # Fetch the CurrentStatus object based on apply_id
+#             current_status = get_object_or_404(CurrentStatus, apply_id=apply_id)
+
+#             # Update the status field
+#             current_status.status = status
+#             current_status.save()
+
+#             return JsonResponse({'success': True, 'message': 'Status updated successfully'})
+#         except Exception as e:
+#             return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+#     return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
+
+    
+
+
     
 
 def tech_pending_services(request):
@@ -224,59 +251,30 @@ def extra_work_technician(request, apply_id):
 
     return render(request, 'extra_work_tech.html', {'apply_instance': apply_instance})
 
-def fuelcharge(request, apply_id):
-    try:
-        apply_instance = Apply.objects.get(id=apply_id)
-    except Apply.DoesNotExist:
-        messages.error(request, "Apply instance not found.")
-        return redirect('apply_list')
+def add_fuel_charge(request, service_id):
+    service = get_object_or_404(Apply, id=service_id)
 
-    technician_name = request.user.get_full_name() or request.user.username
-
-    if request.method == "POST":
-        technician_name = request.POST.get('technician_name') or technician_name
+    if request.method == 'POST':
+        technician_name = request.user.username  # Get technician's username
         date = request.POST.get('date')
         purpose = request.POST.get('purpose')
         kilometers = request.POST.get('kilometers')
+        cost = request.POST.get('cost')
 
-        if not all([technician_name, date, purpose, kilometers]):
-            messages.error(request, "All fields are required except cost.")
-            return redirect('fuelcharge', apply_id=apply_id)
+        # Create a FuelCharge instance and associate it with the Apply instance
+        fuel_charge = FuelCharge.objects.create(
+            technician_name=technician_name,
+            date=date,
+            purpose=purpose,
+            kilometers=kilometers,
+            cost=cost,
+            apply=service
+        )
 
-        try:
-            kilometers = float(kilometers)  
-            cost = kilometers * 3  
-            customer_name = apply_instance.name
-            issue = apply_instance.issue
+        return JsonResponse({'status': 'success', 'message': 'Fuel charge added successfully!'})
 
-            FuelCharge.objects.create(
-                apply=apply_instance,
-                technician_name=technician_name, 
-                date=date,
-                purpose=purpose,
-                kilometers=kilometers,
-                cost=cost,  
-                customer_name=customer_name,
-                issue=issue
-            )
-            messages.success(request, "Fuel charge added successfully!")
-        except ValueError:
-            messages.error(request, "Invalid value for kilometers. Please enter a numeric value.")
-            return redirect('fuelcharge', apply_id=apply_id)
-        except Exception as e:
-            messages.error(request, f"An error occurred: {str(e)}")
-            return redirect('fuelcharge', apply_id=apply_id)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
-        return redirect('fuelcharge', apply_id=apply_id)
-
-    fuel_charges = FuelCharge.objects.filter(apply=apply_instance)
-
-    return render(request, 'fuelcharge.html', {
-        'apply': apply_instance,
-        'fuel_charges': fuel_charges,
-        'technician_name': technician_name  
-    })
-    
 def update_fuelcharge(request, fuel_id):
     fuel = get_object_or_404(FuelCharge, id=fuel_id)
 
