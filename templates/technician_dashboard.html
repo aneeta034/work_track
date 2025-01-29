@@ -10,6 +10,7 @@
   </title>
 
   <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- FontAwesome Icons -->
@@ -18,6 +19,70 @@
   <link rel="icon" href="{% static 'assets/img/kaiadmin/favicon.ico' %}" type="image/x-icon" />
   <!-- External CSS -->
   <link rel="stylesheet" href="{% static 'assets/css/admin_dashboard.css' %}">
+
+  <style>
+    .icon-container {
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Center the icons horizontally */
+  }
+  
+  .icon-container a {
+      color: black;
+      font-size: 20px; /* Reduced size */
+  }
+  
+  .icon-container a:first-child {
+      margin-right: 10px; /* Space after the first icon */
+  }
+  
+  .icon-container a:last-child {
+      margin-top: 9px;
+      margin-left: 10px; /* Space before the second icon */
+  }
+  
+  .icon-container a:hover {
+      color: #555; /* Darker shade on hover (optional) */
+  }
+
+ 
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 30px;
+    left: 0;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    min-width: 200px;
+    z-index: 10;
+  }
+  
+  .dropdown-item {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: black;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .icon-link {
+    cursor: pointer;
+    font-size: 24px;
+    margin-right: 10px;
+  }
+  
+  .icon-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  </style>
 </head>
 <body>
   <!-- Topbar -->
@@ -229,13 +294,8 @@
             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
               <span>{{ service.id }}</span> <!-- Display ID on the first line, centered -->
               <div style="display: flex; margin-top: 5px;">
-                <a href="{% url 'update_applied_service' service.id %}" class="icon-link ms-2">
-                  <i class="fa fa-pencil-alt" aria-hidden="true" title="Update"></i>
-                </a>
-                <form action="{% url 'delete_applied_service' service.id %}" method="post" style="display:inline-block; margin-left: 5px;">
-                  {% csrf_token %}
-                  <button type="submit" class="icon-link delete-icon" title="Delete">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
+                
+                  
                   </button>
                 </form>
               </div>
@@ -275,7 +335,21 @@
             <ul class="files-list">
               <li><a href="{{ service.estimation_document.url }}" target="_blank">Document, </a>
               <a href="{{ service.photos_of_item.url }}" target="_blank">Photo</a></li>
-              <li><a href="{% url 'extra_work_technician' service.id %}">Additional Charges</a></li>
+              <div class="icon-container">
+                <a href="#" class="icon-link" data-bs-toggle="modal" data-bs-target="#addFuelchargeModal-{{ service.id }}">
+                  <i class="bi bi-info-square-fill" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="icon-link" onclick="toggleDropdown(event, '{{ service.id }}')">
+                  <i class="bi bi-plus-square-fill" aria-hidden="true"></i>
+                </a>
+                <div class="dropdown-menu" id="dropdown-{{ service.id }}">
+                  <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addFuelchargeModal-{{ service.id }}">Fuel Charge</a>
+                  <a href="#" class="dropdown-item">Food Allowance</a>
+                  <a href="#" class="dropdown-item">Item Purchased</a>
+                  <a href="#" class="dropdown-item">Vendor Info</a>
+                </div>
+              </div>
+                         
             </ul>
           </td>
           <td>{{ service.any_other_comments }}</td>
@@ -386,8 +460,82 @@
     </div>
   </div>
 </div>
+
+
+<!-- Fuel Charge Modal -->
+<div class="modal fade" id="addFuelchargeModal-{{ service.id }}" tabindex="-1" aria-labelledby="addFuelchargeModalLabel-{{ service.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addFuelchargeModalLabel-{{ service.id }}">Fuel Charge for {{ service.name }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="fuelcharge-form-{{ service.id }}" method="POST">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="technician_name" class="form-label">Technician Name</label>
+            <input type="text" class="form-control" id="technician_name" name="technician_name" value="{{ request.user.username }}" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" class="form-control" id="date" name="date" required>
+          </div>
+          <div class="mb-3">
+            <label for="purpose" class="form-label">Purpose</label>
+            <input type="text" class="form-control" id="purpose" name="purpose" required>
+          </div>
+          <div class="mb-3">
+            <label for="kilometers" class="form-label">Kilometers</label>
+            <input type="number" class="form-control" id="kilometers" name="kilometers" required>
+          </div>
+          <div class="mb-3">
+            <label for="cost" class="form-label">Cost</label>
+            <input type="number" class="form-control" id="cost" name="cost" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Save Fuel Charge</button>
+        </form>
+        <div id="fuelcharge-message"></div> <!-- To display success/error messages -->
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 </div>
+
+<script>
+  // Listen for form submission in the modal
+  $(document).on('submit', '#fuelcharge-form-{{ service.id }}', function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    let form = $(this);
+    let formData = form.serialize(); // Serialize form data for sending
+
+    $.ajax({
+      url: '/technician/fuel-charge/{{ service.id }}/',  // Correct URL (make sure this matches the Django URL pattern)
+      type: 'POST',
+      data: formData,
+      headers: {
+        'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val()  // Ensure CSRF token is sent
+      },
+      success: function(response) {
+        if (response.status === 'success') {
+          // Display success message and close the modal after a short delay
+          $('#fuelcharge-message').html('<div class="alert alert-success">' + response.message + '</div>');
+          setTimeout(function() {
+            $('#addFuelchargeModal-{{ service.id }}').modal('hide');  // Close the modal after success
+            location.reload();  // Optionally reload the page to reflect the updated data
+          }, 1500);
+        } else {
+          $('#fuelcharge-message').html('<div class="alert alert-danger">' + response.message + '</div>');
+        }
+      },
+      error: function(xhr, errmsg, err) {
+        $('#fuelcharge-message').html('<div class="alert alert-danger">An error occurred. Please try again.</div>');
+      }
+    });
+  });
+</script>
 
 <!--Javascript for automatic status change-->
 
@@ -430,7 +578,6 @@
       });
   });
   </script>
-  
 
 
 <script>
@@ -661,5 +808,38 @@ document.getElementById('addServiceModal').addEventListener('click', function (e
   
    
  </script>
+ <script>
+  function toggleDropdown(event, id) {
+    // Prevent the click from closing the dropdown immediately
+    event.stopPropagation();
+  
+    // Find the dropdown menu by ID
+    const dropdownMenu = document.getElementById(`dropdown-${id}`);
+    const allDropdowns = document.querySelectorAll('.dropdown-menu');
+  
+    // Hide all other dropdowns
+    allDropdowns.forEach((dropdown) => {
+      if (dropdown !== dropdownMenu) {
+        dropdown.style.display = 'none';
+      }
+    });
+  
+    // Toggle the current dropdown
+    if (dropdownMenu.style.display === 'block') {
+      dropdownMenu.style.display = 'none';
+    } else {
+      dropdownMenu.style.display = 'block';
+    }
+  }
+  
+  // Close dropdowns if clicked outside
+  document.addEventListener('click', () => {
+    const allDropdowns = document.querySelectorAll('.dropdown-menu');
+    allDropdowns.forEach((dropdown) => {
+      dropdown.style.display = 'none';
+    });
+  });
+</script>
+ 
 </body>
 </html>

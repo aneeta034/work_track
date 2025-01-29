@@ -59,7 +59,4 @@ class CurrentStatus(models.Model):
     customer_name = models.CharField(max_length=225)
     issue = models.TextField()
 
-    def update_status_if_due(self):
-        if self.status == "assigned" and self.date < now().date():
-            self.status = "pending"
-            self.save()
+    
