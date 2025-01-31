@@ -82,6 +82,62 @@
     align-items: center;
     justify-content: center;
   }
+
+
+  /* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding-top: 60px;
+}
+
+.modal-dialog {
+  margin: auto;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.close {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
   </style>
 </head>
 <body>
@@ -105,8 +161,8 @@
   <div class="sidebar">
     <h5>Technician Dashboard</h5>
     <a href="{% url 'technician_dashboard' %}"><i class="fas fa-home"></i> Home</a>
-    <a href="#" data-bs-toggle="modal" data-bs-target="#addCustomerModal"><i class="fas fa-user-plus"></i> Add Customer</a>
-    <a href="#" onclick="openModal()"><i class="fas fa-tools" ></i> Add Service</a>
+    <a href="#" ><i class="fas fa-user-plus"></i> Add Customer</a>
+    <a href="#" ><i class="fas fa-tools" ></i> Add Service</a>
     <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
   </div>
 
@@ -155,9 +211,9 @@
     <div class="navbar">
       <div class="nav-left">
           <a href="{% url 'technician_dashboard' %}" class="filter-option {% if not current_filter or current_filter == 'all'  %}selected{% endif %}">All Tasks</a>
-          <a href="{% url 'technician_dashboard_filter' status='Assigned' %}" class="filter-option {% if current_filter == 'Assigned' %}selected{% endif %}">Assigned</a>
-          <a href="{% url 'technician_dashboard_filter' status='Pending' %}" class="filter-option {% if current_filter == 'Pending' %}selected{% endif %}">Pending</a>
-          <a href="{% url 'technician_dashboard_filter' status='Completed' %}" class="filter-option {% if current_filter == 'Completed' %}selected{% endif %}">Completed</a>
+          <a href="" class="filter-option {% if current_filter == 'Assigned' %}selected{% endif %}">Assigned</a>
+          <a href="" class="filter-option {% if current_filter == 'Pending' %}selected{% endif %}">Pending</a>
+          <a href="" class="filter-option {% if current_filter == 'Completed' %}selected{% endif %}">Completed</a>
       </div>
       <div class="nav-right">
         <input type="search" class="form-control custom-search" placeholder="Search tasks">
@@ -166,105 +222,7 @@
       </div>
     </div>
   
-  <!-- Add Service Modal -->
-<div id="addServiceModal" class="modal">
-  <div class="modal-content">
-    <!-- Top Bar -->
-    <div class="modal-topbar">
-      <h2>Add Service</h2>
-      <span class="close" onclick="closeModal()">&times;</span>
-    </div>
-
-    <form id="addServiceForm" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <div class="modal-grid">
-        <!-- Column 1 -->
-        <div class="modal-column">
-          <div class="form-group">
-            <label for="contact_number">Customer Number</label>
-            <input type="text" id="contact_number" name="contact_number" oninput="searchCustomer()">
-            <div id="customer_results"></div>
-            <div id="customer_not_found" class="text-danger" style="display: none;">Customer not found. Please enter details manually.</div>
-            <small id="customer_error" class="text-danger"></small>
-          </div>
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" readonly>
-          </div>
-          <div class="form-group">
-            <label for="address">Address</label>
-            <input type="text" id="address" name="address" readonly>
-          </div>
-          <div class="form-group">
-            <label for="whatsapp_number">WhatsApp Number</label>
-            <input type="text" id="whatsapp_number" name="whatsapp_number" readonly>
-          </div>
-          <div class="form-group checkbox-group">
-            <input type="checkbox" id="same_as_contact" onchange="copyContactToWhatsApp()">
-            <label for="same_as_contact">Same as Contact Number</label>
-          </div>
-          <div class="form-group">
-            <label for="reffered_by">Referred By</label>
-            <input type="text" id="reffered_by" name="reffered_by" readonly>
-          </div>
-        </div>
-
-        <!-- Column 2 -->
-        <div class="modal-column">
-          <div class="form-group">
-            <label for="service_by">Service By</label>
-            <select id="service_by" name="service_by">
-              <option value="">Select a technician</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="work_type">Work Type</label>
-            <select id="work_type" name="work_type">
-              <option value="sale">Sale</option>
-              <option value="service">Service</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="item_name_or_number">Item Name/Number</label>
-            <input type="text" id="item_name_or_number" name="item_name_or_number">
-          </div>
-          <div class="form-group">
-            <label for="issue">Issue Description</label>
-            <textarea id="issue" name="issue" rows="7"></textarea>
-          </div>
-        </div>
-
-        <!-- Column 3 -->
-        <div class="modal-column">
-          <div class="form-group">
-            <label for="photos_of_item">Upload Photo</label>
-            <input type="file" id="photos_of_item" name="photos_of_item">
-          </div>
-          <div class="form-group">
-            <label for="estimation_document">Upload Document</label>
-            <input type="file" id="estimation_document" name="estimation_document">
-          </div>
-          <div class="form-group">
-            <label for="estimated_price">Estimated Price</label>
-            <input type="text" id="estimated_price" name="estimated_price">
-          </div>
-          <div class="form-group">
-            <label for="estimated_date">Estimated Date</label>
-            <input type="date" id="estimated_date" name="estimated_date">
-          </div>
-          <div class="form-group">
-            <label for="any_other_comments">Comments</label>
-            <textarea id="any_other_comments" name="any_other_comments"></textarea>
-          </div>
-        </div>
-      </div>
-      <div class="form-submit">
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </div>
-    </form>
-  </div>
-</div>
-
+ 
 
   <!-- Table Section -->
   <div class="table-responsive mt-2">
@@ -336,18 +294,18 @@
               <li><a href="{{ service.estimation_document.url }}" target="_blank">Document, </a>
               <a href="{{ service.photos_of_item.url }}" target="_blank">Photo</a></li>
               <div class="icon-container">
-                <a href="#" class="icon-link" data-bs-toggle="modal" data-bs-target="#addFuelchargeModal-{{ service.id }}">
+                <a href="#" class="icon-link">
                   <i class="bi bi-info-square-fill" aria-hidden="true"></i>
-                </a>
-                <a href="#" class="icon-link" onclick="toggleDropdown(event, '{{ service.id }}')">
-                  <i class="bi bi-plus-square-fill" aria-hidden="true"></i>
+
+                  <a href="#" class="icon-link" onclick="toggleDropdown(event, '{{ service.id }}')">
+                    <i class="bi bi-plus-square-fill" aria-hidden="true"></i>
                 </a>
                 <div class="dropdown-menu" id="dropdown-{{ service.id }}">
-                  <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addFuelchargeModal-{{ service.id }}">Fuel Charge</a>
-                  <a href="#" class="dropdown-item">Food Allowance</a>
-                  <a href="#" class="dropdown-item">Item Purchased</a>
-                  <a href="#" class="dropdown-item">Vendor Info</a>
-                </div>
+                  <a href="#" class="dropdown-item" onclick="openFuelChargeModal()">Fuel Charge</a>
+                  <a href="#" class="dropdown-item"  onclick="openFoodAllowanceModal()">Food Allowance</a>
+                  <a href="#" class="dropdown-item" onclick="openItemPurchasedModal()">Item Purchased</a>
+                  <a href="#" class="dropdown-item" onclick="openVendorInfoModal()">Vendor Info</a>
+              </div>
               </div>
                          
             </ul>
@@ -355,267 +313,273 @@
           <td>{{ service.any_other_comments }}</td>
         
           <td>
-            {% if service.current_status_entries.last %}
-              <button 
-                class="btn btn-sm 
-                  {% if service.current_status_entries.last.status == 'Assigned' %}btn-primary{% endif %}
-                  {% if service.current_status_entries.last.status == 'Pending' %}btn-danger{% endif %}
-                  {% if service.current_status_entries.last.status == 'Completed' %}btn-success{% endif %}"
-                data-bs-toggle="modal"
-                data-bs-target="#updateStatusModal{{ service.id }}"
-                data-estimated-date="{{ service.estimated_date|date:'Y-m-d' }}"  
-                data-current-status="{{ service.current_status_entries.last.status }}" 
-                id="statusButton{{ service.id }}">
-                {{ service.current_status_entries.last.status }} <!-- Show current status -->
-              </button>
-            {% else %}
-              <span class="text-muted">No status available</span>
-            {% endif %}
+           
           </td>
       </tr>
-        
+      
 
-<!--update status modal-->
-{% if service.current_status_entries.last %}
-<div class="modal fade" id="updateStatusModal{{ service.id }}" tabindex="-1" aria-labelledby="updateStatusModalLabel{{ service.id }}" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="updateStatusModalLabel{{ service.id }}">Update Status</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="{% url 'update_current_status' service.current_status_entries.last.id %}" method="post">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label for="technician_name{{ service.id }}" class="form-label">Technician Name</label>
-            <input type="text" class="form-control" id="technician_name{{ service.id }}" name="technician_name" value="{{ request.user.username }}" readonly>
-        </div>
-        <div class="mb-3">
-          <label for="date{{ service.id }}" class="form-label">Date</label>
-          <input type="date" 
-                 class="form-control" 
-                 id="date{{ service.id }}" 
-                 name="date" 
-                 value="{{ service.estimated_date|date:'Y-m-d'|default:'' }}" 
-                 required>
-        </div>
-          <div class="mb-3">
-            <label for="status{{ service.id }}" class="form-label">Status</label>
-            <select class="form-control" id="status{{ service.id }}" name="status" required>
-              <option value="Assigned" {% if service.current_status_entries.last.status == 'Assigned' %}selected{% endif %}>Assigned</option>
-              <option value="Pending" {% if service.current_status_entries.last.status == 'Pending' %}selected{% endif %}>Pending</option>
-              <option value="Completed" {% if service.current_status_entries.last.status == 'Completed' %}selected{% endif %}>Completed</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-success">Update</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
 {% endfor %}
 </tbody>
   </table>
 </div>
 
-
-<!-- Add Customer Modal -->
-<div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addCustomerModalLabel">Add New Customer</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="addCustomerForm" method="post" action="{% url 'technician_add_customer' %}">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" id="name" name="name" class="form-control" placeholder="Enter customer name" required>
-          </div>
-          <div class="mb-3">
-            <label for="address" class="form-label">Address</label>
-            <input type="text" id="address" name="address" class="form-control" placeholder="Enter address" required>
-          </div>
-          <div class="mb-3">
-            <label for="contact" class="form-label">Contact Number</label>
-            <input type="text" id="contact" name="contact_number" class="form-control" placeholder="Enter contact number" required>
-          </div>
-          <div class="mb-3">
-            <label for="whatsapp" class="form-label">WhatsApp Number</label>
-            <input type="text" id="whatsapp" name="whatsapp_number" class="form-control" placeholder="Enter WhatsApp number">
-          </div>
-          <div class="mb-3">
-            <label for="referredBy" class="form-label">Referred By</label>
-            <input type="text" id="referredBy" name="reffered_by" class="form-control" placeholder="Enter reference">
-          </div>
-          <div class="text-center">
-            <button type="submit" class="btn text-white" style="background-color:#2973B2;">Add</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-
 <!-- Fuel Charge Modal -->
-<div class="modal fade" id="addFuelchargeModal-{{ service.id }}" tabindex="-1" aria-labelledby="addFuelchargeModalLabel-{{ service.id }}" aria-hidden="true">
+<div class="modal" id="fuelChargeModal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addFuelchargeModalLabel-{{ service.id }}">Fuel Charge for {{ service.name }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">Add Fuel Charge</h5>
+        <button type="button" class="close" onclick="closeFuelChargeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
-        <form id="fuelcharge-form-{{ service.id }}" method="POST">
+        <form method="POST" action="{% url 'save_fuel_charge' %}">
           {% csrf_token %}
-          <div class="mb-3">
-            <label for="technician_name" class="form-label">Technician Name</label>
-            <input type="text" class="form-control" id="technician_name" name="technician_name" value="{{ request.user.username }}" readonly>
+          <div class="form-group">
+            <label for="technician_name">Technician Name</label>
+            <input type="text" class="form-control" name="technician_name" required>
           </div>
-          <div class="mb-3">
-            <label for="date" class="form-label">Date</label>
-            <input type="date" class="form-control" id="date" name="date" required>
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" class="form-control" name="date" required>
           </div>
-          <div class="mb-3">
-            <label for="purpose" class="form-label">Purpose</label>
-            <input type="text" class="form-control" id="purpose" name="purpose" required>
+          <div class="form-group">
+            <label for="purpose">Purpose</label>
+            <textarea class="form-control" name="purpose" rows="3" required></textarea>
           </div>
-          <div class="mb-3">
-            <label for="kilometers" class="form-label">Kilometers</label>
-            <input type="number" class="form-control" id="kilometers" name="kilometers" required>
+          <div class="form-group">
+            <label for="kilometers">Kilometers</label>
+            <input type="number" step="0.01" class="form-control" name="kilometers" required>
           </div>
-          <div class="mb-3">
-            <label for="cost" class="form-label">Cost</label>
-            <input type="number" class="form-control" id="cost" name="cost" required>
+          <div class="form-group">
+            <label for="cost">Cost</label>
+            <input type="number" step="0.01" class="form-control" name="cost" required>
           </div>
-          <button type="submit" class="btn btn-primary">Save Fuel Charge</button>
+          <button type="submit" class="btn btn-primary">Save</button>
         </form>
-        <div id="fuelcharge-message"></div> <!-- To display success/error messages -->
       </div>
     </div>
   </div>
 </div>
+
+
+<!-- Food Allowance Modal -->
+<div class="modal" id="foodAllowanceModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Food Allowance</h5>
+        <button type="button" class="close" onclick="closeFoodAllowanceModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'save_food_allowance' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="technician_name">Technician Name</label>
+            <input type="text" class="form-control" name="technician_name" required>
+          </div>
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" class="form-control" name="date" required>
+          </div>
+          <div class="form-group">
+            <label for="purpose">Purpose</label>
+            <textarea class="form-control" name="purpose" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="cost">Cost</label>
+            <input type="number" step="0.01" class="form-control" name="cost" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Item Purchased Modal -->
+<div class="modal" id="itemPurchasedModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Item Purchased</h5>
+        <button type="button" class="close" onclick="closeItemPurchasedModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" enctype="multipart/form-data" action="{% url 'save_item_purchased' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" class="form-control" name="date" required>
+          </div>
+          <div class="form-group">
+            <label for="item_name">Item Name</label>
+            <input type="text" class="form-control" name="item_name" required>
+          </div>
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" step="0.01" class="form-control" name="price" required>
+          </div>
+          <div class="form-group">
+            <label for="bill_photo">Bill Photo</label>
+            <input type="file" class="form-control" name="bill_photo" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Vendor Info Modal -->
+<div class="modal" id="vendorInfoModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Vendor Info</h5>
+        <button type="button" class="close" onclick="closeVendorInfoModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" enctype="multipart/form-data" action="{% url 'save_vendor_info' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" class="form-control" name="date" required>
+          </div>
+          <div class="form-group">
+            <label for="vendor_name">Vendor Name</label>
+            <input type="text" class="form-control" name="vendor_name" required>
+          </div>
+          <div class="form-group">
+            <label for="vendor_bill_photo">Vendor Bill Photo</label>
+            <input type="file" class="form-control" name="vendor_bill_photo" required>
+          </div>
+          <div class="form-group">
+            <label for="vendor_eta">Vendor ETA</label>
+            <input type="date" class="form-control" name="vendor_eta" required>
+          </div>
+          <div class="form-group">
+            <label for="vendor_cost">Vendor Cost</label>
+            <input type="number" step="0.01" class="form-control" name="vendor_cost" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 </div>
 
+
+
+
+
 <script>
-  // Listen for form submission in the modal
-  $(document).on('submit', '#fuelcharge-form-{{ service.id }}', function(event) {
-    event.preventDefault(); // Prevent default form submission
 
-    let form = $(this);
-    let formData = form.serialize(); // Serialize form data for sending
-
-    $.ajax({
-      url: '/technician/fuel-charge/{{ service.id }}/',  // Correct URL (make sure this matches the Django URL pattern)
-      type: 'POST',
-      data: formData,
-      headers: {
-        'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val()  // Ensure CSRF token is sent
-      },
-      success: function(response) {
-        if (response.status === 'success') {
-          // Display success message and close the modal after a short delay
-          $('#fuelcharge-message').html('<div class="alert alert-success">' + response.message + '</div>');
-          setTimeout(function() {
-            $('#addFuelchargeModal-{{ service.id }}').modal('hide');  // Close the modal after success
-            location.reload();  // Optionally reload the page to reflect the updated data
-          }, 1500);
-        } else {
-          $('#fuelcharge-message').html('<div class="alert alert-danger">' + response.message + '</div>');
-        }
-      },
-      error: function(xhr, errmsg, err) {
-        $('#fuelcharge-message').html('<div class="alert alert-danger">An error occurred. Please try again.</div>');
-      }
-    });
-  });
+  function openFuelChargeModal() {
+    document.getElementById("fuelChargeModal").style.display = "block";
+  }
+  
+  function closeFuelChargeModal() {
+    document.getElementById("fuelChargeModal").style.display = "none";
+  }
+  
+  function openFoodAllowanceModal() {
+    document.getElementById("foodAllowanceModal").style.display = "block";
+  }
+  
+  function closeFoodAllowanceModal() {
+    document.getElementById("foodAllowanceModal").style.display = "none";
+  }
+  
+  function openItemPurchasedModal() {
+    document.getElementById("itemPurchasedModal").style.display = "block";
+  }
+  
+  function closeItemPurchasedModal() {
+    document.getElementById("itemPurchasedModal").style.display = "none";
+  }
+  
+  function openVendorInfoModal() {
+    document.getElementById("vendorInfoModal").style.display = "block";
+  }
+  
+  function closeVendorInfoModal() {
+    document.getElementById("vendorInfoModal").style.display = "none";
+  }
+  
 </script>
 
-<!--Javascript for automatic status change-->
+<script>
+  //for vendor info
+  // Open the modal
+  function openVendorInfoModal() {
+    document.getElementById("vendorInfoModal").style.display = "block";
+  }
+
+  // Close the modal
+  function closeVendorInfoModal() {
+    document.getElementById("vendorInfoModal").style.display = "none";
+  }
+</script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-      // Get all status buttons
-      const statusButtons = document.querySelectorAll('button[id^="statusButton"]');
-  
-      statusButtons.forEach((button) => {
-          const estimatedDate = new Date(button.dataset.estimatedDate); // Get the estimated date
-          const currentStatus = button.dataset.currentStatus; // Get the current status
-          const currentDate = new Date(); // Get the current date
-  
-          // Check if the estimated date has passed and status is "Assigned"
-          if (currentStatus === 'Assigned' && currentDate > estimatedDate) {
-              // Change the status to "Pending"
-              button.classList.remove('btn-primary');
-              button.classList.add('btn-danger');
-              button.textContent = 'Pending';
-  
-              // Optional: Send an AJAX request to update the status on the server
-              fetch('technician/update-status/', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'X-CSRFToken': '{{ csrf_token }}', // Django CSRF token
-                  },
-                  body: JSON.stringify({
-                      apply_id: button.dataset.serviceId, // Include service ID
-                      status: 'Pending',
-                  }),
-              })
-                  .then((response) => {
-                      if (!response.ok) {
-                          console.error('Failed to update status on server');
-                      }
-                  })
-                  .catch((error) => console.error('Error:', error));
-          }
-      });
-  });
-  </script>
+  //for item Purchased
+  // Open the modal
+  function openItemPurchasedModal() {
+    document.getElementById("itemPurchasedModal").style.display = "block";
+  }
 
+  // Close the modal
+  function closeItemPurchasedModal() {
+    document.getElementById("itemPurchasedModal").style.display = "none";
+  }
+</script>
 
 <script>
-// AJAX to handle customer addition
+  // for food allowance
+  // Open the modal
+  function openFoodAllowanceModal() {
+    document.getElementById("foodAllowanceModal").style.display = "block";
+  }
 
-document.addEventListener('DOMContentLoaded', function () {
-  const form = document.querySelector('#addCustomerForm');
-  const modal = new bootstrap.Modal(document.getElementById('addCustomerModal'));
-  const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  // Close the modal
+  function closeFoodAllowanceModal() {
+    document.getElementById("foodAllowanceModal").style.display = "none";
+  }
+</script>
 
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const formData = new FormData(form);
+<script>
+  //for fuel charge
+ // Function to close the modal
+function closeFuelChargeModal() {
+    var modal = document.getElementById('fuelChargeModal');
+    modal.style.display = 'none';  // Hides the modal
+}
 
-    try {
-      const response = await fetch("{% url 'technician_add_customer' %}", {
-        method: "POST",
-        body: formData,
-        headers: {
-          "X-CSRFToken": csrfToken
-        }
-      });
+// Function to open the modal
+function openFuelChargeModal() {
+    var modal = document.getElementById('fuelChargeModal');
+    modal.style.display = 'block';  // Shows the modal
+}
 
-      const data = await response.json();
-
-      if (data.success) {
-        alert(data.message);
-        modal.hide();
-        location.reload();
-      } else {
-        alert(data.error);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("An unexpected error occurred.");
+// Close the modal when clicking outside of it
+window.onclick = function(event) {
+    var modal = document.getElementById('fuelChargeModal');
+    if (event.target == modal) {
+        closeFuelChargeModal();
     }
-  });
-});
+}
+
 </script>
 
  <!-- Bootstrap 5 JS -->
@@ -628,186 +592,9 @@ document.addEventListener('DOMContentLoaded', function () {
      const sidebar = document.querySelector('.sidebar');
      sidebar.classList.toggle('show');
    }
-   const notFoundDiv = document.getElementById('customer_not_found');
-  const resultsDiv = document.getElementById('customer_results'); 
 
-function searchCustomer() {
-  const query = document.getElementById('contact_number').value;
-
-  console.log('Search query:', query); // Debugging
+  </script>
   
-  resultsDiv.innerHTML = ''; // Clear previous results
-  notFoundDiv.style.display = 'none'; 
-
-  fetch(`/technician/search_customer/?q=${query}`)
-    .then(response => response.json())
-    .then(data => {
-      console.log('Search results:', data);
-      if (data.exists) {
-                // Autofill the fields if the customer exists
-                data.results.forEach(customer => {
-                    const div = document.createElement('div');
-                    div.textContent = `${customer.name} - ${customer.contact_number}`;
-                    div.onclick = () => selectCustomer(customer);
-                    resultsDiv.appendChild(div);
-                });
-            } else {
-                // Enable the fields for manual input if the customer doesn't exist
-                enableManualInput();
-                notFoundDiv.style.display = 'block';
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching customer data:', error);
-            resultsDiv.innerHTML = '<div>Error loading results. Please try again later.</div>';
-            notFoundDiv.style.display = 'none'; 
-        });
-}
-
-function enableManualInput() {
-    // Enable the fields for manual input
-    document.getElementById('name').readOnly = false;
-    document.getElementById('address').readOnly = false;
-    document.getElementById('whatsapp_number').readOnly = false;
-    document.getElementById('reffered_by').readOnly = false;
-}
-
-function copyContactToWhatsApp() {
-    const sameAsContact = document.getElementById('same_as_contact');
-    const customerNumber = document.getElementById('contact_number'); // Use customer_number
-    const whatsappNumber = document.getElementById('whatsapp_number');
-
-    if (sameAsContact.checked) {
-        whatsappNumber.value = customerNumber.value; // Copy customer number to WhatsApp number
-    } else {
-        whatsappNumber.value = ''; // Clear WhatsApp number if unchecked
-    }
-}
-
-function selectCustomer(customer) {
-    // Autofill the fields when a customer is selected
-    document.getElementById('contact_number').value = customer.contact_number;
-    document.getElementById('name').value = customer.name;
-    document.getElementById('address').value = customer.address;
-    document.getElementById('whatsapp_number').value = customer.whatsapp_number;
-    document.getElementById('reffered_by').value = customer.reffered_by;
-
-    // Make the fields read-only again
-    document.getElementById('name').readOnly = true;
-    document.getElementById('address').readOnly = true;
-    document.getElementById('whatsapp_number').readOnly = true;
-    document.getElementById('reffered_by').readOnly = true;
-
-    
-    // Clear the search results and hide the "not found" message
-  document.getElementById('customer_results').innerHTML = '';
-  document.getElementById('customer_not_found').style.display = 'none';
-
-}
-      
-    $(document).ready(function() {
-        // Fetch technicians via AJAX
-        $.ajax({
-            url: '/technician/get_users/',  // URL to the API endpoint
-            method: 'GET',
-            success: function(data) {
-                // Populate the dropdown
-                const dropdown = $('#service_by');
-                dropdown.empty();  // Clear existing options
-                dropdown.append('<option value="">Select a technician</option>');  // Add default option
-                data.forEach(function(technician) {
-                    dropdown.append(`<option value="${technician.id}">${technician.username}</option>`);
-                });
-            },
-            error: function(error) {
-                console.error('Error fetching technicians:', error);
-            }
-        });
-    });
- 
-    function saveCustomerManually() {
-    const form = document.getElementById('addServiceForm'); // Use the main form
-    const formData = new FormData(form);
-
-    fetch('/technician/save_customer/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRFToken': getCookie('csrftoken'),  // Include CSRF token for Django
-        },
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Customer saved successfully!');
-                // Optionally, refresh the page or update the UI
-            } else {
-                alert('Error saving customer: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error saving customer:', error);
-            alert('Error saving customer. Please try again later.');
-        });
-}
-
-    // Handle form submission
-    document.getElementById('addServiceForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const formData = new FormData(this);
-      fetch('/technician/add_service/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'X-CSRFToken': '{{ csrf_token }}'
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert('Service added successfully!');
-          window.location.reload();
-        } else {
-          alert('Error: ' + JSON.stringify(data.errors));
-        }
-      });
-    });
-
-    // Modal handling
-    const modal = document.getElementById('addServiceModal');
-
-    // Open the modal
-function openModal() {
-  document.getElementById('addServiceForm').reset();
-  document.getElementById('customer_results').innerHTML = '';
-  document.getElementById('name').readOnly = false;
-  document.getElementById('address').readOnly = false;
-  document.getElementById('whatsapp_number').readOnly = false;
-  document.getElementById('reffered_by').readOnly = false;
-  document.getElementById('addServiceModal').style.display = 'flex';
-}
-
-// Close the modal
-function closeModal() {
-  notFoundDiv.style.display = 'none'; 
-  document.getElementById('addServiceModal').style.display = 'none';
-}
-
-// Prevent closing when clicking outside the modal
-document.getElementById('addServiceModal').addEventListener('click', function (event) {
-  if (event.target === this) {
-    event.stopPropagation(); // Prevent closing
-  }
-});
-
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        closeModal();
-      }
-    }
-  
-   
- </script>
  <script>
   function toggleDropdown(event, id) {
     // Prevent the click from closing the dropdown immediately

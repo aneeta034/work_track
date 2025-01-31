@@ -10,106 +10,7 @@ from django.core.management.base import BaseCommand
 import json
 
 # Create your views here.
-from django.db.models import OuterRef, Subquery
 
-def technician_dashboard(request, status=None):
-    # Subquery to get the latest status for each Apply instance
-    latest_status_subquery = CurrentStatus.objects.filter(
-        apply=OuterRef('pk')
-    ).order_by('-date').values('status')[:1]
-
-    # Base queryset: Get all Apply instances for the logged-in technician
-    services = Apply.objects.filter(service_by=request.user).annotate(
-        latest_status=Subquery(latest_status_subquery)
-    )
-
-    current_filter = status if status is not None else 'all'
-
-    # Filter services based on the status parameter
-    if status and status.lower() != 'all':
-        services = services.filter(latest_status=status)
-
-
-    context = {
-        'technician_customers': services,
-        "current_filter":status,
-    }
-    return render(request, 'technician_dashboard.html', context)
-
-from .forms import AppliedServiceForm
-from django.db.models.functions import Replace
-from django.db.models import Value
-
-from django.views.decorators.csrf import csrf_exempt
-
-# View to handle form submission
-def add_service(request):
-    if request.method == 'POST':
-        form = AppliedServiceForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'success': True})
-        else:
-            return JsonResponse({'success': False, 'errors': form.errors})
-    return render(request, 'admin_dashboard.html')
-
-@csrf_exempt
-def save_customer(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        address = request.POST.get('address')
-        contact_number = request.POST.get('contact_number')
-        whatsapp_number = request.POST.get('whatsapp_number')
-        reffered_by = request.POST.get('reffered_by')
-
-        try:
-            customer = Customer.objects.create(
-                name=name,
-                address=address,
-                contact_number=contact_number,
-                whatsapp_number=whatsapp_number,
-                reffered_by=reffered_by,
-            )
-            return JsonResponse({'success': True, 'message': 'Customer saved successfully!'})
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': str(e)})
-    else:
-        return JsonResponse({'success': False, 'message': 'Invalid request method.'})
-
-# View to handle dynamic customer search
-
-def search_customer(request):
-    query = request.GET.get('q', '').strip()  # Get the query and remove any leading/trailing spaces
-
-    if query:
-        # Normalize the query by removing '+91' if present
-        normalized_query = query.replace('+91', '')
-
-        # Normalize the database values and filter
-        customers = Customer.objects.annotate(
-            normalized_contact_number=Replace('contact_number', Value('+91'), Value(''))
-        ).filter(normalized_contact_number__icontains=normalized_query)
-
-        if customers:
-            results = [
-            {
-                'id': customer.id,
-                'name': customer.name,
-                'address': customer.address,
-                'contact_number': customer.contact_number,
-                'whatsapp_number': customer.whatsapp_number,
-                'reffered_by': customer.reffered_by
-            }
-            for customer in customers]
-            return JsonResponse({'exists': True, 'results': results})
-        else:
-            return JsonResponse({'exists': False, 'message': 'Customer not found. Please enter details manually.'})
-    else:
-        return JsonResponse({'exists': False, 'message': 'No query provided.'})
-    
-def get_users(request):
-    technicians = CustomUser.objects.filter(role='technician').values('id', 'username')
-    return JsonResponse(list(technicians), safe=False)
 
 
 
@@ -124,33 +25,7 @@ def update_current_status(request, apply_id):
         status_entry.save()
         return redirect('technician_dashboard')
     
-# def update_current_status(request, apply_id):
-#     if request.method == 'POST':
-#         try:
-#             # Since apply_id is now coming from the URL, no need to extract it from the request body
-#             status = json.loads(request.body).get('status')  # Get the status from the request body
-
-#             # Ensure the status is a valid one
-#             if status not in ['Pending', 'Assigned', 'Completed']:
-#                 return JsonResponse({'success': False, 'message': 'Invalid status'}, status=400)
-
-#             # Fetch the CurrentStatus object based on apply_id
-#             current_status = get_object_or_404(CurrentStatus, apply_id=apply_id)
-
-#             # Update the status field
-#             current_status.status = status
-#             current_status.save()
-
-#             return JsonResponse({'success': True, 'message': 'Status updated successfully'})
-#         except Exception as e:
-#             return JsonResponse({'success': False, 'message': str(e)}, status=500)
-
-#     return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
-
-    
-
-
-    
+  
 
 def tech_pending_services(request):
     pending_services = CurrentStatus.objects.filter(
@@ -353,29 +228,25 @@ def extra_work_technician(request, apply_id):
 
     return render(request, 'extra_work_tech.html', {'apply_instance': apply_instance})
 
-def add_fuel_charge(request, service_id):
-    service = get_object_or_404(Apply, id=service_id)
-
-    if request.method == 'POST':
-        technician_name = request.user.username  # Get technician's username
+def save_fuel_charge(request):
+    if request.method == "POST":
+        technician_name = request.POST.get('technician_name')
         date = request.POST.get('date')
         purpose = request.POST.get('purpose')
         kilometers = request.POST.get('kilometers')
         cost = request.POST.get('cost')
 
-        # Create a FuelCharge instance and associate it with the Apply instance
-        fuel_charge = FuelCharge.objects.create(
+        fuel_charge = FuelCharge(
             technician_name=technician_name,
             date=date,
             purpose=purpose,
             kilometers=kilometers,
-            cost=cost,
-            apply=service
+            cost=cost
         )
-
-        return JsonResponse({'status': 'success', 'message': 'Fuel charge added successfully!'})
-
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+        fuel_charge.save()
+        messages.success(request, "Fuel charge saved successfully.")
+        return redirect('technician_dashboard')
+    return render(request, 'technician_dashboard.html') 
 
 def update_fuelcharge(request, fuel_id):
     fuel = get_object_or_404(FuelCharge, id=fuel_id)
@@ -420,52 +291,25 @@ def delete_fuelcharge(request, fuel_id):
     messages.error(request, "Invalid request method.")
     return redirect('fuelcharge', apply_id=fuel.apply.id)   
 
-def food_allowance(request, apply_id):
-    try:
-        apply_instance = Apply.objects.get(id=apply_id)
-    except Apply.DoesNotExist:
-        messages.error(request, "Apply instance not found.")
-        return redirect('apply_list')  
-
+def save_food_allowance(request):
     if request.method == "POST":
-        technician_name = request.POST.get('technician_name') or request.user.get_full_name() or request.user.username
+        technician_name = request.POST.get('technician_name')
         date = request.POST.get('date')
         purpose = request.POST.get('purpose')
         cost = request.POST.get('cost')
 
-        if not all([technician_name, date, purpose, cost]):
-            messages.error(request, "All fields are required.")
-            return redirect('food_allowance', apply_id=apply_id)
+        food_allowance = FoodAllowance(
+            technician_name=technician_name,
+            date=date,
+            purpose=purpose,
+            cost=cost
+        )
+        food_allowance.save()
+        messages.success(request, "Food allowance saved successfully.")
+        return redirect('technician_dashboard')
 
-        try:
-            customer_name = apply_instance.name 
-            issue = apply_instance.issue 
 
-            FoodAllowance.objects.create(
-                apply=apply_instance,
-                technician_name=technician_name,
-                date=date,
-                purpose=purpose,
-                cost=cost,
-                customer_name=customer_name, 
-                issue=issue 
-            )
-            messages.success(request, "Food allowance added successfully!")
-        except Exception as e:
-            messages.error(request, f"An error occurred: {str(e)}")
-            return redirect('food_allowance', apply_id=apply_id)
-
-        return redirect('food_allowance', apply_id=apply_id)
-
-    food_allowances = FoodAllowance.objects.filter(apply=apply_instance)
-
-    # Pass the logged-in user's name as the default value for technician_name
-    context = {
-        'apply': apply_instance,
-        'food_allowances': food_allowances,
-        'technician_name': request.user.get_full_name() or request.user.username,
-    }
-    return render(request, 'food_allowance.html', context)
+    
 
 def update_food_allowance(request, food_id):
     food = get_object_or_404(FoodAllowance, id=food_id)
@@ -510,49 +354,22 @@ def delete_food_allowance(request, allowance_id):
     messages.error(request, "Invalid request method.")
     return redirect('food_allowance', apply_id=apply_id)
 
-def item_purchased(request, apply_id):
-    try:
-        apply_instance = Apply.objects.get(id=apply_id)
-    except Apply.DoesNotExist:
-        messages.error(request, "Apply instance not found.")
-        return redirect('apply_list') 
-
+def save_item_purchased(request):
     if request.method == "POST":
         date = request.POST.get('date')
         item_name = request.POST.get('item_name')
         price = request.POST.get('price')
-        bill_photo = request.FILES.get('bill_photo')  
+        bill_photo = request.FILES.get('bill_photo')
 
-        if not all([date, item_name, price, bill_photo]):
-            messages.error(request, "All fields are required.")
-            return redirect('item_purchased', apply_id=apply_id)
-
-        try:
-            customer_name = apply_instance.name 
-            issue = apply_instance.issue  
-
-            ItemPurchased.objects.create(
-                apply=apply_instance,
-                date=date,
-                item_name=item_name,
-                price=price,
-                bill_photo=bill_photo,
-                customer_name=customer_name,  
-                issue=issue  
-            )
-            messages.success(request, "Item purchased successfully added!")
-        except Exception as e:
-            messages.error(request, f"Error: {str(e)}")
-            return redirect('item_purchased', apply_id=apply_id)
-
-        return redirect('item_purchased', apply_id=apply_id)
-
-    items = ItemPurchased.objects.filter(apply=apply_instance)
-    context = {
-        'apply': apply_instance,
-        'items': items
-    }
-    return render(request, 'item_purchased.html', context)
+        item_purchased = ItemPurchased(
+            date=date,
+            item_name=item_name,
+            price=price,
+            bill_photo=bill_photo
+        )
+        item_purchased.save()
+        messages.success(request, "Item purchased saved successfully.")
+        return redirect('technician_dashboard')
 
 def update_item_purchased(request, item_id):
     item = get_object_or_404(ItemPurchased, id=item_id)
@@ -598,9 +415,7 @@ def delete_item_purchased(request, item_id):
     messages.error(request, "Invalid request method.")
     return redirect('item_purchased', apply_id=apply_id)
 
-def vendor_info(request, apply_id):
-    apply_instance = get_object_or_404(Apply, id=apply_id)
-
+def save_vendor_info(request):
     if request.method == "POST":
         date = request.POST.get('date')
         vendor_name = request.POST.get('vendor_name')
@@ -608,37 +423,18 @@ def vendor_info(request, apply_id):
         vendor_eta = request.POST.get('vendor_eta')
         vendor_cost = request.POST.get('vendor_cost')
 
-        if not all([date, vendor_name, vendor_bill_photo, vendor_eta, vendor_cost]):
-            messages.error(request, "All fields are required.")
-            return redirect('vendorinfo', apply_id=apply_id)
-
-        try:
-            customer_name = apply_instance.name 
-            issue = apply_instance.issue  
-
-            VendorInfo.objects.create(
-                apply=apply_instance,
-                date=date,
-                vendor_name=vendor_name,
-                vendor_bill_photo=vendor_bill_photo,
-                vendor_eta=vendor_eta,
-                vendor_cost=vendor_cost,
-                customer_name=customer_name,  
-                issue=issue 
-            )
-            messages.success(request, "Vendor info successfully added!")
-        except Exception as e:
-            messages.error(request, f"Error: {str(e)}")
-            return redirect('vendor_info', apply_id=apply_id)
-
-        return redirect('vendor_info', apply_id=apply_id)
-
-    vendors = VendorInfo.objects.filter(apply=apply_instance)
-    context = {
-        'apply': apply_instance,
-        'vendors': vendors,
-    }
-    return render(request, 'vendor_info.html', context)
+        vendor_info = VendorInfo(
+            date=date,
+            vendor_name=vendor_name,
+            vendor_bill_photo=vendor_bill_photo,
+            vendor_eta=vendor_eta,
+            vendor_cost=vendor_cost
+        )
+        vendor_info.save()
+        messages.success(request, "Vendor info saved successfully.")
+        return redirect('technician_dashboard')
+    
+    
 
 def update_vendor_info(request, vendor_id):
     vendor = get_object_or_404(VendorInfo, id=vendor_id)
@@ -686,49 +482,6 @@ def delete_vendor_info(request, vendor_id):
 
     messages.error(request, "Invalid request method.")
     return redirect('vendor_info', apply_id=apply_id)
-
-# def current_status(request, apply_id):
-#     apply_instance = get_object_or_404(Apply, id=apply_id)
-
-#     technician_name = request.user.get_full_name() or request.user.username
-
-#     if request.method == "POST":
-#         date = request.POST.get('date')
-#         technician_name = request.POST.get('technician_name', technician_name)
-#         status = request.POST.get('status')
-
-#         if not all([date, technician_name, status]):
-#             messages.error(request, "All fields are required.")
-#             return redirect('current_status', apply_id=apply_id)
-
-#         try:
-#             customer_name = apply_instance.name
-#             issue = apply_instance.issue
-
-#             CurrentStatus.objects.create(
-#                 apply=apply_instance,
-#                 date=date,
-#                 technician_name=technician_name,
-#                 status=status,
-#                 customer_name=customer_name,
-#                 issue=issue,
-#             )
-#             messages.success(request, "Current status successfully added!")
-#         except Exception as e:
-#             messages.error(request, f"Error: {str(e)}")
-#             return redirect('current_status', apply_id=apply_id)
-
-#         return redirect('current_status', apply_id=apply_id)
-
-#     status = CurrentStatus.objects.filter(apply=apply_instance)
-#     context = {
-#         'apply': apply_instance,
-#         'status': status,
-#         'technician_name': technician_name,
-#     }
-#     return render(request, 'current_status.html', context)
-
-
     
 def delete_current_status(request, status_id):
 

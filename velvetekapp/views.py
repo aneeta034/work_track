@@ -6,36 +6,41 @@ from django.contrib import messages
 from loginapp.models import CustomUser
 import urllib
 import requests
+from django.http import HttpResponseRedirect
+
+
 
 
 
 def add_technician(request):
-    if request.method == 'POST':
-        # Check for AJAX request by verifying the X-Requested-With header
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            username = request.POST.get('username')
-            email = request.POST.get('email')
-            password = request.POST.get('password')
+    if request.method == "POST":
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
 
-            if CustomUser.objects.filter(username=username).exists():
-                return JsonResponse({'success': False, 'error': "Username already exists. Please choose a different one."})
-            elif not username or not email or not password:
-                return JsonResponse({'success': False, 'error': "All fields are required."})
-            else:
-                technician = CustomUser.objects.create_user(
-                    username=username,
-                    email=email,
-                    password=password,
-                    role='technician',
-                    is_staff=True
-                )
-                technician.save()
-                return JsonResponse({'success': True, 'message': "Technician added successfully!"})
+        if not username or not email or not password:
+            messages.error(request, "All fields are required.")
+            return HttpResponseRedirect(request.path)  # Redirect to the same page
 
-        else:
-            return JsonResponse({'success': False, 'error': "Invalid request method or missing AJAX header."})
-    else:
-        return JsonResponse({'success': False, 'error': "Invalid request method."})
+        if CustomUser.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists. Please choose a different one.")
+            return HttpResponseRedirect(request.path)  # Redirect to the same page
+
+        # Create the technician user
+        technician = CustomUser.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            role='technician',
+            is_staff=True
+        )
+        technician.save()
+
+        messages.success(request, "Technician added successfully.")
+        return HttpResponseRedirect(request.path)  # Redirect to the same page
+
+    return render(request, 'admin_dashboard.html')
+
 
 def list_technicians(request):
     technicians = CustomUser.objects.filter(role='technician')
@@ -135,7 +140,7 @@ def add_customer(request):
         address = request.POST.get('address', '').strip()
         contact_number = request.POST.get('contact_number', '').strip()
         whatsapp_number = request.POST.get('whatsapp_number', '').strip()
-        reffered_by = request.POST.get('reffered_by', '').strip()
+        referred_by = request.POST.get('referred_by', '').strip()
 
         # Validation checks
         if not name or not contact_number:
@@ -150,7 +155,7 @@ def add_customer(request):
             address=address,
             contact_number=contact_number,
             whatsapp_number=whatsapp_number,
-            reffered_by=reffered_by,
+            referred_by=referred_by,
         )
 
         return JsonResponse({"success": True, "message": "Customer added successfully!"})

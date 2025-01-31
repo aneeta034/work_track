@@ -7,7 +7,7 @@ class Customer(models.Model):
     address = models.TextField()
     contact_number = models.CharField(max_length=15,unique=True)
     whatsapp_number = models.CharField(max_length=15)
-    reffered_by =models.CharField(max_length=255)
+    referred_by =models.CharField(max_length=255)
 
 
 class Apply(models.Model):
@@ -16,7 +16,7 @@ class Apply(models.Model):
     address = models.TextField(null=True)
     contact_number = models.CharField(max_length=15,null=True)
     whatsapp_number = models.CharField(max_length=15,null=True)
-    reffered_by =models.CharField(max_length=255,null=True) 
+    referred_by =models.CharField(max_length=255,null=True) 
     service_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     WORK_TYPE_CHOICES=[
