@@ -10,8 +10,92 @@ from django.core.management.base import BaseCommand
 import json
 
 # Create your views here.
+from .forms import AppliedServiceForm
+from django.db.models.functions import Replace
+from django.db.models import Value
+
+from django.views.decorators.csrf import csrf_exempt
+
+# View to handle form submission
+def add_service(request):
+    if request.method == 'POST':
+        # Extract customer data from the form
+        name = request.POST.get('name')
+        address = request.POST.get('address')
+        contact_number = request.POST.get('contact_number')
+        whatsapp_number = request.POST.get('whatsapp_number')
+        referred_by = request.POST.get('referred_by')
+
+        # Check if the customer already exists using all parameters
+        customer = Customer.objects.filter(
+            name=name,
+            address=address,
+            contact_number=contact_number,
+            whatsapp_number=whatsapp_number,
+            referred_by=referred_by,
+        ).first()
+
+        is_new_customer = False
+
+        # If the customer doesn't exist, create a new one
+        if not customer:
+            try:
+                customer = Customer.objects.create(
+                    name=name,
+                    address=address,
+                    contact_number=contact_number,
+                    whatsapp_number=whatsapp_number,
+                    referred_by=referred_by,
+                )
+                is_new_customer = True
+            except Exception as e:
+                return JsonResponse({'success': False, 'message': f'Error creating customer: {str(e)}'})
+
+        form = AppliedServiceForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True,'message': 'Service added successfully!',
+                'is_new_customer': is_new_customer,})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
+    return render(request, 'admin_dashboard.html')
 
 
+
+# View to handle dynamic customer search
+
+def search_customer(request):
+    query = request.GET.get('q', '').strip()  # Get the query and remove any leading/trailing spaces
+
+    if query:
+        # Normalize the query by removing '+91' if present
+        normalized_query = query.replace('+91', '')
+
+        # Normalize the database values and filter
+        customers = Customer.objects.annotate(
+            normalized_contact_number=Replace('contact_number', Value('+91'), Value(''))
+        ).filter(normalized_contact_number__icontains=normalized_query)
+
+        if customers:
+            results = [
+            {
+                'id': customer.id,
+                'name': customer.name,
+                'address': customer.address,
+                'contact_number':customer.contact_number,
+                'whatsapp_number': customer.whatsapp_number,
+                'referred_by': customer.referred_by
+            }
+            for customer in customers]
+            return JsonResponse({'exists': True, 'results': results})
+        else:
+            return JsonResponse({'exists': False, 'message': 'Customer not found. Please enter details manually.'})
+    else:
+        return JsonResponse({'exists': False, 'message': 'No query provided.'})
+    
+def get_users(request):
+    technicians = CustomUser.objects.filter(role='technician').values('id', 'username')
+    return JsonResponse(list(technicians), safe=False)
 
 
 def update_current_status(request, apply_id):
