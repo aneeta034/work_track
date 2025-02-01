@@ -213,7 +213,7 @@
 
 
 
-<!-- The Modal -->
+<!-- The Modal Add Customer-->
 <div class="modal" id="customerModal" style="display: none;">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -291,6 +291,7 @@
 {% endblock %}
 
 <script>
+  // for add cust
   // Open the modal
   function openCustomerModal() {
       document.getElementById("customerModal").style.display = "block";
@@ -322,7 +323,7 @@
   // Close modal if clicking outside of the modal dialog
   window.onclick = function(event) {
     if (event.target == document.getElementById("technicianModal")) {
-        closeTechnicianModal();
+        closeTechnician---Modal();
     }
 }
 

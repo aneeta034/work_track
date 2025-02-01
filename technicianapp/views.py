@@ -9,11 +9,9 @@ import requests
 from django.core.management.base import BaseCommand
 import json
 
-# Create your views here.
 
 
-
-
+# Create your views here. 
 def update_current_status(request, apply_id):
     if request.method == 'POST':
         status_entry = get_object_or_404(CurrentStatus, id=apply_id)
@@ -24,7 +22,6 @@ def update_current_status(request, apply_id):
 
         status_entry.save()
         return redirect('technician_dashboard')
-    
   
 
 def tech_pending_services(request):
@@ -146,29 +143,30 @@ def technician_add_service(request):
 
 def technician_add_customer(request):
     if request.method == "POST":
-            name = request.POST.get('name', '').strip()
-            address = request.POST.get('address', '').strip()
-            contact_number = request.POST.get('contact_number', '').strip()
-            whatsapp_number = request.POST.get('whatsapp_number', '').strip()
-            reffered_by = request.POST.get('reffered_by', '').strip()
+        name = request.POST.get('name', '').strip()
+        address = request.POST.get('address', '').strip()
+        contact_number = request.POST.get('contact_number', '').strip()
+        whatsapp_number = request.POST.get('whatsapp_number', '').strip()
+        referred_by = request.POST.get('referred_by', '').strip()
 
-            # Validation checks
-            if not name or not contact_number:
-                return JsonResponse({"success": False, "error": "Name and Contact Number are required."}, status=400)
+        # Validation checks
+        if not name or not contact_number:
+            return JsonResponse({"success": False, "error": "Name and Contact Number are required."}, status=400)
 
-            if Customer.objects.filter(contact_number=contact_number).exists():
-                return JsonResponse({"success": False, "error": "A customer with this contact number already exists."}, status=400)
+        if Customer.objects.filter(contact_number=contact_number).exists():
+            return JsonResponse({"success": False, "error": "A customer with this contact number already exists."}, status=400)
 
-            # Create the new customer
-            Customer.objects.create(
-                name=name,
-                address=address,
-                contact_number=contact_number,
-                whatsapp_number=whatsapp_number,
-                reffered_by=reffered_by,
-            )
+        # Create the new customer
+        Customer.objects.create(
+            name=name,
+            address=address,
+            contact_number=contact_number,
+            whatsapp_number=whatsapp_number,
+            referred_by=referred_by,
+        )
 
-            return JsonResponse({"success": True, "message": "Customer added successfully!"})
+        return JsonResponse({"success": True, "message": "Customer added successfully!"})
+
     return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
 
 # def technician_add_customer(request):

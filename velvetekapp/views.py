@@ -14,17 +14,16 @@ from django.http import HttpResponseRedirect
 
 def add_technician(request):
     if request.method == "POST":
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '').strip()
 
+        # Validation checks
         if not username or not email or not password:
-            messages.error(request, "All fields are required.")
-            return HttpResponseRedirect(request.path)  # Redirect to the same page
+            return JsonResponse({"success": False, "error": "All fields are required."}, status=400)
 
         if CustomUser.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists. Please choose a different one.")
-            return HttpResponseRedirect(request.path)  # Redirect to the same page
+            return JsonResponse({"success": False, "error": "Username already exists. Please choose a different one."}, status=400)
 
         # Create the technician user
         technician = CustomUser.objects.create_user(
@@ -36,10 +35,9 @@ def add_technician(request):
         )
         technician.save()
 
-        messages.success(request, "Technician added successfully.")
-        return HttpResponseRedirect(request.path)  # Redirect to the same page
+        return JsonResponse({"success": True, "message": "Technician added successfully!"})
 
-    return render(request, 'admin_dashboard.html')
+    return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
 
 
 def list_technicians(request):

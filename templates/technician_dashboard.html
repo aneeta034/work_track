@@ -84,60 +84,6 @@
   }
 
 
-  /* Modal Styles */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
-  padding-top: 60px;
-}
-
-.modal-dialog {
-  margin: auto;
-}
-
-.modal-content {
-  background-color: #fefefe;
-  margin: 5% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #ddd;
-}
-
-.modal-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.close {
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 4px;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
   </style>
 </head>
 <body>
@@ -161,7 +107,7 @@ button:hover {
   <div class="sidebar">
     <h5>Technician Dashboard</h5>
     <a href="{% url 'technician_dashboard' %}"><i class="fas fa-home"></i> Home</a>
-    <a href="#" ><i class="fas fa-user-plus"></i> Add Customer</a>
+    <a href="#" onclick="openCustomerModal()"><i class="fas fa-user-plus"></i> Add Customer</a>
     <a href="#" ><i class="fas fa-tools" ></i> Add Service</a>
     <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
   </div>
@@ -313,15 +259,72 @@ button:hover {
           <td>{{ service.any_other_comments }}</td>
         
           <td>
-           
-          </td>
+            {% if service.current_status_entries.last %}
+              <button 
+                class="btn btn-sm 
+                  {% if service.current_status_entries.last.status == 'Assigned' %}btn-primary{% endif %}
+                  {% if service.current_status_entries.last.status == 'Pending' %}btn-danger{% endif %}
+                  {% if service.current_status_entries.last.status == 'Completed' %}btn-success{% endif %}"
+                
+                onclick="openUpdateStatusModal({{ service.id }})"
+                data-estimated-date="{{ service.estimated_date|date:'Y-m-d' }}"  
+                data-current-status="{{ service.current_status_entries.last.status }}"
+                data-service-id="{{ service.id }}" 
+                id="statusButton{{ service.id }}">
+                {{ service.current_status_entries.last.status }} <!-- Show current status -->
+              </button>
+            {% else %}
+              <span class="text-muted">No status available</span>
+            {% endif %}
+        </td>
+        
+        
       </tr>
       
+<!-- Update Status Modal -->
+{% if service.current_status_entries.last %}
+    <div class="modal " id="updateStatusModal{{ service.id }}">
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Status</h5>
+                    <button type="button" class="close" onclick="closeUpdateStatusModal({{ service.id }})">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'update_current_status' service.current_status_entries.last.id %}" method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="technician_name{{ service.id }}" class="form-label">Technician Name</label>
+                            <input type="text" class="form-control" id="technician_name{{ service.id }}" name="technician_name" value="{{ request.user.username }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="date{{ service.id }}" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="date{{ service.id }}" name="date" value="{{ service.estimated_date|date:'Y-m-d'|default:'' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="status{{ service.id }}" class="form-label">Status</label>
+                            <select class="form-control" id="status{{ service.id }}" name="status" required>
+                                <option value="Assigned" {% if service.current_status_entries.last.status == 'Assigned' %}selected{% endif %}>Assigned</option>
+                                <option value="Pending" {% if service.current_status_entries.last.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="Completed" {% if service.current_status_entries.last.status == 'Completed' %}selected{% endif %}>Completed</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
 
 {% endfor %}
 </tbody>
   </table>
 </div>
+
+
 
 <!-- Fuel Charge Modal -->
 <div class="modal" id="fuelChargeModal">
@@ -479,9 +482,141 @@ button:hover {
 {% endblock %}
 </div>
 
+<!-- The Modal Add Customer-->
+<div class="modal" id="customerModal" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Customer</h5>
+        <button type="button" class="close" onclick="closeCustomerModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" enctype="multipart/form-data" action="{% url 'technician_add_customer' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="contact_number">Contact Number:</label>
+            <input type="text" class="form-control" id="contact_number" name="contact_number" required>
+          </div>
+          <div class="form-group">
+            <label for="whatsapp_number">WhatsApp Number:</label>
+            <input type="text" class="form-control" id="whatsapp_number" name="whatsapp_number">
+          </div>
+          <div class="form-group">
+            <label for="address">Address:</label>
+            <input type="text"  class="form-control" id="address" name="address">
+          </div>
+          
+          <div class="form-group">
+            <label for="referred_by">Referred By:</label>
+            <input type="text" class="form-control" id="referred_by" name="referred_by">
+          </div>
+          <button type="submit" class="btn btn-primary">Save</button>     
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
+
+<script>
+    function openUpdateStatusModal(serviceId) {
+        let modal = document.getElementById("updateStatusModal" + serviceId);
+        if (modal) {
+            modal.style.display = "block";
+        } else {
+            console.error("Modal NOT found for Service ID:", serviceId);
+        }
+    }
+
+    function closeUpdateStatusModal(serviceId) {
+        let modal = document.getElementById("updateStatusModal" + serviceId);
+        if (modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        let modals = document.querySelectorAll("[id^='updateStatusModal']");
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    };
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const statusButtons = document.querySelectorAll('button[id^="statusButton"]');
+  
+      statusButtons.forEach((button) => {
+          const estimatedDate = new Date(button.dataset.estimatedDate);
+          const currentStatus = button.dataset.currentStatus;
+          const currentDate = new Date();
+          const applyId = button.dataset.serviceId; // Correct: Get apply ID
+  
+          // Check if the status is 'Assigned' and the current date is greater than the estimated date
+          if (currentStatus === 'Assigned' && currentDate > estimatedDate) {
+            // Update the button styles and text
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-danger');
+            button.textContent = 'Pending';
+
+            // Perform the fetch request to update the status
+            fetch(`/update-status/${applyId}/`, {  // Ensure URL uses applyId
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',  // CSRF token for security
+                },
+                body: JSON.stringify({
+                    status: 'Pending',  // Sending the status as "Pending"
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Status updated successfully:", data);
+                // Optionally update the UI further based on the response if needed
+            })
+            .catch(error => {
+                console.error('Error updating status:', error);
+                alert("Failed to update status. Please try again.");
+            });
+        }
+    });
+  });
+     
+</script>
+
+<script>
+  // for add customer
+  // Open the modal
+  function openCustomerModal() {
+      document.getElementById("customerModal").style.display = "block";
+  }
+
+  // Close the modal
+  function closeCustomerModal() {
+      document.getElementById("customerModal").style.display = "none";
+  }
+
+  // Close modal if clicking outside of the modal dialog
+  window.onclick = function(event) {
+      if (event.target == document.getElementById("customerModal")) {
+          closeCustomerModal();
+      }
+  }
+</script>
 
 <script>
 
