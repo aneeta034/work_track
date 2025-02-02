@@ -7,24 +7,122 @@ from loginapp.models import CustomUser
 import urllib
 import requests
 from django.http import HttpResponseRedirect
+from datetime import datetime
 
+from django.db.models import OuterRef, Subquery
 
+# Filter applied services based on the filter type
+def filter_applied_services(request):
+    filter_type = request.GET.get('filterType', 'date')  # Default to 'date'
+    query = request.GET.get('query', '')
+    start = request.GET.get('start', '')
+    end = request.GET.get('end', '')
+
+    # Start with all applied services
+    applied_services = Apply.objects.all()
+
+    if filter_type == "date" and query:
+        applied_services = applied_services.filter(created_at=query)
+    elif filter_type == "month" and query:
+        # Extract year and month from query (e.g., '2025-02')
+        year, month = query.split('-')
+        applied_services = applied_services.filter(created_month=month, created_year=year)
+    elif filter_type == "year" and query:
+        applied_services = applied_services.filter(created_year=query)
+    elif filter_type == "dateRange" and start and end:
+        applied_services = applied_services.filter(created_at__range=[start, end])
+    elif filter_type == "monthRange" and start and end:
+        # Extract year and month from start and end (e.g., '2025-02')
+        start_year, start_month = start.split('-')
+        end_year, end_month = end.split('-')
+
+        # Filter by range based on year and month
+        applied_services = applied_services.filter(
+            created_year__gte=start_year, created_month__gte=start_month,
+            created_year__lte=end_year, created_month__lte=end_month
+        )
+    elif filter_type == "yearRange" and start and end:
+        applied_services = applied_services.filter(created_year__gte=start, created_year__lte=end)
+
+    # Gather statistics for the dashboard
+    apply_services = Apply.objects.all()
+    customer_count = apply_services.values('name').distinct().count()
+    technician_count = apply_services.values('service_by').distinct().count()
+    total_services = apply_services.count()
+
+    # Prepare context to render the filtered data
+    context = {
+        'applied_services': applied_services,
+        'customer_count': customer_count,
+        'total_services': total_services,
+        'technician_count': technician_count,
+        'current_filter': filter_type  # Track the active filter
+    }
+    return render(request, 'admin_dashboard.html', context)
+
+# View to reset the applied services filter and show all tasks
+def reset_filter_applied_services(request):
+    # Reset the filter, show all applied services
+    applied_services = Apply.objects.all()
+
+    # Gather statistics for the dashboard
+    customer_count = applied_services.values('name').distinct().count()
+    technician_count = applied_services.values('service_by').distinct().count()
+    total_services = applied_services.count()
+
+    # Prepare context to render all services
+    context = {
+        'applied_services': applied_services,
+        'customer_count': customer_count,
+        'total_services': total_services,
+        'technician_count': technician_count,
+        'current_filter': 'all'  # No active filter
+    }
+    return render(request, 'admin_dashboard.html', context)
+
+def switch_task(request, status=None):
+    latest_status_subquery = CurrentStatus.objects.filter(
+        apply=OuterRef('pk')
+    ).order_by('-date').values('status')[:1]
+
+    # Base queryset: Get all Apply instances (irrespective of the technician)
+    services = Apply.objects.all().annotate(
+        latest_status=Subquery(latest_status_subquery)
+    )
+
+    # Filter services based on the status parameter
+    if status and status.lower() != 'all':
+        # Ensure the status filter is case-insensitive and exact
+        services = services.filter(latest_status__iexact=status)
+
+    # Counts for the cards
+    customer_count = Customer.objects.count()
+    total_services = Apply.objects.count()
+    technician_count = CustomUser.objects.filter(role='technician').count()
+    
+    context = {
+        'applied_services': services,
+        'customer_count': customer_count,
+        'total_services': total_services,
+        'technician_count': technician_count, 
+        'current_filter': status
+    }
+    return render(request, 'admin_dashboard.html', context)
 
 
 
 def add_technician(request):
     if request.method == "POST":
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '').strip()
 
+        # Validation checks
         if not username or not email or not password:
-            messages.error(request, "All fields are required.")
-            return HttpResponseRedirect(request.path)  # Redirect to the same page
+            return JsonResponse({"success": False, "error": "All fields are required."}, status=400)
 
         if CustomUser.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists. Please choose a different one.")
-            return HttpResponseRedirect(request.path)  # Redirect to the same page
+            return JsonResponse({"success": False, "error": "Username already exists. Please choose a different one."}, status=400)
 
         # Create the technician user
         technician = CustomUser.objects.create_user(
@@ -36,10 +134,9 @@ def add_technician(request):
         )
         technician.save()
 
-        messages.success(request, "Technician added successfully.")
-        return HttpResponseRedirect(request.path)  # Redirect to the same page
+        return JsonResponse({"success": True, "message": "Technician added successfully!"})
 
-    return render(request, 'admin_dashboard.html')
+    return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
 
 
 def list_technicians(request):

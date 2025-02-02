@@ -168,7 +168,22 @@
       border-bottom: 2.5px solid #2973B2; /* Add a persistent underline */
       text-decoration: none; /* Remove default underline if any */
   }
-  
+  /* Custom placeholder for month inputs */
+.month-placeholder::before {
+  content: attr(data-placeholder);
+  color: #6c757d; /* Placeholder text color */
+  position: absolute;
+  pointer-events: none;
+  padding-left: 0.5rem;
+}
+
+.month-placeholder::-webkit-datetime-edit {
+  color: transparent; /* Hide the default text */
+}
+
+.month-placeholder::-webkit-datetime-edit-fields-wrapper {
+  visibility: hidden; /* Hide the default fields */
+}
    /* Modal Styles */
 #addServiceModal.modal {
   display: none; /* Hidden by default */

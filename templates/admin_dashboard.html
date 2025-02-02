@@ -110,19 +110,44 @@
     <h3 class="mt-0 mb-2">Tasks</h3>
     <div class="navbar">
       <div class="nav-left">
-        <a href="{% url 'admin_dashboard' %}" class="filter-option" id="all-tasks" onclick="updateSelection('all')">All Tasks</a>
-        <a href="#" class="filter-option" id="pending" onclick="updateSelection('pending')">Assigned</a>
-        <a href="#" class="filter-option" id="completed" onclick="updateSelection('completed')">Completed</a>
-        <a href="#" class="filter-option" id="completed" onclick="updateSelection('completed')">Pending</a>
-
+        <a href="{% url 'switch_task'  %}" class="filter-option {% if current_filter != 'Assigned' and current_filter != 'Pending' and current_filter != 'Completed' %}selected{% endif %}">All Tasks</a>
+        <a href="{% url 'switch_task_filter' status='Assigned' %}" class="filter-option {% if current_filter == 'Assigned' %}selected{% endif %}">Assigned</a>
+        <a href="{% url 'switch_task_filter' status='Pending' %}" class="filter-option {% if current_filter == 'Pending' %}selected{% endif %}">Pending</a>
+        <a href="{% url 'switch_task_filter' status='Completed' %}" class="filter-option {% if current_filter == 'Completed' %}selected{% endif %}">Completed</a>
       </div>
-      <div class="nav-right">
-        <input type="search" class="form-control custom-search" placeholder="Search tasks">
-        <button class="btn btn-secondary btn-sm">Export Data</button>
-        <button class="btn btn-primary btn-sm">Add Service</button>
-      </div>
-      <div class="bold-line" id="bold-line"></div>
-
+      <form id="filterForm">
+        <div class="nav-right d-flex align-items-center">
+            <!-- Filter Icon -->
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-filter"></i> <!-- Font Awesome filter icon -->
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                    <li><a class="dropdown-item" href="#" data-filter="date">By Date</a></li>
+                    <li><a class="dropdown-item" href="#" data-filter="month">By Month</a></li>
+                    <li><a class="dropdown-item" href="#" data-filter="year">By Year</a></li>
+                    <li><a class="dropdown-item" href="#" data-filter="dateRange">By Date Range</a></li>
+                    <li><a class="dropdown-item" href="#" data-filter="monthRange">By Month Range</a></li>
+                    <li><a class="dropdown-item" href="#" data-filter="yearRange">By Year Range</a></li>
+                </ul>
+            </div>
+    
+            <!-- Search Bar -->
+            <input type="text" id="searchBar" name="query" class="form-control custom-search ms-2" placeholder="Search by Date">
+    
+            <!-- Range Fields -->
+            <div id="rangeFields" class="d-none d-flex ms-2">
+                <input type="text" id="startValue" name="start" class="form-control me-2" placeholder="Start">
+                <input type="text" id="endValue" name="end" class="form-control" placeholder="End">
+            </div>
+    
+            <!-- Buttons -->
+            <button type="button" class="btn btn-primary btn-sm ms-2" id="searchBtn">Search</button>
+            <button type="button" class="btn btn-secondary btn-sm ms-2" id="resetBtn">Reset</button>
+            <button type="button" class="btn btn-secondary btn-sm ms-2">Export Data</button>
+        </div>
+    </form>
+      
     </div>
     
 
@@ -213,7 +238,7 @@
 
 
 
-<!-- The Modal -->
+<!-- The Modal Add Customer-->
 <div class="modal" id="customerModal" style="display: none;">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -289,8 +314,11 @@
 
 
 {% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+  // for add cust
   // Open the modal
   function openCustomerModal() {
       document.getElementById("customerModal").style.display = "block";
@@ -322,7 +350,7 @@
   // Close modal if clicking outside of the modal dialog
   window.onclick = function(event) {
     if (event.target == document.getElementById("technicianModal")) {
-        closeTechnicianModal();
+        closeTechnician---Modal();
     }
 }
 
@@ -331,47 +359,123 @@
 
 
 
-  <!-- Bootstrap 5 JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Function to toggle the sidebar visibility
     function toggleSidebar() {
       const sidebar = document.querySelector('.sidebar');
       sidebar.classList.toggle('show');
     }
+    function updatePlaceholder(filter) {
+    const searchBar = document.getElementById("searchBar");
+    const rangeFields = document.getElementById("rangeFields");
+    const startValue = document.getElementById("startValue");
+    const endValue = document.getElementById("endValue");
 
-    document.addEventListener('DOMContentLoaded', function() {
-  const filterOptions = document.querySelectorAll('.filter-option');
-  const boldLine = document.getElementById('bold-line');
+    // Hide the Search Bar and Show Range Fields if a Range Filter is Selected
+    if (filter === "dateRange" || filter === "monthRange" || filter === "yearRange") {
+        searchBar.classList.add("d-none"); // Hide Search Bar
+        rangeFields.classList.remove("d-none"); // Show Range Fields
+    } else {
+        searchBar.classList.remove("d-none"); // Show Search Bar
+        rangeFields.classList.add("d-none"); // Hide Range Fields
+    }
 
-  // Function to update bold line position
-  function updateBoldLine(selectedOption) {
-    // Get the position and width of the selected option
-    const optionRect = selectedOption.getBoundingClientRect();
-    
-    // Set the width and position of the bold line
-    boldLine.style.width = `${optionRect.width}px`;
-    boldLine.style.left = `${optionRect.left - document.querySelector('.navbar').getBoundingClientRect().left}px`;
-  }
+    // Change the Search Bar Type and Placeholder Based on Filter Selection
+    if (filter === "date") {
+        searchBar.type = "date";
+        searchBar.placeholder = "Search by Date";
+    } else if (filter === "month") {
+        searchBar.type = "month";
+        searchBar.setAttribute("data-placeholder", "Search by Month");
+        searchBar.value = ""; // Clear the value
+        searchBar.classList.add("month-placeholder"); // Add a custom class
+    } else if (filter === "year") {
+        searchBar.type = "number";
+        searchBar.placeholder = "Search by Year";
+    } else {
+        // Update Range Fields for Date, Month, or Year Ranges
+        if (filter === "dateRange") {
+            startValue.type = "date";
+            endValue.type = "date";
+            startValue.placeholder = "Start Date";
+            endValue.placeholder = "End Date";
+        } else if (filter === "monthRange") {
+          startValue.type = "month";
+            endValue.type = "month";
+            // Workaround for month range placeholders
+            startValue.setAttribute("data-placeholder", "Start Month");
+            endValue.setAttribute("data-placeholder", "End Month");
+            startValue.value = ""; // Clear the value
+            endValue.value = ""; // Clear the value
+            startValue.classList.add("month-placeholder"); // Add a custom class
+            endValue.classList.add("month-placeholder"); // Add a custom class
+        } else if (filter === "yearRange") {
+            startValue.type = "number";
+            endValue.type = "number";
+            startValue.placeholder = "Start Year";
+            endValue.placeholder = "End Year";
+        }
+    }
+}
 
-  // Add click event listeners to all filter options
-  filterOptions.forEach(option => {
-    option.addEventListener('click', function() {
-      // Remove selected class from all filter options
-      filterOptions.forEach(item => item.classList.remove('selected'));
-      // Add selected class to the clicked option
-      this.classList.add('selected');
-      
-      // Update bold line position and width
-      updateBoldLine(this);
-    });
-  });
-
-  // Default selection on page load
-  const defaultSelection = document.getElementById('all-tasks');
-  defaultSelection.classList.add('selected');
-  updateBoldLine(defaultSelection); // Set the initial position of the bold line
+document.addEventListener("input", function (e) {
+    if (e.target.type === "month" && e.target.classList.contains("month-placeholder")) {
+        if (e.target.value) {
+            e.target.classList.remove("month-placeholder");
+        } else {
+            e.target.classList.add("month-placeholder");
+        }
+    }
 });
+
+// Handle filter selection from the dropdown
+document.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', function (e) {
+        e.preventDefault();
+        const filter = this.getAttribute('data-filter');
+        updatePlaceholder(filter);
+    });
+});
+
+// Handle search button click
+document.getElementById("searchBtn").addEventListener("click", function () {
+    const filter = document.querySelector('.dropdown-item.active')?.getAttribute('data-filter') || 'date';
+    const searchBar = document.getElementById("searchBar");
+    const startValue = document.getElementById("startValue");
+    const endValue = document.getElementById("endValue");
+
+    let query = "";
+
+    // Check if values exist before constructing the query
+    if ((filter === "dateRange" || filter === "monthRange" || filter === "yearRange") && startValue.value && endValue.value) {
+        query = `start=${startValue.value}&end=${endValue.value}`;
+    } else if (searchBar.value.trim() !== "") {
+        query = `query=${searchBar.value.trim()}`;
+    } else {
+        // If no valid values exist, return early and prevent navigation
+        alert("Please enter a search value before proceeding.");
+        return;
+    }
+
+    // Construct the URL with the filter type and query
+    const baseUrl = "{% url 'filter_applied_services' %}";
+    const url = `${baseUrl}?filterType=${filter}&${query}`;
+
+    // Redirect to the constructed URL
+    window.location.href = url;
+});
+
+// Reset the filter to show all tasks
+document.getElementById("resetBtn").addEventListener("click", function () {
+    document.getElementById("searchBar").value = ""; // Clear search bar
+    document.getElementById("searchBar").classList.remove("d-none"); // Show search bar
+    document.getElementById("rangeFields").classList.add("d-none"); // Hide range fields
+    updatePlaceholder("date"); // Reset to default filter
+    window.location.href = "{% url 'reset_filter_applied_services' %}"; // Redirect to reset and show all services
+});
+
+// Initial call to update placeholders based on the default filter option
+updatePlaceholder("date");
   </script>
 </body>
 </html>
