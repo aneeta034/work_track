@@ -162,8 +162,8 @@ def technician_dashboard(request):
         'total_services': total_services,
         'pending_task': pending_task,
         'completed_task': completed_task,
-       
         
          
     }
     return render(request, 'technician_dashboard.html', context)
+

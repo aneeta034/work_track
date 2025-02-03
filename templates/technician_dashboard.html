@@ -107,8 +107,12 @@
   <div class="sidebar">
     <h5>Technician Dashboard</h5>
     <a href="{% url 'technician_dashboard' %}"><i class="fas fa-home"></i> Home</a>
+
+    
+    <a href="#" onclick="openModal()" ><i class="fas fa-tools" ></i> Add Service</a>
+
     <a href="#" onclick="openCustomerModal()"><i class="fas fa-user-plus"></i> Add Customer</a>
-    <a href="#" ><i class="fas fa-tools" ></i> Add Service</a>
+   
     <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
   </div>
 
@@ -156,10 +160,10 @@
     <h3 class="mt-0 mb-2">Tasks</h3>
     <div class="navbar">
       <div class="nav-left">
-          <a href="{% url 'technician_dashboard' %}" class="filter-option {% if not current_filter or current_filter == 'all'  %}selected{% endif %}">All Tasks</a>
-          <a href="" class="filter-option {% if current_filter == 'Assigned' %}selected{% endif %}">Assigned</a>
-          <a href="" class="filter-option {% if current_filter == 'Pending' %}selected{% endif %}">Pending</a>
-          <a href="" class="filter-option {% if current_filter == 'Completed' %}selected{% endif %}">Completed</a>
+        <a href="{% url 'switch_tasks'  %}" class="filter-option {% if current_filter != 'Assigned' and current_filter != 'Pending' and current_filter != 'Completed' %}selected{% endif %}">All Tasks</a>
+        <a href="{% url 'switch_tasks_filter' status='Assigned' %}" class="filter-option {% if current_filter == 'Assigned' %}selected{% endif %}">Assigned</a>
+        <a href="{% url 'switch_tasks_filter' status='Pending' %}" class="filter-option {% if current_filter == 'Pending' %}selected{% endif %}">Pending</a>
+        <a href="{% url 'switch_tasks_filter' status='Completed' %}" class="filter-option {% if current_filter == 'Completed' %}selected{% endif %}">Completed</a>
       </div>
       <div class="nav-right">
         <input type="search" class="form-control custom-search" placeholder="Search tasks">
@@ -168,7 +172,105 @@
       </div>
     </div>
   
- 
+    <!-- Add Service Modal -->
+<div id="addServiceModal" class="modal">
+  <div class="modal-content">
+    <!-- Top Bar -->
+    <div class="modal-topbar">
+      <h2>Add Service</h2>
+      <span class="close" onclick="closeModal()">&times;</span>
+    </div>
+
+    <form id="addServiceForm" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="modal-grid">
+        <!-- Column 1 -->
+        <div class="modal-column">
+          <div class="form-group">
+            <label for="contact_number">Customer Number</label>
+            <input type="text" id="contact_number" name="contact_number" oninput="searchCustomer()">
+            <div id="customer_results"></div>
+            <div id="customer_not_found" class="text-danger" style="display: none;">Customer not found. Please enter details manually.</div>
+            <small id="customer_error" class="text-danger"></small>
+          </div>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" readonly>
+          </div>
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" readonly>
+          </div>
+          <div class="form-group">
+            <label for="whatsapp_number">WhatsApp Number</label>
+            <input type="text" id="whatsapp_number" name="whatsapp_number" readonly>
+          </div>
+          <div class="form-group checkbox-group">
+            <input type="checkbox" id="same_as_contact" onchange="copyContactToWhatsApp()">
+            <label for="same_as_contact">Same as Contact Number</label>
+          </div>
+          <div class="form-group">
+            <label for="referred_by">Referred By</label>
+            <input type="text" id="referred_by" name="referred_by" readonly>
+          </div>
+        </div>
+
+        <!-- Column 2 -->
+        <div class="modal-column">
+          <div class="form-group">
+            <label for="service_by">Service By</label>
+            <select id="service_by" name="service_by">
+              <option value="">Select a technician</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="work_type">Work Type</label>
+            <select id="work_type" name="work_type">
+              <option value="sale">Sale</option>
+              <option value="service">Service</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="item_name_or_number">Item Name/Number</label>
+            <input type="text" id="item_name_or_number" name="item_name_or_number">
+          </div>
+          <div class="form-group">
+            <label for="issue">Issue Description</label>
+            <textarea id="issue" name="issue" rows="7"></textarea>
+          </div>
+        </div>
+
+        <!-- Column 3 -->
+        <div class="modal-column">
+          <div class="form-group">
+            <label for="photos_of_item">Upload Photo</label>
+            <input type="file" id="photos_of_item" name="photos_of_item">
+          </div>
+          <div class="form-group">
+            <label for="estimation_document">Upload Document</label>
+            <input type="file" id="estimation_document" name="estimation_document">
+          </div>
+          <div class="form-group">
+            <label for="estimated_price">Estimated Price</label>
+            <input type="text" id="estimated_price" name="estimated_price">
+          </div>
+          <div class="form-group">
+            <label for="estimated_date">Estimated Date</label>
+            <input type="date" id="estimated_date" name="estimated_date">
+          </div>
+          <div class="form-group">
+            <label for="any_other_comments">Comments</label>
+            <textarea id="any_other_comments" name="any_other_comments"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 
   <!-- Table Section -->
   <div class="table-responsive mt-2">
@@ -228,7 +330,7 @@
               {% endif %}
             </div>
           </td>
-          <td>{{ service.reffered_by }}</td>
+          <td>{{ service.referred_by }}</td>
           <td>{{ service.get_work_type_display }}</td>
           <td>{{ service.item_name_or_number }}</td>
           <td colspan="2">{{ service.issue }}</td> <!-- Span across two columns -->
@@ -237,8 +339,8 @@
           <td>{{ service.service_by.username }}</td>
           <td>
             <ul class="files-list">
-              <li><a href="{{ service.estimation_document.url }}" target="_blank">Document, </a>
-              <a href="{{ service.photos_of_item.url }}" target="_blank">Photo</a></li>
+              <li><a href="#" target="_blank">Document, </a>
+              <a href="#" target="_blank">Photo</a></li>
               <div class="icon-container">
                 <a href="#" class="icon-link">
                   <i class="bi bi-info-square-fill" aria-hidden="true"></i>
@@ -288,7 +390,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Update Status</h5>
-                    <button type="button" class="close" onclick="closeUpdateStatusModal({{ service.id }})">
+                    <button type="button" class="close" onclick="closeUpdateStatusModal( {{service.id }} )">
                         <span>&times;</span>
                     </button>
                 </div>
@@ -727,6 +829,167 @@ window.onclick = function(event) {
      const sidebar = document.querySelector('.sidebar');
      sidebar.classList.toggle('show');
    }
+   const notFoundDiv = document.getElementById('customer_not_found');
+  const resultsDiv = document.getElementById('customer_results'); 
+
+function searchCustomer() {
+  const query = document.getElementById('contact_number').value;
+
+  console.log('Search query:', query); // Debugging
+  
+  resultsDiv.innerHTML = ''; // Clear previous results
+  notFoundDiv.style.display = 'none'; 
+
+  fetch(`/technician/search_customer/?q=${query}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log('Search results:', data);
+      if (data.exists) {
+                // Autofill the fields if the customer exists
+                data.results.forEach(customer => {
+                    const div = document.createElement('div');
+                    div.textContent = `${customer.name} - ${customer.contact_number}`;
+                    div.onclick = () => selectCustomer(customer);
+                    resultsDiv.appendChild(div);
+                });
+            } else {
+                // Enable the fields for manual input if the customer doesn't exist
+                enableManualInput();
+                notFoundDiv.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching customer data:', error);
+            resultsDiv.innerHTML = '<div>Error loading results. Please try again later.</div>';
+            notFoundDiv.style.display = 'none'; 
+        });
+}
+
+function enableManualInput() {
+    // Enable the fields for manual input
+    document.getElementById('name').readOnly = false;
+    document.getElementById('address').readOnly = false;
+    document.getElementById('whatsapp_number').readOnly = false;
+    document.getElementById('referred_by').readOnly = false;
+}
+
+function copyContactToWhatsApp() {
+    const sameAsContact = document.getElementById('same_as_contact');
+    const customerNumber = document.getElementById('contact_number'); // Use customer_number
+    const whatsappNumber = document.getElementById('whatsapp_number');
+
+    if (sameAsContact.checked) {
+        whatsappNumber.value = customerNumber.value; // Copy customer number to WhatsApp number
+    } else {
+        whatsappNumber.value = ''; // Clear WhatsApp number if unchecked
+    }
+}
+
+function selectCustomer(customer) {
+    // Autofill the fields when a customer is selected
+    document.getElementById('contact_number').value = customer.contact_number;
+    document.getElementById('name').value = customer.name;
+    document.getElementById('address').value = customer.address;
+    document.getElementById('whatsapp_number').value = customer.whatsapp_number;
+    document.getElementById('referred_by').value = customer.reffered_by;
+
+    // Make the fields read-only again
+    document.getElementById('name').readOnly = true;
+    document.getElementById('address').readOnly = true;
+    document.getElementById('whatsapp_number').readOnly = true;
+    document.getElementById('referred_by').readOnly = true;
+
+    
+    // Clear the search results and hide the "not found" message
+  document.getElementById('customer_results').innerHTML = '';
+  document.getElementById('customer_not_found').style.display = 'none';
+
+}
+      
+    $(document).ready(function() {
+        // Fetch technicians via AJAX
+        $.ajax({
+            url: '/technician/get_users/',  // URL to the API endpoint
+            method: 'GET',
+            success: function(data) {
+                // Populate the dropdown
+                const dropdown = $('#service_by');
+                dropdown.empty();  // Clear existing options
+                dropdown.append('<option value="">Select a technician</option>');  // Add default option
+                data.forEach(function(technician) {
+                    dropdown.append(`<option value="${technician.id}">${technician.username}</option>`);
+                });
+            },
+            error: function(error) {
+                console.error('Error fetching technicians:', error);
+            }
+        });
+    });
+
+  
+    // Handle form submission
+    document.getElementById('addServiceForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const form = document.getElementById('addServiceForm');
+      const formData = new FormData(this);
+      fetch('/technician/add_service/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+            if (data.is_new_customer) {
+                alert('Customer and service added successfully!');  // Display this message only for new customers
+            } else {
+                alert('Service added successfully!');  // Display this message for existing customers
+            }
+            window.location.reload();  // Optionally reload the page or update the UI
+        } else {
+            alert('Error: ' + (data.message || JSON.stringify(data.errors)));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again later.');
+    });
+});
+
+    // Modal handling
+    const modal = document.getElementById('addServiceModal');
+
+    // Open the modal
+function openModal() {
+  document.getElementById('addServiceForm').reset();
+  document.getElementById('customer_results').innerHTML = '';
+  document.getElementById('name').readOnly = false;
+  document.getElementById('address').readOnly = false;
+  document.getElementById('whatsapp_number').readOnly = false;
+  document.getElementById('referred_by').readOnly = false;
+  document.getElementById('addServiceModal').style.display = 'flex';
+}
+
+// Close the modal
+function closeModal() {
+  notFoundDiv.style.display = 'none'; 
+  document.getElementById('addServiceModal').style.display = 'none';
+}
+
+// Prevent closing when clicking outside the modal
+document.getElementById('addServiceModal').addEventListener('click', function (event) {
+  if (event.target === this) {
+    event.stopPropagation(); // Prevent closing
+  }
+});
+
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        closeModal();
+      }
+    }
 
   </script>
   

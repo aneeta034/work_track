@@ -11,5 +11,8 @@ urlpatterns = [
     path('apply-for-service/',views.apply_for_service,name='apply_for_service'),
     path("update-applied-service/<int:service_id>/",views.update_applied_service, name="update_applied_service"),
     path('delete-applied-service/<int:service_id>/',views.delete_applied_service,name='delete_applied_service'),
-
+    path('switch_task/', views.switch_task, name='switch_task'),
+    path('switch_task/<str:status>/', views.switch_task, name='switch_task_filter'),
+     path('filter-applied-services/', views.filter_applied_services, name='filter_applied_services'),
+    path('reset-filter-applied-services/', views.reset_filter_applied_services, name='reset_filter_applied_services'),
 ]
