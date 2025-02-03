@@ -1,5 +1,6 @@
 from django.db import models
 from loginapp.models import CustomUser
+from django.utils.timezone import now
 
 from datetime import date
 
