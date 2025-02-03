@@ -335,10 +335,11 @@ def view_applied_services(request):
     }
     return render(request, 'display_applied_services.html',dict_services)
 
+
+
 def update_applied_service(request, service_id):
     applied_service = get_object_or_404(Apply, id=service_id)
-    users = CustomUser.objects.all()  # Fetch all users for the dropdown
-
+    
     if request.method == "POST":
         service_by_id = request.POST.get('service_by')  # Get the selected user ID
         work_type = request.POST.get('work_type')
@@ -354,8 +355,7 @@ def update_applied_service(request, service_id):
             service_by_user = CustomUser.objects.get(id=service_by_id)  # Fetch the user object
             applied_service.service_by = service_by_user
         except CustomUser.DoesNotExist:
-            messages.error(request, "Invalid user selected for service.")
-            return redirect('update_applied_service', service_id=service_id)
+            return JsonResponse({"error": "Invalid user selected for service."}, status=400)
 
         applied_service.work_type = work_type
         applied_service.item_name_or_number = item_name_or_number
@@ -369,14 +369,28 @@ def update_applied_service(request, service_id):
         applied_service.any_other_comments = any_other_comments
         applied_service.save()
 
-        messages.success(request, "Applied service updated successfully!")
-        return redirect('admin_dashboard')
+        # Return updated data as JSON response
+        updated_data = {
+            "id": applied_service.id,
+            "service_by": applied_service.service_by.username,
+            "work_type": applied_service.work_type,
+            "item_name_or_number": applied_service.item_name_or_number,
+            "issue": applied_service.issue,
+            "estimated_price": applied_service.estimated_price,
+            "estimated_date": applied_service.estimated_date.strftime('%Y-%m-%d') if applied_service.estimated_date else "",
+            "any_other_comments": applied_service.any_other_comments,
+        }
+        return JsonResponse(updated_data)
 
+    # If it's a GET request, just render the modal form without any processing.
+    users = CustomUser.objects.all()
     context = {
         'applied_service': applied_service,
-        'users': users,  # Pass users for the dropdown
+        'users': users,
     }
-    return render(request, 'update_applied_service.html', context)
+    return render(request, 'admin_dashboard.html', context)
+
+
 
 def delete_applied_service(request, service_id):
     if request.method == "POST":

@@ -36,22 +36,20 @@ def logout_view(request):
 
 @login_required
 def admin_dashboard(request):
-    applied_services = Apply.objects.all()
-    if not applied_services.exists():
-        applied_services = None 
-
+    applied_services = Apply.objects.prefetch_related('current_status_entries').all()
+    
     customer_count = Customer.objects.count()
     total_services = Apply.objects.count()
-    # pending_count = CurrentStatus.objects.filter(status='Pending').count()
-    # completed_count = CurrentStatus.objects.filter(status='Completed').count()
     technician_count = CustomUser.objects.filter(role='technician').count()
     
+   
+    for service in applied_services:
+        service.latest_status = service.current_status_entries.last()  
+
     context = {
         'applied_services': applied_services,
         'customer_count': customer_count,
         'total_services': total_services,
-        # 'pending_count': pending_count,
-        # 'completed_count': completed_count,
         'technician_count': technician_count, 
     }
     return render(request, 'admin_dashboard.html', context)

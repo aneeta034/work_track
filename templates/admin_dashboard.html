@@ -27,9 +27,6 @@
     }
   </style>
 
-  
-
-
 
 </head>
 <body>
@@ -154,9 +151,9 @@
             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
               <span>{{ service.id }}</span> <!-- Display ID on the first line, centered -->
               <div style="display: flex; margin-top: 5px;">
-                <a href="{% url 'update_applied_service' service.id %}" class="icon-link ms-2">
+                <a href="#" onclick="openUpdateserviceModal({{ applied_service.id }})" class="icon-link ms-2">
                   <i class="fa fa-pencil-alt" aria-hidden="true" title="Update"></i>
-                </a>
+              </a>
                 <form action="{% url 'delete_applied_service' service.id %}" method="post" style="display:inline-block; margin-left: 5px;">
                   {% csrf_token %}
                   <button type="submit" class="icon-link delete-icon" title="Delete">
@@ -204,6 +201,19 @@
             </ul>
           </td>
           <td>{{ service.any_other_comments }}</td>
+          <td>
+            {% if service.latest_status %}
+                <span class="
+                    {% if service.latest_status.status == 'Assigned' %}text-primary{% endif %}
+                    {% if service.latest_status.status == 'Pending' %}text-danger{% endif %}
+                    {% if service.latest_status.status == 'Completed' %}text-success{% endif %}
+                ">
+                    {{ service.latest_status.status }}
+                </span>
+            {% else %}
+                <span class="text-muted">No Status</span>
+            {% endif %}
+        </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -212,6 +222,74 @@
 </div>
 
 
+
+<!-- Update Service Modal -->
+<div class="modal" id="updateserviceModal"  >
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" >Update Service Details</h5>
+              <button type="button" class="close"  onclick="closeUpdateserviceModal()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+          <form id="updateServiceForm" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              
+                  
+                  <div class="form-group">
+                    <label for="service_by">Service By:</label>
+                    <select name="service_by" id="service_by"  class="form-control" required>
+                        {% for user in users %}
+                            <option value="{{ user.id }}" {% if applied_service.service_by.id == user.id %}selected{% endif %}>
+                                {{ user.username }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="work_type">Work Type:</label>
+                    <select id="work_type" name="work_type" class="form-control">
+                        <option value="sale" {% if applied_service.work_type == 'sale' %} selected {% endif %}>Sale</option>
+                        <option value="service" {% if applied_service.work_type == 'service' %} selected {% endif %}>Service</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="item_name_or_number">Item Name/Number:</label>
+                      <input type="text" id="item_name_or_number" name="item_name_or_number" class="form-control" value="{{ applied_service.item_name_or_number }}">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="issue">Issue:</label>
+                    <textarea id="issue" name="issue" class="form-control">{{ applied_service.issue }}</textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="estimated_price">Estimated Price:</label>
+                    <input type="text" id="estimated_price" name="estimated_price" class="form-control" value="{{ applied_service.estimated_price }}">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="estimated_date">Estimated Date:</label>
+                    <input type="date" id="estimated_date" name="estimated_date" class="form-control" value="{{ applied_service.estimated_date|date:'Y-m-d' }}">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="any_other_comments">Any Other Comments:</label>
+                    <textarea id="any_other_comments" name="any_other_comments" class="form-control">{{ applied_service.any_other_comments }}</textarea>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" onclick="closeUpdateserviceModal()">Close</button>
+                  <button type="submit" class="btn btn-success">Update</button>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
 
 <!-- The Modal Add Customer-->
 <div class="modal" id="customerModal" style="display: none;">
@@ -289,6 +367,47 @@
 
 
 {% endblock %}
+
+<script>
+  function openUpdateserviceModal() {
+    document.getElementById("updateserviceModal").style.display = "block";
+}
+
+// Close the modal
+function closeUpdateserviceModal() {
+  document.getElementById("updateserviceModal").style.display = "none";
+}
+
+// Close modal if clicking outside of the modal dialog
+window.onclick = function(event) {
+  if (event.target == document.getElementById("updateserviceModal")) {
+      closeUpdateserviceModal();
+  }
+}
+  
+
+  // Optional: Auto open modal with data when triggered
+  function openUpdateServiceModal(serviceId) {
+    // Open modal logic (can be filled with dynamic data)
+    const modal = document.getElementById("updateServiceModal");
+    var modalInstance = new bootstrap.Modal(modal);
+    modalInstance.show();
+    
+    // Fetch data dynamically for the service and populate fields
+    fetch(`/update-applied-service/${serviceId}/`)
+      .then(response => response.json())
+      .then(data => {
+        // Populate the form with data (example)
+        document.getElementById("service_by").value = data.service_by;  
+        document.getElementById("work_type").value = data.work_type;
+        document.getElementById("item_name_or_number").value = data.item_name_or_number;
+        document.getElementById("issue").value = data.issue;
+        document.getElementById("estimated_price").value = data.estimated_price;
+        document.getElementById("estimated_date").value = data.estimated_date;
+        document.getElementById("any_other_comments").value = data.any_other_comments;
+      });
+  }
+</script>
 
 <script>
   // for add cust
