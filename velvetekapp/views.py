@@ -21,16 +21,26 @@ def filter_applied_services(request):
     # Start with all applied services
     applied_services = Apply.objects.all()
 
+    
     if filter_type == "date" and query:
+        # Assuming query is a date in the format 'YYYY-MM-DD'
         applied_services = applied_services.filter(created_at=query)
+        
     elif filter_type == "month" and query:
         # Extract year and month from query (e.g., '2025-02')
         year, month = query.split('-')
-        applied_services = applied_services.filter(created_month=month, created_year=year)
+        applied_services = applied_services.filter(
+            created_at__year=year, created_at__month=month
+        )
+        
     elif filter_type == "year" and query:
-        applied_services = applied_services.filter(created_year=query)
+        # Filter by year
+        applied_services = applied_services.filter(created_at__year=query)
+        
     elif filter_type == "dateRange" and start and end:
+        # Filter by date range (start and end dates)
         applied_services = applied_services.filter(created_at__range=[start, end])
+        
     elif filter_type == "monthRange" and start and end:
         # Extract year and month from start and end (e.g., '2025-02')
         start_year, start_month = start.split('-')
@@ -38,13 +48,14 @@ def filter_applied_services(request):
 
         # Filter by range based on year and month
         applied_services = applied_services.filter(
-            created_year__gte=start_year, created_month__gte=start_month,
-            created_year__lte=end_year, created_month__lte=end_month
+            Q(created_at__year__gte=start_year, created_at__month__gte=start_month) &
+            Q(created_at__year__lte=end_year, created_at__month__lte=end_month)
         )
+        
     elif filter_type == "yearRange" and start and end:
-        applied_services = applied_services.filter(created_year__gte=start, created_year__lte=end)
-
-    # Gather statistics for the dashboard
+        # Filter by year range
+        applied_services = applied_services.filter(created_at__year__gte=start, created_at__year__lte=end)
+        # Gather statistics for the dashboard
     apply_services = Apply.objects.all()
     customer_count = apply_services.values('name').distinct().count()
     technician_count = apply_services.values('service_by').distinct().count()

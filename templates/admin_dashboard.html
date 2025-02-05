@@ -365,6 +365,8 @@
       const sidebar = document.querySelector('.sidebar');
       sidebar.classList.toggle('show');
     }
+
+    let filter='date'
     function updatePlaceholder(filter) {
     const searchBar = document.getElementById("searchBar");
     const rangeFields = document.getElementById("rangeFields");
@@ -432,19 +434,19 @@ document.addEventListener("input", function (e) {
 document.querySelectorAll('.dropdown-item').forEach(item => {
     item.addEventListener('click', function (e) {
         e.preventDefault();
-        const filter = this.getAttribute('data-filter');
+        filter = this.getAttribute('data-filter');
         updatePlaceholder(filter);
     });
 });
 
 // Handle search button click
 document.getElementById("searchBtn").addEventListener("click", function () {
-    const filter = document.querySelector('.dropdown-item.active')?.getAttribute('data-filter') || 'date';
     const searchBar = document.getElementById("searchBar");
     const startValue = document.getElementById("startValue");
     const endValue = document.getElementById("endValue");
 
     let query = "";
+    
 
     // Check if values exist before constructing the query
     if ((filter === "dateRange" || filter === "monthRange" || filter === "yearRange") && startValue.value && endValue.value) {
@@ -460,7 +462,6 @@ document.getElementById("searchBtn").addEventListener("click", function () {
     // Construct the URL with the filter type and query
     const baseUrl = "{% url 'filter_applied_services' %}";
     const url = `${baseUrl}?filterType=${filter}&${query}`;
-
     // Redirect to the constructed URL
     window.location.href = url;
 });

@@ -1,6 +1,6 @@
 from django.db import models
 from loginapp.models import CustomUser
-
+from django.utils import timezone
 from datetime import date
 
 # Create your models here.
@@ -32,14 +32,7 @@ class Apply(models.Model):
     estimated_price = models.CharField(max_length=255)
     estimated_date = models.DateField(null=True)
     any_other_comments = models.CharField(max_length=255,null=True,blank=True)
-    created_at = models.DateField(auto_now_add=True)  # Automatically store date
-    created_month = models.IntegerField()
-    created_year = models.IntegerField()
-
-    def save(self, *args, **kwargs):
-        self.created_month = self.created_at.month
-        self.created_year = self.created_at.year
-        super().save(*args, **kwargs)
+    created_at = models.DateField(default=timezone.now)
 
     def __str__(self):
         return self.name
