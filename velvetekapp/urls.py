@@ -15,4 +15,7 @@ urlpatterns = [
     path('switch_task/<str:status>/', views.switch_task, name='switch_task_filter'),
      path('filter-applied-services/', views.filter_applied_services, name='filter_applied_services'),
     path('reset-filter-applied-services/', views.reset_filter_applied_services, name='reset_filter_applied_services'),
+    path('add_service/', views.add_service, name='add_service'),
+    path('search_customer/', views.search_customer, name='search_customer'),
+    path('get_users/', views.get_users, name='get_users'),
 ]

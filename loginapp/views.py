@@ -54,7 +54,7 @@ def admin_dashboard(request):
         # 'pending_count': pending_count,
         # 'completed_count': completed_count,
         'technician_count': technician_count, 
-        'MEDIA_URL':settings.MEDIA_URl
+        'MEDIA_URL':settings.MEDIA_URL
     }
     return render(request, 'admin_dashboard.html', context)
 
