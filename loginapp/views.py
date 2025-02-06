@@ -6,6 +6,7 @@ from velvetekapp.models import Apply,Customer
 from technicianapp.models import CurrentStatus
 from .models import CustomUser
 from django.contrib import messages
+from django.conf import settings
 import requests
 import urllib
 
@@ -53,6 +54,7 @@ def admin_dashboard(request):
         # 'pending_count': pending_count,
         # 'completed_count': completed_count,
         'technician_count': technician_count, 
+        'MEDIA_URL':settings.MEDIA_URl
     }
     return render(request, 'admin_dashboard.html', context)
 
@@ -164,7 +166,7 @@ def technician_dashboard(request):
         'total_services': total_services,
         'pending_task': pending_task,
         'completed_task': completed_task,
-        
+        'MEDIA_URL': settings.MEDIA_URL, 
          
     }
     return render(request, 'technician_dashboard.html', context)

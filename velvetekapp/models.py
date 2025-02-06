@@ -27,7 +27,7 @@ class Apply(models.Model):
     work_type=models.CharField(max_length=10,choices=WORK_TYPE_CHOICES,default='sale')
     item_name_or_number = models.CharField(max_length=255,null=True)
     issue = models.TextField(blank=True,null=True) #applicable for 'services'
-    photos_of_item =models.ImageField(upload_to='images',null=True, blank=True)#option for 'services'
+    photos_of_item =models.TextField(null=True, blank=True)
     estimation_document =models.FileField(upload_to='pdf',null=True,blank=True)    
     estimated_price = models.CharField(max_length=255)
     estimated_date = models.DateField(null=True)
@@ -40,4 +40,20 @@ class Apply(models.Model):
     def str(self):
         return f"{self.nature_of_work.capitalize()} - {self.item_name_or_number}"
 
+    def save_photos(self, photos):
+        """Custom method to save multiple photos"""
+        photo_paths = []
+        for photo in photos:
+            # Assuming 'photo' is a file object, you can save it to the file system
+            photo_path = 'images/' + photo.name
+            with open(photo_path, 'wb') as f:
+                f.write(photo.read())
+            photo_paths.append(photo_path)
 
+        # Save photo paths as a comma-separated string
+        self.photos_of_item = ",".join(photo_paths)
+        self.save()
+
+    def get_photos(self):
+        """Custom method to retrieve photos as a list"""
+        return self.photos_of_item.split(",") if self.photos_of_item else []

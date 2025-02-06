@@ -7,8 +7,9 @@ from .models import Apply,FuelCharge,FoodAllowance,ItemPurchased,VendorInfo,Curr
 import urllib
 import requests
 from django.core.management.base import BaseCommand
+from django.conf import settings
 import json
-
+from django.core.files.storage import default_storage
 # Create your views here.
 from .forms import AppliedServiceForm
 from django.db.models.functions import Replace
@@ -45,7 +46,8 @@ def switch_tasks(request, status=None):
         'total_services': total_services,
         'pending_task': pending_task,
         'completed_task': completed_task,
-        'current_filter':status
+        'current_filter':status,
+        'MEDIA_URL': settings.MEDIA_URL, 
     }
     return render(request, 'technician_dashboard.html', context)
 
@@ -61,11 +63,8 @@ def add_service(request):
 
         # Check if the customer already exists using all parameters
         customer = Customer.objects.filter(
-            name=name,
-            address=address,
             contact_number=contact_number,
             whatsapp_number=whatsapp_number,
-            referred_by=referred_by,
         ).first()
 
         is_new_customer = False
@@ -86,7 +85,16 @@ def add_service(request):
 
         form = AppliedServiceForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            apply_instance = form.save(commit=False)
+
+            image_paths = []
+            for image in request.FILES.getlist('photos_of_item'):
+                image_name = default_storage.save(f'upload/{image.name}', image)
+                image_paths.append(image_name)
+    
+            # Save image paths as a comma-separated string
+            apply_instance.photos_of_item = ",".join(image_paths)
+            apply_instance.save()
             return JsonResponse({'success': True,'message': 'Service added successfully!',
                 'is_new_customer': is_new_customer,})
         else:
