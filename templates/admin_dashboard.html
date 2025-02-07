@@ -112,11 +112,27 @@
     <h3 class="mt-0 mb-2">Tasks</h3>
     <div class="navbar">
       <div class="nav-left">
-        <a href="{% url 'switch_task'  %}" class="filter-option {% if current_filter != 'Assigned' and current_filter != 'Pending' and current_filter != 'Completed' %}selected{% endif %}">All Tasks</a>
-        <a href="{% url 'switch_task_filter' status='Assigned' %}" class="filter-option {% if current_filter == 'Assigned' %}selected{% endif %}">Assigned</a>
-        <a href="{% url 'switch_task_filter' status='Pending' %}" class="filter-option {% if current_filter == 'Pending' %}selected{% endif %}">Pending</a>
-        <a href="{% url 'switch_task_filter' status='Completed' %}" class="filter-option {% if current_filter == 'Completed' %}selected{% endif %}">Completed</a>
-      </div>
+        <a href="{% url 'switch_task' %}?filterType={{ request.GET.filterType }}&query={{ request.GET.query }}&start={{ request.GET.start }}&end={{ request.GET.end }}" 
+           class="filter-option {% if current_filter != 'Assigned' and current_filter != 'Pending' and current_filter != 'Completed' %}selected{% endif %}">
+            All Tasks
+        </a>
+    
+        <a href="{% url 'switch_task_filter' status='Assigned' %}?filterType={{ request.GET.filterType }}&query={{ request.GET.query }}&start={{ request.GET.start }}&end={{ request.GET.end }}" 
+           class="filter-option {% if current_filter == 'Assigned' %}selected{% endif %}">
+            Assigned
+        </a>
+    
+        <a href="{% url 'switch_task_filter' status='Pending' %}?filterType={{ request.GET.filterType }}&query={{ request.GET.query }}&start={{ request.GET.start }}&end={{ request.GET.end }}" 
+           class="filter-option {% if current_filter == 'Pending' %}selected{% endif %}">
+            Pending
+        </a>
+    
+        <a href="{% url 'switch_task_filter' status='Completed' %}?filterType={{ request.GET.filterType }}&query={{ request.GET.query }}&start={{ request.GET.start }}&end={{ request.GET.end }}" 
+           class="filter-option {% if current_filter == 'Completed' %}selected{% endif %}">
+            Completed
+        </a>
+    </div>
+    
       <form id="filterForm">
         <div class="nav-right d-flex align-items-center">
             <!-- Filter Icon -->
@@ -146,7 +162,7 @@
             <!-- Buttons -->
             <button type="button" class="btn btn-primary btn-sm ms-2" id="searchBtn">Search</button>
             <button type="button" class="btn btn-secondary btn-sm ms-2" id="resetBtn">Reset</button>
-            <button type="button" class="btn btn-secondary btn-sm ms-2">Export Data</button>
+            <button type="button" class="btn btn-secondary btn-sm ms-2" onclick="exportData()">Export Data</button>
         </div>
     </form>
       
@@ -477,69 +493,7 @@
       sidebar.classList.toggle('show');
     }
 
-    let filter='date'
-    function updatePlaceholder(filter) {
-    const searchBar = document.getElementById("searchBar");
-    const rangeFields = document.getElementById("rangeFields");
-    const startValue = document.getElementById("startValue");
-    const endValue = document.getElementById("endValue");
-
-    // Hide the Search Bar and Show Range Fields if a Range Filter is Selected
-    if (filter === "dateRange" || filter === "monthRange" || filter === "yearRange") {
-        searchBar.classList.add("d-none"); // Hide Search Bar
-        rangeFields.classList.remove("d-none"); // Show Range Fields
-    } else {
-        searchBar.classList.remove("d-none"); // Show Search Bar
-        rangeFields.classList.add("d-none"); // Hide Range Fields
-    }
-
-    // Change the Search Bar Type and Placeholder Based on Filter Selection
-    if (filter === "date") {
-        searchBar.type = "date";
-        searchBar.placeholder = "Search by Date";
-    } else if (filter === "month") {
-        searchBar.type = "month";
-        searchBar.setAttribute("data-placeholder", "Search by Month");
-        searchBar.value = ""; // Clear the value
-        searchBar.classList.add("month-placeholder"); // Add a custom class
-    } else if (filter === "year") {
-        searchBar.type = "number";
-        searchBar.placeholder = "Search by Year";
-    } else {
-        // Update Range Fields for Date, Month, or Year Ranges
-        if (filter === "dateRange") {
-            startValue.type = "date";
-            endValue.type = "date";
-            startValue.placeholder = "Start Date";
-            endValue.placeholder = "End Date";
-        } else if (filter === "monthRange") {
-          startValue.type = "month";
-            endValue.type = "month";
-            // Workaround for month range placeholders
-            startValue.setAttribute("data-placeholder", "Start Month");
-            endValue.setAttribute("data-placeholder", "End Month");
-            startValue.value = ""; // Clear the value
-            endValue.value = ""; // Clear the value
-            startValue.classList.add("month-placeholder"); // Add a custom class
-            endValue.classList.add("month-placeholder"); // Add a custom class
-        } else if (filter === "yearRange") {
-            startValue.type = "number";
-            endValue.type = "number";
-            startValue.placeholder = "Start Year";
-            endValue.placeholder = "End Year";
-        }
-    }
-}
-
-document.addEventListener("input", function (e) {
-    if (e.target.type === "month" && e.target.classList.contains("month-placeholder")) {
-        if (e.target.value) {
-            e.target.classList.remove("month-placeholder");
-        } else {
-            e.target.classList.add("month-placeholder");
-        }
-    }
-});
+    
 const notFoundDiv = document.getElementById('customer_not_found');
   const resultsDiv = document.getElementById('customer_results'); 
 
@@ -701,6 +655,69 @@ document.getElementById('addServiceModal').addEventListener('click', function (e
         closeModal();
       }
     }
+    let filter='date'
+    function updatePlaceholder(filter) {
+    const searchBar = document.getElementById("searchBar");
+    const rangeFields = document.getElementById("rangeFields");
+    const startValue = document.getElementById("startValue");
+    const endValue = document.getElementById("endValue");
+
+    // Hide the Search Bar and Show Range Fields if a Range Filter is Selected
+    if (filter === "dateRange" || filter === "monthRange" || filter === "yearRange") {
+        searchBar.classList.add("d-none"); // Hide Search Bar
+        rangeFields.classList.remove("d-none"); // Show Range Fields
+    } else {
+        searchBar.classList.remove("d-none"); // Show Search Bar
+        rangeFields.classList.add("d-none"); // Hide Range Fields
+    }
+
+    // Change the Search Bar Type and Placeholder Based on Filter Selection
+    if (filter === "date") {
+        searchBar.type = "date";
+        searchBar.placeholder = "Search by Date";
+    } else if (filter === "month") {
+        searchBar.type = "month";
+        searchBar.setAttribute("data-placeholder", "Search by Month");
+        searchBar.value = ""; // Clear the value
+        searchBar.classList.add("month-placeholder"); // Add a custom class
+    } else if (filter === "year") {
+        searchBar.type = "number";
+        searchBar.placeholder = "Search by Year";
+    } else {
+        // Update Range Fields for Date, Month, or Year Ranges
+        if (filter === "dateRange") {
+            startValue.type = "date";
+            endValue.type = "date";
+            startValue.placeholder = "Start Date";
+            endValue.placeholder = "End Date";
+        } else if (filter === "monthRange") {
+          startValue.type = "month";
+            endValue.type = "month";
+            // Workaround for month range placeholders
+            startValue.setAttribute("data-placeholder", "Start Month");
+            endValue.setAttribute("data-placeholder", "End Month");
+            startValue.value = ""; // Clear the value
+            endValue.value = ""; // Clear the value
+            startValue.classList.add("month-placeholder"); // Add a custom class
+            endValue.classList.add("month-placeholder"); // Add a custom class
+        } else if (filter === "yearRange") {
+            startValue.type = "number";
+            endValue.type = "number";
+            startValue.placeholder = "Start Year";
+            endValue.placeholder = "End Year";
+        }
+    }
+}
+
+document.addEventListener("input", function (e) {
+    if (e.target.type === "month" && e.target.classList.contains("month-placeholder")) {
+        if (e.target.value) {
+            e.target.classList.remove("month-placeholder");
+        } else {
+            e.target.classList.add("month-placeholder");
+        }
+    }
+});
 
 // Handle filter selection from the dropdown
 document.querySelectorAll('.dropdown-item').forEach(item => {
@@ -737,6 +754,7 @@ document.getElementById("searchBtn").addEventListener("click", function () {
     // Redirect to the constructed URL
     window.location.href = url;
 });
+
 
 // Reset the filter to show all tasks
 document.getElementById("resetBtn").addEventListener("click", function () {
@@ -797,6 +815,22 @@ updatePlaceholder("date");
               fileNamesDisplay.appendChild(fileItem);
           });
       }
+  }
+</script>
+<script>
+  function exportData() {
+      let status = "{{ current_filter|default:'all' }}"; // Ensure status is always set
+      let baseUrl = "{% url 'export_applied_services' status='__status__' %}".replace('__status__', status);
+      
+      let params = new URLSearchParams({
+          filterType: "{{ request.GET.filterType|default:'' }}",
+          query: "{{ request.GET.query|default:'' }}",
+          start: "{{ request.GET.start|default:'' }}",
+          end: "{{ request.GET.end|default:'' }}"
+      });
+
+      // Redirect with the dynamically generated URL
+      window.location.href = baseUrl + "?" + params.toString();
   }
 </script>
 </body>

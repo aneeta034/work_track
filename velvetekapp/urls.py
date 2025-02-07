@@ -18,4 +18,6 @@ urlpatterns = [
     path('add_service/', views.add_service, name='add_service'),
     path('search_customer/', views.search_customer, name='search_customer'),
     path('get_users/', views.get_users, name='get_users'),
+    path('export-applied-services/<str:status>/', views.export_applied_services, name='export_applied_services'),
+
 ]

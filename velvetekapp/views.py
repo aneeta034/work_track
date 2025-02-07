@@ -8,8 +8,178 @@ import urllib
 import requests
 from django.http import HttpResponseRedirect
 from datetime import datetime
-
+from django.core.files.storage import default_storage
+from technicianapp.forms import AppliedServiceForm
+from django.db.models.functions import Replace
+from django.db.models import Value
+from django.db.models import Q
+import pandas as pd
+from django.http import HttpResponse
 from django.db.models import OuterRef, Subquery
+import pandas as pd
+from django.http import HttpResponse
+from django.db.models import Q, OuterRef, Subquery
+from .models import Apply
+from technicianapp.models import CurrentStatus
+import urllib.parse
+
+def export_applied_services(request, status):
+    # Get the latest status for each Apply instance
+    latest_status_subquery = CurrentStatus.objects.filter(
+        apply=OuterRef('pk')
+    ).order_by('-date').values('status')[:1]
+
+    # Base queryset: Get all Apply instances with the latest status
+    applied_services = Apply.objects.all().annotate(
+        latest_status=Subquery(latest_status_subquery)
+    )
+
+    # Filter by status if not 'all'
+    if status.lower() != 'all':
+        applied_services = applied_services.filter(latest_status__iexact=status)
+
+    # Get search filters
+    filter_type = request.GET.get('filterType', '')
+    query = request.GET.get('query', '')
+    start = request.GET.get('start', '')
+    end = request.GET.get('end', '')
+
+    # Apply search filters
+    if filter_type == "date" and query:
+        applied_services = applied_services.filter(created_at=query)
+
+    elif filter_type == "month" and query:
+        year, month = query.split('-')
+        applied_services = applied_services.filter(created_at__year=year, created_at__month=month)
+
+    elif filter_type == "year" and query:
+        applied_services = applied_services.filter(created_at__year=query)
+
+    elif filter_type == "dateRange" and start and end:
+        applied_services = applied_services.filter(created_at__range=[start, end])
+
+    elif filter_type == "monthRange" and start and end:
+        start_year, start_month = start.split('-')
+        end_year, end_month = end.split('-')
+        applied_services = applied_services.filter(
+            Q(created_at__year__gte=start_year, created_at__month__gte=start_month) &
+            Q(created_at__year__lte=end_year, created_at__month__lte=end_month)
+        )
+
+    elif filter_type == "yearRange" and start and end:
+        applied_services = applied_services.filter(created_at__year__gte=start, created_at__year__lte=end)
+   
+    # Convert to DataFrame
+    
+    df = pd.DataFrame.from_records(
+    applied_services.values(
+        'id',
+        'name', 
+        'address', 
+        'contact_number', 
+        'whatsapp_number', 
+        'referred_by', 
+        'service_by__username',  # Fetch the username from CustomUser
+        'work_type', 
+        'item_name_or_number', 
+        'issue', 
+        'photos_of_item',
+        'estimation_document',
+        'estimated_price', 
+        'estimated_date', 
+        'any_other_comments', 
+        'created_at',
+        'latest_status'
+    )
+)
+    # Construct a dynamic filename
+    filename_parts = ["applied_services"]
+    if status.lower() != "all":
+        filename_parts.append(status)  # Add status
+    if filter_type and query:
+        filename_parts.append(f"{filter_type}_{query}")  # e.g., date_2025-02-07
+    elif start and end:
+        filename_parts.append(f"{filter_type}_{start}_to_{end}")  # e.g., dateRange_2025-02-01_to_2025-02-07
+    
+    filename = "_".join(filename_parts) + ".xlsx"
+    filename = urllib.parse.quote(filename)  # Encode for safe file download
+
+    # Prepare response
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    # Write to Excel
+    df.to_excel(response, index=False)
+
+    return response
+
+
+
+def switch_task(request, status=None):
+    # Extract search filters
+    filter_type = request.GET.get('filterType', '')
+    query = request.GET.get('query', '')
+    start = request.GET.get('start', '')
+    end = request.GET.get('end', '')
+
+    # Get the latest status for each Apply instance
+    latest_status_subquery = CurrentStatus.objects.filter(
+        apply=OuterRef('pk')
+    ).order_by('-date').values('status')[:1]
+
+    # Base queryset: Get all Apply instances
+    services = Apply.objects.all().annotate(
+        latest_status=Subquery(latest_status_subquery)
+    )
+
+    # Apply task status filter
+    if status and status.lower() != 'all':
+        services = services.filter(latest_status__iexact=status)
+
+    # Apply additional search filters
+    if filter_type == "date" and query:
+        services = services.filter(created_at=query)
+
+    elif filter_type == "month" and query:
+        year, month = query.split('-')
+        services = services.filter(
+            created_at__year=year, created_at__month=month
+        )
+
+    elif filter_type == "year" and query:
+        services = services.filter(created_at__year=query)
+
+    elif filter_type == "dateRange" and start and end:
+        services = services.filter(created_at__range=[start, end])
+
+    elif filter_type == "monthRange" and start and end:
+        start_year, start_month = start.split('-')
+        end_year, end_month = end.split('-')
+
+        services = services.filter(
+            Q(created_at__year__gte=start_year, created_at__month__gte=start_month) &
+            Q(created_at__year__lte=end_year, created_at__month__lte=end_month)
+        )
+
+    elif filter_type == "yearRange" and start and end:
+        services = services.filter(created_at__year__gte=start, created_at__year__lte=end)
+
+    # Count statistics for the dashboard
+    customer_count = Customer.objects.count()
+    total_services = Apply.objects.count()
+    technician_count = CustomUser.objects.filter(role='technician').count()
+
+    context = {
+        'applied_services': services,
+        'customer_count': customer_count,
+        'total_services': total_services,
+        'technician_count': technician_count,
+        'current_filter': status,  # Track the applied status filter
+        'search_filter': filter_type  # Track the applied search filter
+    }
+
+    return render(request, 'admin_dashboard.html', context)
+
 
 # Filter applied services based on the filter type
 def filter_applied_services(request):
@@ -67,7 +237,7 @@ def filter_applied_services(request):
         'customer_count': customer_count,
         'total_services': total_services,
         'technician_count': technician_count,
-        'current_filter': filter_type  # Track the active filter
+        'current_filter': 'all'  # Track the active filter
     }
     return render(request, 'admin_dashboard.html', context)
 
@@ -91,34 +261,7 @@ def reset_filter_applied_services(request):
     }
     return render(request, 'admin_dashboard.html', context)
 
-def switch_task(request, status=None):
-    latest_status_subquery = CurrentStatus.objects.filter(
-        apply=OuterRef('pk')
-    ).order_by('-date').values('status')[:1]
 
-    # Base queryset: Get all Apply instances (irrespective of the technician)
-    services = Apply.objects.all().annotate(
-        latest_status=Subquery(latest_status_subquery)
-    )
-
-    # Filter services based on the status parameter
-    if status and status.lower() != 'all':
-        # Ensure the status filter is case-insensitive and exact
-        services = services.filter(latest_status__iexact=status)
-
-    # Counts for the cards
-    customer_count = Customer.objects.count()
-    total_services = Apply.objects.count()
-    technician_count = CustomUser.objects.filter(role='technician').count()
-    
-    context = {
-        'applied_services': services,
-        'customer_count': customer_count,
-        'total_services': total_services,
-        'technician_count': technician_count, 
-        'current_filter': status
-    }
-    return render(request, 'admin_dashboard.html', context)
 # View to handle form submission
 def add_service(request):
     if request.method == 'POST':
