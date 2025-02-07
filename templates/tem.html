@@ -21,7 +21,19 @@
   <link rel="icon" href="{% static 'assets/img/kaiadmin/favicon.ico' %}" type="image/x-icon" />
   <!-- External CSS -->
   <link rel="stylesheet" href="{% static 'assets/css/admin_dashboard.css' %}">
+<style>
+  
+.plus-icon {
+    font-size: 20px;   /* Adjust icon size */
+    color: grey;       /* Default color */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Ensures proper centering */
+}
 
+.plus-icon:hover {
+    color: black;      /* Change color on hover */
+}
+</style>
 
 </head>
 <body>
@@ -145,6 +157,8 @@
               <div style="display: flex; margin-top: 5px;">
                 
                   
+                  </button>
+                </form>
               </div>
             </div>
           </td>
@@ -180,12 +194,24 @@
           <td>{{ service.service_by.username }}</td>
           <td>
             <ul class="files-list">
-              <li><a href="#" target="_blank">Document, </a>
-              <a href="#" target="_blank">Photo</a></li>                        
+              {% if service.estimation_document %}
+                <li><a href="{{ service.estimation_document.url }}" target="_blank">Document</a>
+                  {% endif %}
+              {% if service.get_photos %}
+                  <a href="{{ MEDIA_URL }}{{ service.get_photos.0 }}" data-lightbox="gallery-{{ service.id }}" data-title="Service Photos">Photo</a>
+        
+                  {% for photo in service.get_photos|slice:"1:" %}
+                    <a href="{{ MEDIA_URL }}{{ photo }}" data-lightbox="gallery-{{ service.id }}" style="display: none;"></a>
+                  {% endfor %}
+              {% endif %}                                
             </ul>
           </td>
-          <td><a href="{% url 'fuelcharge' service.id %}"><i class="bi bi-plus-circle"></i></a></td>
-          <td>{{ service.any_other_comments }}</td>
+          <td style="display:flex; justify-content:center; align-item:center;">
+            <a href="{% url 'fuelcharge' service.id %}" class="plus-icon">
+                <i class="bi bi-plus-circle"></i>
+            </a>
+        </td>          
+        <td>{{ service.any_other_comments }}</td>
         
           <td>
             {% if service.current_status_entries.last %}
@@ -259,7 +285,7 @@
 {% endblock %}
 </div>
 
-'    <!-- Add Service Modal -->
+       <!-- Add Service Modal -->
 <div id="addServiceModal" class="modal">
   <div class="modal-content">
     <!-- Top Bar -->
@@ -331,8 +357,11 @@
         <div class="modal-column">
           <div class="form-group">
             <label for="photos_of_item">Upload Photo</label>
-            <input type="file" id="photos_of_item" name="photos_of_item">
-          </div>
+            <div class="file-input-container">
+                <input type="file" id="photos_of_item" name="photos_of_item" multiple>
+                <div id="fileNamesDisplay" class="file-names-display">No files selected</div>
+            </div>
+        </div>
           <div class="form-group">
             <label for="estimation_document">Upload Document</label>
             <input type="file" id="estimation_document" name="estimation_document">
@@ -357,7 +386,8 @@
     </form>
   </div>
 </div>
-'
+
+
 <!-- The Modal Add Customer-->
 <div class="modal" id="customerModal" >
   <div class="modal-dialog">

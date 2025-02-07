@@ -1,3 +1,23 @@
+<nav class="navbar" style="margin-left:230px; background-color: #e3f2fd;">
+  <ul class="navbar-nav d-flex flex-row gap-4">
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'technician_dashboard'  %}"><i class="bi bi-arrow-left"></i></a>
+  </li>
+  <li class="nav-item">
+      <a class="nav-link {% if request.resolver_match.url_name == 'fuelcharge' %}fw-bold active{% endif %}" href="{% url 'fuelcharge' apply.id %}">Fuel Charge</a>
+  </li>
+  <li class="nav-item">
+      <a class="nav-link {% if request.resolver_match.url_name == 'food_allowance' %}fw-bold active{% endif %}" href="{% url 'food_allowance' apply.id %}">Food Allowance</a>
+  </li>
+  <li class="nav-item">
+      <a class="nav-link {% if request.resolver_match.url_name == 'item_purchased' %}fw-bold active{% endif %}" href="{% url 'item_purchased' apply.id %}">Item Purchased</a>
+  </li>
+  <li class="nav-item">
+      <a class="nav-link {% if request.resolver_match.url_name == 'vendor_info' %}fw-bold active{% endif %}" href="{% url 'vendor_info' apply.id %}">Vendor Info</a>
+  </li>
+</ul>
+</nav>
+
 {% extends 'admin_dashboard.html' %}
 {% block title %}
     Apply
