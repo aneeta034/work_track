@@ -1,136 +1,219 @@
 {% extends 'technician_dashboard.html' %}
 {% block title %}
-updates
+food allowance
 {% endblock %}
 {% block content %}
-<div class="container w-100 mt-8  border rounded shadow ">
-
+<style>
+  .custom-navbar{
+      width:1288px; /* Ensure both navbar and table have the same width */
+      margin-left: auto; /* Push both to the right */
+      margin-right: 0;
+  }
   
-  <div class="row">
-    <div class="col-md-12">
+  
+</style>
+
+<!-- Remove the container around navbar -->
+<div class="mt-0">
+  <!-- Custom Navbar for Vendor Info -->
+  <nav class="navbar navbar-expand-lg bg-light shadow rounded custom-navbar">
+      <div class="container-fluid"> <!-- Use container-fluid instead -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#vendorNav">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-left" id="vendorNav"> <!-- Ensure alignment -->
+              <ul class="navbar-nav d-flex flex-wrap gap-2">
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'technician_dashboard'  %}"><i class="bi bi-arrow-left"></i></a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'fuelcharge' %}fw-bold active{% endif %}" href="{% url 'fuelcharge' apply.id %}">Fuel Charge</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'food_allowance' %}fw-bold active{% endif %}" href="{% url 'food_allowance' apply.id %}">Food Allowance</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'item_purchased' %}fw-bold active{% endif %}" href="{% url 'item_purchased' apply.id %}">Item Purchased</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link {% if request.resolver_match.url_name == 'vendor_info' %}fw-bold active{% endif %}" href="{% url 'vendor_info' apply.id %}">Vendor Info</a>
+              </li>
+              </ul>
+          </div>
+      </div>
+  </nav>
+
+
+  <div class="col-md-6 offset-md-4" style="margin-left:480px; margin-top:30px;">
       <div class="card">
-        <div class="card-header">
-            <h4 class="card-title text-center">Add Food Allowance </h4>
+        <div class="card-header text-white text-left" style="background-color: #2973B2;">
+          <h4 class="card-title text-left">Food Allowance </h4>
         </div>
         <div class="card-body">
           <div class="form-group">
             <form action="{% url 'food_allowance' apply.id %}" method="post">
               {% csrf_token %}
-              <div class="form-group" style="padding-left: 350px;">
-              <div class="form-group col-md-8">
-              <label for="technician_name">Technician Name</label>
-              <input
-                type="text"
-                class="form-control"
-                id="technician_name"
-                name="technician_name"
-                placeholder=""
-                value="{{ technician_name }}" 
-              required/>
-              
-              </div>
-              <div class=" form-group col-md-8">
-              <label for="date">Date</label>
-              <input
-                type="date"
-                class="form-control"
-                name="date"
-                id="date"
-                name=""
-              />
-              </div>
-              <div class="form-group col-md-8">
-              <label for="purpose">Purpose</label>
-              <input
-                type="text"
-                class="form-control"
-                id="purpose"
-                name="purpose"
-                placeholder=""
-              />
-              </div>
-  
-              
-              <div class="form-group col-md-8">
-              <label for="cost">Cost</label>
-              <input
-                type="number"
-                class="form-control"
-                id="cost"
-                name="cost"
-                placeholder=""
-              />
-              </div>
-
+              <div class="form-group">
+                <!-- First Row -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="technician_name">Technician Name</label>
+                        <input type="text" class="form-control" id="technician_name" name="technician_name" value="{{ technician_name }}" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="date">Date</label>
+                        <input type="date" class="form-control" name="date" id="date" />
+                    </div>
+                </div>
+    
+                <!-- Second Row -->
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="purpose">Purpose</label>
+                        <input type="text" class="form-control" id="purpose" name="purpose" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="cost">Cost</label>
+                        <input type="number" class="form-control" id="cost" name="cost" />
+                    </div>
+                </div>
             </div>
-  
-              <div class="card-action text-center mt-3"  style="padding-left: 100px;">
-                <button class="btn btn-success" type="submit">Add</button>
-                <a href="{% url 'extra_work_technician' apply.id %}" class="btn btn-secondary">Back</a>
-
-              </div>
-            </form>
-          </div>
+    
+            <div class="card-action text-center mt-3" style="margin-bottom:20px;">
+                <button class="btn btn-primary" type="submit">Add</button>
+            </div>
+        </form>
+    </div>
         </div>
       </div>
     </div>
   </div>
   
 
-  <div class="container">
-    <div class="page-inner">
-      
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header">
-              <h4 class="card-title">Food Allowance Details</h4>
+                    <div class="table-responsive mt-4 " style="padding-left: 230px;">
+                      {% if food_allowances %}
+                        <table id="basic-datatables" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Customer Name</th>
+                                    <th scope="col">Issue</th>
+                                    <th scope="col">Technician Name</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Purpose</th>
+                                    <th scope="col">Cost</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for d in food_allowances %}
+                                <tr>
+                                    <td>{{ d.customer_name }}</td>
+                                    <td>{{ d.issue }}</td>
+                                    <td>{{ d.technician_name }}</td>
+                                    <td>{{ d.date }}</td>
+                                    <td>{{ d.purpose }}</td> 
+                                    <td>{{ d.cost }}</td>
+                        
+                                        <td>
+                                            <div style="display: flex; align-items: center;">
+                                                <a href="{% url 'update_food_allowance' d.id %}" class="edit-foodallowance-btn" data-bs-toggle="modal" data-bs-target="#updateFoodAllowanceModal{{ d.id }}">
+                                                    <i class="fa fa-pencil-alt" aria-hidden="true" title="Update"></i>
+                                                </a>
+                                                <form action="{% url 'update_food_allowance' d.id %}" method="post" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <button type="button" class="icon-link delete-icon" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteFoodAllowanceModal{{ d.id }}">
+                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                </form>
+                                                
+                                                <!-- Delete Confirmation Modal -->
+                                                <div class="modal fade" id="deleteFoodAllowanceModal{{ d.id }}" tabindex="-1" aria-labelledby="deleteFoodAllowanceLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Confirm Delete</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>Are you sure you want to delete this food allowance?</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                
+                                                                <!-- Delete Form (Confirmed on Click) -->
+                                                                <form action="{% url 'update_food_allowance' d.id %}" method="post">
+                                                                    {% csrf_token %}
+                                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                        
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+
+<!--update food allowance Modal -->
+{% for d in food_allowances %}
+<div class="modal fade" id="updateFoodAllowanceModal{{ d.id }}" tabindex="-1" aria-labelledby="updateFoodAllowanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Food Allowance</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table
-                  id="basic-datatables"
-                  class="display table table-striped table-hover"
-                >
-                  <thead>
-                    <tr>
-                      <th scope="col">Customer Name</th>
-                      <th scope="col">Issue</th>
-                      <th scope="col">Technician Name</th>
-                      <th scope="col">Date</th>
-                      <th scope="col">Purpose</th>
-                      <th scope="col">Cost</th>
-                      <th scope="col">Actions</th>
-                    </tr>
-                   
-                  </thead>
-                  {% for d in  food_allowances %}
-                  <tbody>
-                    <tr>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'update_food_allowance' d.id %}">
+                    {% csrf_token %}
                     
-                        <tr>
-                          <td>{{ d.customer_name }}</td>
-                          <td>{{ d.issue }}</td>
-                          <td>{{ d.technician_name }}</td>
-                          <td>{{ d.date }}</td>
-                          <td>{{ d.purpose }}</td> 
-                          <td>{{ d.cost }}</td>
-                          <td><a href="{% url 'update_food_allowance' d.id %}" class="btn btn-sm btn-primary">Update</a>
-                            <td>
-                              <form method="post" action="{% url 'delete_food_allowance' d.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                          </td>
-                        </tr>
-                    </tr>
-                    {% endfor %}
-                    
-                  </tbody>
-                </table>
-              </div>
+                    <input type="hidden" name="food_id" value="{{ d.id }}">   
+
+
+                    <div class="mb-3">
+                        <label class="form-label">Technician Name</label>
+                        <input type="text" class="form-control" name="technician_name" value="{{ d.technician_name }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-control" name="date" value="{{ d.date|date:'Y-m-d' }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Purpose</label>
+                        <input type="text" class="form-control" name="purpose" value="{{ d.purpose }}">
+                    </div>
+
+            
+
+                    <div class="mb-3">
+                        <label class="form-label">Cost</label>
+                        <input type="number" step="0.01" class="form-control" name="cost" value="{{ d.cost }}">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
             </div>
-          </div>
         </div>
+    </div>
+</div>
+{% endfor %}
+
+                        {% else %}
+<div class="alert alert-warning text-center ">
+    No food allowance available. Please add data.
+</div>
+{% endif %}
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 

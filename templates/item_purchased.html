@@ -1,105 +1,236 @@
 {% extends 'technician_dashboard.html' %}
 {% block title %}
-updates
+item purchased
 {% endblock %}
 {% block content %}
-<div class="container w-100 mt-8 border rounded shadow">
-   
+<style>
+    .custom-navbar{
+        width:1288px; /* Ensure both navbar and table have the same width */
+        margin-left: auto; /* Push both to the right */
+        margin-right: 0;
+    }
+    
+    
+</style>
 
-    <!-- Form Section -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title text-center">Add Item Purchased </h4>
-                </div>
-                <div class="card-body">
-                    <form action="{% url 'item_purchased' apply.id %}" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div style="padding-left: 350px;">
-                        <div class="form-group col-md-8">
-                            <label for="date">Date</label>
-                            <input type="date" class="form-control" id="date" name="date" required>
-                        </div>
-                    
-                        <div class="form-group col-md-8">
-                            <label for="item_name">Item Purchased</label>
-                            <input type="text" class="form-control" id="item_name" name="item_name" placeholder="Item Name" required>
-                        </div>
-                    
-                        <div class="form-group col-md-8">
-                            <label for="price">Price</label>
-                            <input type="number" class="form-control" id="price" name="price" placeholder="Price" required>
-                        </div>
-                    
-                        <div class="form-group col-md-8">
-                            <label for="bill_photo">Bill Photo</label>
-                            <input type="file" class="form-control" id="bill_photo" name="bill_photo" accept="image/*" required>
-                        </div>
-                        </div>
-                    
-                        <div class="text-center mt-3"  style="padding-left: 100px;">
-                            <button type="submit" class="btn btn-success">Add Item</button>
-                            <a href="{% url 'extra_work_technician' apply.id %}" class="btn btn-secondary">Back</a>
-
-                        </div>
-                    </form>
-                </div>
+<!-- Remove the container around navbar -->
+<div class="mt-0">
+    <!-- Custom Navbar for Vendor Info -->
+    <nav class="navbar navbar-expand-lg bg-light shadow bordered custom-navbar rounded-0">
+        <div class="container-fluid"> <!-- Use container-fluid instead -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#vendorNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-left" id="vendorNav"> <!-- Ensure alignment -->
+                <ul class="navbar-nav d-flex flex-wrap gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'technician_dashboard'  %}"><i class="bi bi-arrow-left"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'fuelcharge' %}fw-bold active{% endif %}" href="{% url 'fuelcharge' apply.id %}">Fuel Charge</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'food_allowance' %}fw-bold active{% endif %}" href="{% url 'food_allowance' apply.id %}">Food Allowance</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'item_purchased' %}fw-bold active{% endif %}" href="{% url 'item_purchased' apply.id %}">Item Purchased</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'vendor_info' %}fw-bold active{% endif %}" href="{% url 'vendor_info' apply.id %}">Vendor Info</a>
+                    </li>
+                </ul>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- Table Section -->
-    <div class="container mt-4">
+
+
+    <div class="col-md-6 offset-md-4" style="margin-left:480px; margin-top:30px;">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Item Purchased Details</h4>
+          <div class="card-header text-white text-left" style="background-color: #2973B2;">
+            <h4 class="card-title text-left">Item Purchased </h4>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+                <form action="{% url 'item_purchased' apply.id %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="container">
+                        <div class="row">
+                             <!-- First Row -->
+                             <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="item_name">Item Purchased</label>
+                                    <input type="text" class="form-control" id="item_name" name="item_name" placeholder="Item Name" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="date">Date</label>
+                                    <input type="date" class="form-control" id="date" name="date" required>
+                                </div>
+                            </div>            
+                        </div>
+                
+                        <div class="row mt-3"> <!-- Second Row -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="price">Price</label>
+                                    <input type="number" class="form-control" id="price" name="price" placeholder="Price" required>
+                                </div>
+                            </div>
+                
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="bill_photo">Bill Photo</label>
+                                    <input type="file" class="form-control" id="bill_photo" name="bill_photo" accept="image/*" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="text-center mt-3" style="margin-bottom: 20px;">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </form>
+                
+            </div>                            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+       
+
+    <div class="table-responsive mt-4 " style="padding-left: 230px;">
+        {% if items %}
+        <table id="basic-datatables" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Issue</th>
+                    <th>Date</th>
+                    <th>Item Purchased</th>
+                    <th>Price</th>
+                    <th>Bill Photo</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in items %}
+                <tr>
+                    <td>{{ d.customer_name }}</td>
+                    <td>{{ d.issue }}</td>
+                    <td>{{ d.date }}</td>
+                    <td>{{ d.item_name }}</td>
+                    <td>{{ d.price }}</td>
+                    <td>
+                        <img src="{{ d.bill_photo.url }}" alt="Bill Photo" width="100" height="100">
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center;">
+                            <a href="{% url 'update_item_purchased' d.id %}" class="edit-itempurchased-btn" data-bs-toggle="modal" data-bs-target="#updateItemPurchasedModal{{ d.id }}">
+                                <i class="fa fa-pencil-alt" aria-hidden="true" title="Update"></i>
+                            </a>
+                            <form action="{% url 'update_item_purchased' d.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="button" class="icon-link delete-icon" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteItemPurchasedModal{{ d.id }}">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                            
+                            <!-- Delete Confirmation Modal -->
+                            <div class="modal fade" id="deleteItemPurchasedModal{{ d.id }}" tabindex="-1" aria-labelledby="deleteItemPurchasedLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Confirm Delete</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete this purchased item?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            
+                                            <!-- Delete Form (Confirmed on Click) -->
+                                            <form action="{% url 'update_item_purchased' d.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                    
+                {% endfor %}
+            </tbody>
+        </table>
+
+<!--update item purchased Modal -->
+{% for d in items %}
+<div class="modal fade" id="updateItemPurchasedModal{{ d.id }}" tabindex="-1" aria-labelledby="updateItemPurchasedModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Item Purchased</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Customer Name</th>
-                                <th>Issue</th>
-                                <th>Date</th>
-                                <th>Item Purchased</th>
-                                <th>Price</th>
-                                <th>Bill Photo</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for d in items %}
-                            <tr>
-                                <td>{{ d.customer_name }}</td>
-                                <td>{{ d.issue }}</td>
-                                <td>{{ d.date }}</td>
-                                <td>{{ d.item_name }}</td>
-                                <td>{{ d.price }}</td>
-                                <td>
-                                    <img src="{{ d.bill_photo.url }}" alt="Bill Photo" width="100" height="100">
-                                </td>
-                                <td>
-                                    <a href="{% url 'update_item_purchased' d.id %}" class="btn btn-sm btn-primary">Update</a>
-                                </td>
-                                <td>
-                                    <form method="post" action="{% url 'delete_item_purchased' d.id %}">
-                                        {% csrf_token %}
-                                        <button type="submit"  class="btn btn-sm btn-danger">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="5" class="text-center">No items purchased yet.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'update_item_purchased' d.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <input type="hidden" name="item_id" value="{{ d.id }}">   
+
+                    <div class="mb-3">
+                        <label class="form-label">Item Name</label>
+                        <input type="text" class="form-control" name="item_name" value="{{ d.item_name }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-control" name="date" value="{{ d.date|date:'Y-m-d' }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Bill Photo</label>
+                        <input type="file" class="form-control-file" name="bill_photo" accept="image/*">
+                        
+                        {% if d.bill_photo %}
+                        <small>Current Photo:</small><br>
+                        <img src="{{ d.bill_photo.url }}" alt="Bill Photo" class="img-thumbnail mt-2" width="150">
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Price</label>
+                        <input type="number" step="0.01" class="form-control" name="price" value="{{ d.price }}" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
+{% endfor %}
+
+
+        {% else %}
+<div class="alert alert-warning text-center">
+    No item purchased available. Please add data.
+</div>
+{% endif %}
+    </div> 
+</div>
+</div>
+</div>
+</div>
+</div>
+
+   
 {% endblock %}

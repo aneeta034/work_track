@@ -1,4 +1,4 @@
-{% extends 'admin_dashboard.html' %}
+{% extends 'technician_dashboard.html' %}
 {% block title %}
 Update Fuel Charge
 {% endblock %}
@@ -44,7 +44,6 @@ Update Fuel Charge
                     </div>
                     <div class="text-center mt-3" style="padding-left: 100px;">
                         <button class="btn btn-success" type="submit">Update</button>
-                        <a href="{% url 'fuelcharge' fuel.id %}" class="btn btn-secondary">Cancel</a>
 
                     </div>
                 </form>
