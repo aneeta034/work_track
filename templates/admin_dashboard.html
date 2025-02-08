@@ -238,13 +238,14 @@
             <label for="photos_of_item">Upload Photo</label>
             <div class="file-input-container">
                 <input type="file" id="photos_of_item" name="photos_of_item" multiple>
-                <div id="fileNamesDisplay" class="file-names-display">No files selected</div>
+                <div id="fileNamesDisplay" class="file-names-display">No files chosen</div>
             </div>
         </div>
-          <div class="form-group">
-            <label for="estimation_document">Upload Document</label>
-            <input type="file" id="estimation_document" name="estimation_document">
-          </div>
+        <div class="form-group">
+          <label for="estimation_document">Upload Document</label>
+          <input type="file" id="estimation_document" name="estimation_document">
+          <div id="estimation_document_display" class="doc-display"></div>  <!--  Added this for display -->
+      </div>
           <div class="form-group">
             <label for="estimated_price">Estimated Price</label>
             <input type="text" id="estimated_price" name="estimated_price">
@@ -295,9 +296,12 @@
             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
               <span>{{ service.id }}</span> <!-- Display ID on the first line, centered -->
               <div style="display: flex; margin-top: 5px;">
-                <a href="#" onclick="openUpdateserviceModal({{ applied_service.id }})" class="icon-link ms-2">
-                  <i class="fa fa-pencil-alt" aria-hidden="true" title="Update"></i>
-              </a>
+                <button class="edit-service-btn" data-service-id="{{ service.id }}" data-toggle="modal" data-target="#serviceModal" 
+                          style="border: none; background: none; padding: 0; cursor: pointer;">
+                          <i class="fas fa-pen" style="font-size: 14px; color: #4A90E2;"></i>
+                      </button>
+                
+                
               <form action="{% url 'delete_applied_service' service.id %}" method="post" style="display:inline-block; margin-left: 5px;">
                 {% csrf_token %}
                 <button type="button" class="icon-link delete-icon" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteServiceModal{{ service.id }}">
@@ -742,25 +746,34 @@ function selectCustomer(customer) {
   
     // Handle form submission
     document.getElementById('addServiceForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const form = document.getElementById('addServiceForm');
-      const formData = new FormData(this);
-      fetch('/technician/add_service/', {
+    event.preventDefault();
+
+    const form = document.getElementById('addServiceForm');
+    const formData = new FormData(this);
+    const serviceId = form.getAttribute("data-service-id");  // Get service ID if exists
+    let url = serviceId ? `/technician/update_service/${serviceId}/` : `/technician/add_service/`;  
+
+    // Append removed files if any
+    if (window.removedFiles && window.removedFiles.length > 0) {
+        formData.append("removed_files", JSON.stringify(window.removedFiles));
+    }
+    console.log("Removed Files Sent:", formData.get("removed_files"));
+    fetch(url, {
         method: 'POST',
         body: formData,
         headers: {
-          'X-CSRFToken': '{{ csrf_token }}'
+            'X-CSRFToken': '{{ csrf_token }}'
         }
-      })
-      .then(response => response.json())
-      .then(data => {
+    })
+    .then(response => response.json())
+    .then(data => {
         if (data.success) {
-            if (data.is_new_customer) {
-                alert('Customer and service added successfully!');  // Display this message only for new customers
-            } else {
-                alert('Service added successfully!');  // Display this message for existing customers
-            }
-            window.location.reload();  // Optionally reload the page or update the UI
+            let message = serviceId ? 'Service updated successfully!' : 
+                         (data.is_new_customer ? 'Customer and service added successfully!' : 'Service added successfully!');
+
+            alert(message);
+            window.removedFiles = [];  // Clear removed files after successful update
+            window.location.reload();  // Optionally reload the page
         } else {
             alert('Error: ' + (data.message || JSON.stringify(data.errors)));
         }
@@ -919,9 +932,91 @@ updatePlaceholder("date");
   <!-- Lightbox JS -->
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox.min.js"></script>
 <script>
+  let selectedFiles = new DataTransfer();
+  let existingPhotos = []; // Array to store existing photo URLs
+
+  document.querySelectorAll(".edit-service-btn").forEach(button => {
+    button.addEventListener("click", function () {
+        let serviceId = this.getAttribute("data-service-id");
+        let serviceByDropdown = document.getElementById("service_by");
+
+        fetch(`/technician/get_service/${serviceId}/`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("contact_number").value = data.contact_number;
+                document.getElementById("name").value = data.name;
+                document.getElementById("address").value = data.address;
+                document.getElementById("whatsapp_number").value = data.whatsapp_number;
+                document.getElementById("referred_by").value = data.referred_by;
+                let selectedOption = [...serviceByDropdown.options].find(option => option.textContent.trim() === data.service_by);
+
+                if (selectedOption) {
+                    selectedOption.selected = true;  // Set the matching option
+                } else {
+                    console.warn("Technician name not found:", data.service_by_name);
+                }
+                console.log(selectedOption)
+                document.getElementById("work_type").value = data.work_type;
+                document.getElementById("item_name_or_number").value = data.item_name_or_number;
+                document.getElementById("issue").value = data.issue;
+                document.getElementById("estimated_price").value = data.estimated_price;
+                document.getElementById("estimated_date").value = data.estimated_date;
+                document.getElementById("any_other_comments").value = data.any_other_comments;
+
+                document.getElementById("addServiceForm").setAttribute("data-service-id", serviceId);
+               
+                selectedFiles = new DataTransfer();
+                existingPhotos = [...data.photos_of_item]; // Store existing photos
+                fileNamesDisplay.innerHTML = "";
+
+                // Display Existing Photos
+                existingPhotos.forEach((photoUrl, index) => {
+                    const fileItem = document.createElement("div");
+                    fileItem.className = "file-item";
+                    fileItem.innerHTML = `
+                        <span class="file-name">${photoUrl.split('/').pop()}</span>
+                        <span class="delete-btn" onclick="removeExistingFile(${index}, '${photoUrl}', event)">×</span>
+                    `;
+                    fileNamesDisplay.appendChild(fileItem);
+                });
+                // Handle Estimation Document
+                let estimationDocDisplay = document.getElementById("estimation_document_display"); // ✅ Target correct element
+
+                if (!estimationDocDisplay) {
+                    console.error("❌ Element #estimation_document_display not found!");
+                } else {
+                    estimationDocDisplay.innerHTML = "";  // Clear previous data
+                    console.log("✅ Estimation Document Display Element Found.");
+
+                    if (data.estimation_document) {
+                        console.log("📂 Estimation Document URL:", data.estimation_document);
+
+                        // Extract filename from path
+                        let fileName = data.estimation_document.split('/').pop();
+                        console.log("📄 Extracted File Name:", fileName);
+
+                        // Display file name with a link to the document
+                        estimationDocDisplay.innerHTML = `
+                            <a href="${data.estimation_document}" target="_blank" class="doc-name">${fileName}</a>
+                        `;
+                        console.log("✅ Document link added successfully.");
+                    } else {
+                        console.warn("⚠️ No estimation document found.");
+                        estimationDocDisplay.innerHTML = `<span class="doc-name">No document uploaded</span>`;
+                    }
+                }
+
+
+                
+                
+                document.getElementById('addServiceModal').style.display = 'flex';
+            })
+            .catch(error => console.error("Error fetching data:", error));
+    });
+});
+
   const fileInput = document.getElementById('photos_of_item');
   const fileNamesDisplay = document.getElementById('fileNamesDisplay');
-  let selectedFiles = new DataTransfer();
 
   fileInput.addEventListener('change', function(e) {
       // Add new files to existing selection
@@ -949,21 +1044,47 @@ updatePlaceholder("date");
   }
 
   function updateFileNames() {
-      if (selectedFiles.files.length === 0) {
-          fileNamesDisplay.textContent = 'No files selected';
-      } else {
-          fileNamesDisplay.innerHTML = '';
-          Array.from(selectedFiles.files).forEach((file, index) => {
-              const fileItem = document.createElement('div');
-              fileItem.className = 'file-item';
-              fileItem.innerHTML = `
-                  <span class="file-name">${file.name}</span>
-                  <span class="delete-btn" onclick="removeFile(${index}, event)">×</span>
-              `;
-              fileNamesDisplay.appendChild(fileItem);
-          });
-      }
+    fileNamesDisplay.innerHTML = '';
+    
+    // Display existing photos first
+    existingPhotos.forEach((photoUrl, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.innerHTML = `
+            <span class="file-name">${photoUrl.split('/').pop()}</span>
+            <span class="delete-btn" onclick="removeExistingFile(${index}, '${photoUrl}', event)">×</span>
+        `;
+        fileNamesDisplay.appendChild(fileItem);
+    });
+    // Then display newly added files
+    Array.from(selectedFiles.files).forEach((file, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.innerHTML = `
+            <span class="file-name">${file.name}</span>
+            <span class="delete-btn" onclick="removeFile(${index}, event)">×</span>
+        `;
+        fileNamesDisplay.appendChild(fileItem);
+    });
+      if (existingPhotos.length === 0 && selectedFiles.files.length === 0) {
+        fileNamesDisplay.textContent = 'No files selected';
+    }
   }
+  function removeExistingFile(index, fileUrl, event) {
+    event.stopPropagation();
+
+     
+    // Remove from existingPhotos array
+    existingPhotos = existingPhotos.filter((url, i) => i !== index);
+    
+    // Remove from display
+    event.target.parentElement.remove();
+    
+    // Store removed file to handle in backend
+    if (!window.removedFiles) window.removedFiles = [];
+    window.removedFiles.push(fileUrl);
+}
+
 </script>
 <script>
   function exportData() {

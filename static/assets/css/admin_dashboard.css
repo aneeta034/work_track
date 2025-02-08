@@ -352,6 +352,7 @@
   border-color: #004085 !important;
   color: #fff !important;
 }
+
   /* Styled Table */
   .table-responsive {
     overflow-x: auto; /* Enable horizontal scroll */
@@ -433,78 +434,80 @@
     color: #25D366; /* WhatsApp green */
     margin-right: 5px;
   }
-
-  .file-input-container {
-    position: relative;
-    display: inline-block;
-    width: 100%;
+/* Styles specific to .file-input-container */
+.file-input-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
 }
 
-.file-names-display {
-    position: absolute;
-    top: 0;
-    left: 105px; /* Space for "Choose File" button */
-    right: 0;
-    height: 100%;
-    padding: 1px 5px;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    overflow-y: hidden;
-    white-space: nowrap;
-    border-left: 1px  #ccc;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    scrollbar-width: thin; /* For Firefox */
-    scrollbar-color: #ccc transparent; /* Optional scrollbar styling */
+.file-input-container .file-names-display {
+  position: absolute;
+  top: 0;
+  left: 98px; /* Space for "Choose File" button */
+  right: 0;
+  height: 100%;
+  padding: 1px 5px;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-y: hidden;
+  white-space: nowrap;
+  border-left: 1px  #ccc;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #ccc transparent; /* Optional scrollbar styling */
+  font-size: 14px;
 }
 
-
-.file-item {
-    display: inline-flex;
-    align-items: center;
-    background: #eee;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 13px;
+.file-input-container .file-item {
+  display: inline-flex;
+  align-items: center;
+  background: #eee;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 13px;
 }
 
-.delete-btn {
-    color: black;
-    cursor: pointer;
-    margin-left: 5px;
-    font-weight: bold;
+.file-input-container .delete-btn {
+  color: black;
+  cursor: pointer;
+  margin-left: 5px;
+  font-weight: bold;
 }
 
-.delete-btn:hover {
-    color: darkred;
+.file-input-container .delete-btn:hover {
+  color: darkred;
 }
 
 /* Hide the default "No file chosen" text */
-input[type="file"] {
-    color: transparent;
-    border: 1px solid #ccc; /* Explicit border */
-    padding: 6px; /* Adjust padding to match other fields */
-    width: 100%; /* Ensure it stretches to match other input fields */
-    box-sizing: border-box; /* Include padding & border in width */
+.file-input-container input[type="file"] {
+  color: transparent;
+  border: 1px  #ccc; /* Explicit border */
+  padding: 6px; /* Adjust padding to match other fields */
+  width: 100%; /* Ensure it stretches to match other input fields */
+  box-sizing: border-box; /* Include padding & border in width */
 }
 
 /* Show the "Choose File" text */
-input[type="file"]::-webkit-file-upload-button {
-    color: initial;
+.file-input-container input[type="file"]::-webkit-file-upload-button {
+  color: initial;
 }
-.file-names-display::-webkit-scrollbar {
+
+/* Scrollbar styles specific to .file-input-container */
+.file-input-container .file-names-display::-webkit-scrollbar {
   height: 6px;
 }
 
-.file-names-display::-webkit-scrollbar-track {
+.file-input-container .file-names-display::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
-.file-names-display::-webkit-scrollbar-thumb {
+.file-input-container .file-names-display::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 3px;
 }
-  
+
   /* Responsive */
   @media (max-width: 768px) {
     .topbar {

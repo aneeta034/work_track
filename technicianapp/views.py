@@ -17,6 +17,90 @@ from django.db.models import OuterRef, Subquery
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 
+import os
+
+
+def get_service(request, service_id):
+    service = get_object_or_404(Apply, id=service_id)
+    apply_instance = get_object_or_404(Apply, id=service_id)
+    
+    # Get stored photo file paths
+    existing_photos = apply_instance.get_photos()
+    existing_photos = [request.build_absolute_uri(f'/media/{photo}') for photo in existing_photos]
+
+
+    service_data = {
+        "contact_number": service.contact_number,
+        "name": service.name,
+        "address": service.address,
+        "whatsapp_number": service.whatsapp_number,
+        "referred_by": service.referred_by,
+        "service_by": service.service_by.username,
+        "work_type": service.work_type,
+        "item_name_or_number": service.item_name_or_number,
+        "issue": service.issue,
+        "photos_of_item": existing_photos,
+        "estimation_document": service.estimation_document.url if service.estimation_document else None,
+        "estimated_price": service.estimated_price,
+        "estimated_date": service.estimated_date.strftime("%Y-%m-%d") if service.estimated_date else "",
+        "any_other_comments": service.any_other_comments,
+    }
+
+    return JsonResponse(service_data)
+
+
+def update_service(request, service_id):
+    if request.method == "POST":
+        service = get_object_or_404(Apply, id=service_id)
+       
+
+        service.work_type = request.POST.get("work_type", service.work_type)
+        service.item_name_or_number = request.POST.get("item_name_or_number", service.item_name_or_number)
+        service.issue = request.POST.get("issue", service.issue)
+        service.estimated_price = request.POST.get("estimated_price", service.estimated_price)
+        service.estimated_date = request.POST.get("estimated_date", service.estimated_date)
+        service.any_other_comments = request.POST.get("any_other_comments", service.any_other_comments)
+
+        # ✅ Handle Estimation Document Upload
+        if "estimation_document" in request.FILES:
+            estimation_doc = request.FILES["estimation_document"]
+            doc_name = f'pdf/{estimation_doc.name}'
+            service.estimation_document = default_storage.save(doc_name, estimation_doc)
+
+        # Handle New Photos
+        image_paths = service.photos_of_item.split(",") if service.photos_of_item else []
+
+        # 🔹 Get New Uploaded Files
+        for image in request.FILES.getlist('photos_of_item'):
+            image_name = default_storage.save(f'upload/{image.name}', image)
+            image_paths.append(image_name)
+
+        # 🔹 Handle Removed Files
+        removed_files = request.POST.get("removed_files")
+
+        if removed_files:
+            try:
+                removed_files = json.loads(removed_files)  # Convert JSON string to Python list
+                print("Received Removed Files:", removed_files)  # Debugging
+                removed_files = {file.replace("http://127.0.0.1:8000/media/", "") for file in removed_files}
+                # Remove from list & delete from storage
+                image_paths = [img for img in image_paths if img not in removed_files]
+                for img in removed_files:
+                    if default_storage.exists(img):
+                        default_storage.delete(img)
+                        print(f"Deleted: {img}")  # Debugging
+
+            except json.JSONDecodeError:
+                print("Invalid JSON in removed_files")
+
+        # 🔹 Update the Database
+        service.photos_of_item = ",".join(image_paths)
+        print("Updated Image Paths:", service.photos_of_item)  # Debugging
+
+
+        service.save()
+        return JsonResponse({"success": True})
+    return JsonResponse({"error": "Invalid request"}, status=400)
 
 def switch_tasks(request, status=None):
     # Subquery to get the latest status for each Apply instance

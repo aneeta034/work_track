@@ -22,6 +22,9 @@ from django.db.models import Q, OuterRef, Subquery
 from .models import Apply
 from technicianapp.models import CurrentStatus
 import urllib.parse
+from django.db.models import Sum
+
+
 
 def export_applied_services(request, status):
     # Get the latest status for each Apply instance
@@ -394,9 +397,9 @@ def list_technicians(request):
 
     return render(request, 'list_technicians.html',context)
 
-def extra_work_admin(request, apply_id):
+def extra_work_admin(request, service_id):
     try:
-        apply_instance = Apply.objects.get(id=apply_id)
+        apply_instance = Apply.objects.get(id=service_id)
     except Apply.DoesNotExist:
         messages.error(request, "Apply instance not found.")
         return redirect('apply_list')
@@ -414,8 +417,13 @@ def extra_work_admin(request, apply_id):
         'items_purchased': items_purchased,
         'vendors_info': vendors_info,
         'current_status_entries': current_status_entries,
+        'fuel_total': fuel_charges.aggregate(total=Sum('cost'))['total'] or 0,
+        'food_total': food_allowances.aggregate(total=Sum('cost'))['total'] or 0,
+        'items_total': items_purchased.aggregate(total=Sum('price'))['total'] or 0,
+        'vendor_total': vendors_info.aggregate(total=Sum('vendor_cost'))['total'] or 0,
+    
     }
-    return render(request, 'extra_work_admin.html', context)
+    return render(request, 'additional_charges.html', context)
 
 def view_fuelcharge_details(request, apply_id):
     apply_instance = get_object_or_404(Apply, id=apply_id)

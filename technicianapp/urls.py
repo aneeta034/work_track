@@ -32,4 +32,6 @@ urlpatterns = [
         path('get_users/', views.get_users, name='get_users'),
         path('switch_tasks/', views.switch_tasks, name='switch_tasks'),
         path('switch_tasks/<str:status>/', views.switch_tasks, name='switch_tasks_filter'),
+        path("update_service/<int:service_id>/", views.update_service, name="update_service"),
+        path("get_service/<int:service_id>/", views.get_service, name="get_service"),
 ]

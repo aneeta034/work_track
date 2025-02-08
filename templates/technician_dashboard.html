@@ -301,7 +301,7 @@
                   {% if service.current_status_entries.last.status == 'Pending' %}btn-danger{% endif %}
                   {% if service.current_status_entries.last.status == 'Completed' %}btn-success{% endif %}"
                 
-                onclick="openUpdateStatusModal({{ service.id }})"
+                onclick="openUpdateStatusModal( {{ service.id }}) "
                 data-estimated-date="{{ service.estimated_date|date:'Y-m-d' }}"  
                 data-current-status="{{ service.current_status_entries.last.status }}"
                 data-service-id="{{ service.id }}" 
