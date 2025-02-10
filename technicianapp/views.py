@@ -99,8 +99,11 @@ def update_service(request, service_id):
 
 
         service.save()
+        messages.success(request, "Service updated successfully!")  # Flash message in Django
+
         return JsonResponse({"success": True})
-    return JsonResponse({"error": "Invalid request"}, status=400)
+    
+    return JsonResponse({"success": False, "message": "Invalid request"}, status=400)
 
 def switch_tasks(request, status=None):
     # Subquery to get the latest status for each Apply instance

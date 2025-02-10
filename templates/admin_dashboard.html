@@ -61,6 +61,10 @@
 
   <!-- Main Content -->
   <div class="main-content">
+    <!-- Flash Message Container -->
+<div id="flashMessageContainer" class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 1050;"></div>
+
+
     <!-- Cards Section -->
     <div class="row">
       <div class="col-md-4">
@@ -742,47 +746,100 @@ function selectCustomer(customer) {
             }
         });
     });
+    document.addEventListener("DOMContentLoaded", function () {
+    let flashData = sessionStorage.getItem("flashMessage");
+    if (flashData) {
+        let { type, text } = JSON.parse(flashData);
+        showFlashMessage(type, text);
+        sessionStorage.removeItem("flashMessage"); // ✅ Remove after displaying
+    }
+});
 
-  
-    // Handle form submission
-    document.getElementById('addServiceForm').addEventListener('submit', function(event) {
+function showFlashMessage(type, message) {
+    let flashContainer = document.getElementById("flash-messages");
+    if (!flashContainer) {
+        flashContainer = document.createElement("div");
+        flashContainer.id = "flash-messages";
+        flashContainer.style.position = "fixed";
+        flashContainer.style.top = "0";
+        flashContainer.style.left = "15%";
+        flashContainer.style.width = "100%";
+        flashContainer.style.zIndex = "1000";
+        flashContainer.style.textAlign = "left"; // ✅ Center text
+        flashContainer.style.padding = "15px";
+        flashContainer.style.fontSize = "16px";
+        document.body.prepend(flashContainer);
+    }
+
+    let flashMessage = document.createElement("div");
+    flashMessage.className = `alert alert-${type}`;
+    flashMessage.style.display = "inline-block";
+    flashMessage.style.padding = "15px 20px";
+    flashMessage.style.width = "100%";  // ✅ Full-width
+    flashMessage.style.margin = "0";  // ✅ No extra spacing
+    flashMessage.style.borderRadius = "0";  // ✅ Remove rounded edges
+    flashMessage.style.boxShadow = "0 2px 10px rgba(0,0,0,0.2)";
+    flashMessage.style.borderRadius = "12px"; 
+    flashMessage.style.fontWeight = "bold";
+    flashMessage.innerHTML = message;
+
+    flashContainer.appendChild(flashMessage);
+
+    setTimeout(() => {
+        flashMessage.remove();
+    }, 3000);
+}
+
+document.getElementById('addServiceForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
     const form = document.getElementById('addServiceForm');
     const formData = new FormData(this);
-    const serviceId = form.getAttribute("data-service-id");  // Get service ID if exists
-    let url = serviceId ? `/technician/update_service/${serviceId}/` : `/technician/add_service/`;  
+    const serviceId = form.getAttribute("data-service-id");
+    let url = serviceId ? `/technician/update_service/${serviceId}/` : `/technician/add_service/`;
 
-    // Append removed files if any
     if (window.removedFiles && window.removedFiles.length > 0) {
         formData.append("removed_files", JSON.stringify(window.removedFiles));
     }
-    console.log("Removed Files Sent:", formData.get("removed_files"));
+
     fetch(url, {
         method: 'POST',
         body: formData,
         headers: {
-            'X-CSRFToken': '{{ csrf_token }}'
+            'X-CSRFToken': document.querySelector("[name=csrfmiddlewaretoken]").value
         }
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            let message = serviceId ? 'Service updated successfully!' : 
-                         (data.is_new_customer ? 'Customer and service added successfully!' : 'Service added successfully!');
+            let message = serviceId ? "Service updated successfully!" :
+                         (data.is_new_customer ? "Customer and service added successfully!" : "Service added successfully!");
 
-            alert(message);
-            window.removedFiles = [];  // Clear removed files after successful update
-            window.location.reload();  // Optionally reload the page
+            // ✅ Store Flash Message in sessionStorage Before Reload
+            sessionStorage.setItem("flashMessage", JSON.stringify({ type: "success", text: message }));
+
+            // ✅ Close Modal Before Reloading Page
+            let modalElement = document.getElementById("addServiceModal");
+            let modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+
+            // ✅ Reload After Modal is Fully Closed
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+
         } else {
-            alert('Error: ' + (data.message || JSON.stringify(data.errors)));
+            showFlashMessage("danger", "Error: " + (data.message || JSON.stringify(data.errors)));
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again later.');
+        console.error("Error:", error);
+        showFlashMessage("danger", "An error occurred. Please try again later.");
     });
 });
+
 
     // Modal handling
     const modal = document.getElementById('addServiceModal');
