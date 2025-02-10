@@ -49,15 +49,14 @@
     <span class="admin-text">Hi,{{user.username}}</span>
   </div>
 
-  <!-- Sidebar -->
   <div class="sidebar">
-    <h2>Admin Panel</h2>
-    <a href="{% url 'admin_dashboard' %}"><i class="fas fa-home"></i> Home</a>
-    <a href="#" onclick="openCustomerModal()"><i class="fas fa-user-plus"></i> Add Customer</a>
-    <a href="#" onclick="openTechnicianModal()"><i class="fas fa-user-cog"></i> Add Technician </a>
-    <a href="#" onclick="openModal()" ><i class="fas fa-tools"></i> Add Service</a>
-    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
-  </div>
+    <a href="{% url 'admin_dashboard' %}"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="#" onclick="openCustomerModal()"><i class="fas fa-user-plus"></i><span>Add Customer</span></a>
+    <a href="#" onclick="openTechnicianModal()"><i class="fas fa-user-cog"></i><span>Add Technician</span></a>
+    <a href="#" onclick="openModal()"><i class="fas fa-tools"></i><span>Add Service</span></a>
+    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+</div>
+
 
   <!-- Main Content -->
   <div class="main-content">
@@ -163,7 +162,7 @@
             <!-- Buttons -->
             <button type="button" class="btn btn-primary btn-sm ms-2" id="searchBtn">Search</button>
             <button type="button" class="btn btn-secondary btn-sm ms-2" id="resetBtn">Reset</button>
-            <button type="button" class="btn btn-secondary btn-sm ms-2" onclick="exportData()">Export Data</button>
+            <button type="button" class="btn btn-secondary btn-sm ms-2" onclick="exportData()">Export</button>
         </div>
     </form>
       
@@ -646,7 +645,10 @@ window.onclick = function(event) {
     // Function to toggle the sidebar visibility
     function toggleSidebar() {
       const sidebar = document.querySelector('.sidebar');
-      sidebar.classList.toggle('show');
+      
+      if (window.innerWidth <= 768) {  // Only apply for mobile view
+        sidebar.classList.toggle('expanded');
+    }else{sidebar.classList.toggle('show');}
     }
 
     
