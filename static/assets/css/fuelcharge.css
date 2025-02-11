@@ -1,36 +1,30 @@
-/* Default Desktop Styles */
-.custom-navbar {
-    width: 85%;
-    margin-top: 5px;
-    margin-left: auto;
-}
-
-.form-container {
-    width: 85%;
-    margin-top: 5px;
-    margin-left: 225px;
-}
-
-.table-container {
-    padding-left: 230px;
-}
-
-/* Responsive Styling for Mobile */
-@media (max-width: 768px) {
-    .custom-navbar {
-        width: 100% !important;
-        margin-left: 0 !important;
+/* Default styling for larger screens (desktop view) */
+@media (min-width: 992px) {
+    .custom-navbar,
+    .custom-container,
+    .custom-table {
+        margin-left: 225px !important;
+        max-width: 85%;
     }
-
-    .form-container {
-        width: 100% !important;
-        margin-left: 0 !important;
-        padding: 10px;
+    .table-responsive {
+        padding-left: 230px;
     }
+}
 
-    .table-container {
-        padding-left: 0 !important;
-        width: 100% !important;
-        overflow-x: auto; /* Enable horizontal scrolling for small screens */
+/* Mobile view adjustments */
+@media (max-width: 991px) {
+    .custom-navbar,
+    .custom-container,
+    .custom-table {
+        margin-left: 0 !important;
+        max-width: 100%;
+        padding: 0 15px;
+    }
+    .navbar-nav {
+        flex-direction: column;
+        text-align: center;
+    }
+    .table-responsive {
+        padding-left: 2px;
     }
 }
