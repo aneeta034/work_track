@@ -181,11 +181,29 @@ def add_service(request):
             # Save image paths as a comma-separated string
             apply_instance.photos_of_item = ",".join(image_paths)
             apply_instance.save()
-            return JsonResponse({'success': True,'message': 'Service added successfully!',
-                'is_new_customer': is_new_customer,})
+             # Create the current status entry
+            if customer.whatsapp_number:
+                message = f"Dear {customer.name}, your application for '{apply_instance.work_type}' has been successfully submitted and is currently 'assigned'."
+                encoded_message = urllib.parse.quote(message)
+                whatsapp_url = f"https://whatsapimanagment.onrender.com/send-message?phoneNumber={customer.whatsapp_number}&messageBody={encoded_message}"
+
+                try:
+                    response = requests.get(whatsapp_url)
+                    if response.status_code == 200:
+                        messages.success(request, "Service request submitted and WhatsApp message sent successfully!")
+                    else:
+                        messages.warning(request, "Service request submitted, but failed to send WhatsApp message.")
+                except requests.RequestException as e:
+                    messages.warning(request, f"Service request submitted, but error sending WhatsApp message: {e}")
+
+            return JsonResponse({'success': True, 'message': 'Service added successfully!', 'is_new_customer': is_new_customer})
+
         else:
             return JsonResponse({'success': False, 'errors': form.errors})
+
     return render(request, 'admin_dashboard.html')
+
+
 # View to handle dynamic customer searc
 def search_customer(request):
     query = request.GET.get('q', '').strip()  # Get the query and remove any leading/trailing spaces
