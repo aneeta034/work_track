@@ -2,6 +2,7 @@
 {% block title %}
 food allowance
 {% endblock %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 {% block content %}
 <style>
   .custom-navbar{
@@ -15,82 +16,77 @@ food allowance
 
 <!-- Remove the container around navbar -->
 <div class="mt-0">
-  <!-- Custom Navbar for Vendor Info -->
-  <nav class="navbar navbar-expand-lg bg-light shadow rounded custom-navbar">
-      <div class="container-fluid"> <!-- Use container-fluid instead -->
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#vendorNav">
-              <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse justify-content-left" id="vendorNav"> <!-- Ensure alignment -->
-              <ul class="navbar-nav d-flex flex-wrap gap-2">
+    <nav class="navbar navbar-expand-lg bg-light shadow rounded custom-navbar" style="max-width: 85%; margin-top: 5px; margin-left: auto;">
+    <div class="container-fluid">
+        
+        <!-- Selected Page Title (Only Visible in Mobile View) -->
+        <span class="navbar-brand d-lg-none fw-bold" id="selectedPageTitle"></span>
+
+        <!-- Back Button (Visible Only on Desktop) -->
+        <a class="nav-link d-none d-lg-block" href="{% url 'technician_dashboard' %}">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+
+        <!-- Navbar Toggle Button (Right-Aligned) -->
+        <button class="navbar-toggler ms-auto" type="button" id="navbarToggle">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar Links -->
+        <div class="collapse navbar-collapse" id="vendorNav">
+            <ul class="navbar-nav d-flex flex-wrap gap-2">
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'technician_dashboard'  %}"><i class="bi bi-arrow-left"></i></a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link {% if request.resolver_match.url_name == 'fuelcharge' %}fw-bold active{% endif %}" href="{% url 'fuelcharge' apply.id %}">Fuel Charge</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link {% if request.resolver_match.url_name == 'food_allowance' %}fw-bold active{% endif %}" href="{% url 'food_allowance' apply.id %}">Food Allowance</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link {% if request.resolver_match.url_name == 'item_purchased' %}fw-bold active{% endif %}" href="{% url 'item_purchased' apply.id %}">Item Purchased</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link {% if request.resolver_match.url_name == 'vendor_info' %}fw-bold active{% endif %}" href="{% url 'vendor_info' apply.id %}">Vendor Info</a>
-              </li>
-              </ul>
-          </div>
-      </div>
-  </nav>
-
-
-  <div class="col-md-6 offset-md-4" style="margin-left:480px; margin-top:30px;">
-      <div class="card">
-        <div class="card-header text-white text-left" style="background-color: #2973B2;">
-          <h4 class="card-title text-left">Food Allowance </h4>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'fuelcharge' %}fw-bold active{% endif %}" href="{% url 'fuelcharge' apply.id %}" data-title="Fuel Charge">Fuel Charge</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'food_allowance' %}fw-bold active{% endif %}" href="{% url 'food_allowance' apply.id %}" data-title="Food Allowance">Food Allowance</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'item_purchased' %}fw-bold active{% endif %}" href="{% url 'item_purchased' apply.id %}" data-title="Item Purchased">Item Purchased</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'vendor_info' %}fw-bold active{% endif %}" href="{% url 'vendor_info' apply.id %}" data-title="Vendor Info">Vendor Info</a>
+                </li>
+            </ul>
         </div>
+    </div>
+</nav>
+
+  <div class="container" style="max-width: 85%; margin-top: 5px; margin-right: unset;">
+    <div class="card p-4">
         <div class="card-body">
-          <div class="form-group">
             <form action="{% url 'food_allowance' apply.id %}" method="post">
-              {% csrf_token %}
-              <div class="form-group">
-                <!-- First Row -->
+                {% csrf_token %}
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="technician_name">Technician Name</label>
                         <input type="text" class="form-control" id="technician_name" name="technician_name" value="{{ technician_name }}" required />
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="date">Date</label>
                         <input type="date" class="form-control" name="date" id="date" />
                     </div>
-                </div>
-    
-                <!-- Second Row -->
-                <div class="row mt-3">
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="purpose">Purpose</label>
                         <input type="text" class="form-control" id="purpose" name="purpose" />
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="cost">Cost</label>
                         <input type="number" class="form-control" id="cost" name="cost" />
                     </div>
                 </div>
-            </div>
-    
-            <div class="card-action text-center mt-3" style="margin-bottom:20px;">
-                <button class="btn btn-primary" type="submit">Add</button>
-            </div>
-        </form>
-    </div>
+                <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-primary" type="submit">Add</button>
+                </div>
+            </form>
         </div>
-      </div>
     </div>
+</div>
+
   </div>
   
 
-                    <div class="table-responsive mt-4 " style="padding-left: 230px;">
+                    <div class="table-responsive mt-4 " style="max-width: 85%; margin-top: 5px; margin-left: auto;">
                       {% if food_allowances %}
                         <table id="basic-datatables" class="table table-striped table-bordered">
                             <thead>
@@ -215,5 +211,34 @@ food allowance
         </div>
     </div>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let toggleButton = document.getElementById("navbarToggle");
+        let navbarMenu = document.getElementById("vendorNav");
+        let selectedPageTitle = document.getElementById("selectedPageTitle");
+
+        // Find the currently active menu item and set its text as the title
+        let activeItem = document.querySelector(".nav-link.active");
+        if (activeItem) {
+            selectedPageTitle.textContent = activeItem.getAttribute("data-title");
+        }
+
+        // Toggle navbar on button click
+        toggleButton.addEventListener("click", function () {
+            navbarMenu.classList.toggle("show");
+        });
+
+        // Close navbar when clicking outside
+        document.addEventListener("click", function (event) {
+            let isClickInside = navbarMenu.contains(event.target) || toggleButton.contains(event.target);
+            if (!isClickInside) {
+                navbarMenu.classList.remove("show");
+            }
+        });
+    });
+</script>
 {% endblock %}
 

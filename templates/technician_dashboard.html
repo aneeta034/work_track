@@ -46,15 +46,14 @@
 
   <!-- Sidebar -->
   <div class="sidebar">
-    <h5>Technician Dashboard</h5>
-    <a href="{% url 'technician_dashboard' %}"><i class="fas fa-home"></i> Home</a>
+    <a href="{% url 'technician_dashboard' %}"><i class="fas fa-home"></i> <span>Home</span></a>
 
     
-    <a href="#" onclick="openModal()" ><i class="fas fa-tools" ></i> Add Service</a>
+    <a href="#" onclick="openModal()" ><i class="fas fa-tools" ></i><span>Add Service</span</a>
 
-    <a href="#" onclick="openCustomerModal()"><i class="fas fa-user-plus"></i> Add Customer</a>
+    <a href="#" onclick="openCustomerModal()"><i class="fas fa-user-plus"></i><span>Add Customer</span</a>
    
-    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
   </div>
 
   <!-- Main Content -->
@@ -279,10 +278,10 @@
           <td>
             <ul class="files-list">
       {% if service.estimation_document %}
-        <li><a href="{{ service.estimation_document.url }}" target="_blank">Document</a>
+        <li><a href="{{ service.estimation_document.url }}" target="_blank">Document</a></li>
           {% endif %}
       {% if service.get_photos %}
-          <a href="{{ MEDIA_URL }}{{ service.get_photos.0 }}" data-lightbox="gallery-{{ service.id }}" data-title="Service Photos">Photo</a>
+          <li><a href="{{ MEDIA_URL }}{{ service.get_photos.0 }}" data-lightbox="gallery-{{ service.id }}" data-title="Service Photos">Photo</a></li>
 
           {% for photo in service.get_photos|slice:"1:" %}
             <a href="{{ MEDIA_URL }}{{ photo }}" data-lightbox="gallery-{{ service.id }}" style="display: none;"></a>
@@ -291,7 +290,8 @@
                          
             </ul>
           </td>
-          <td><a href="{% url 'fuelcharge' service.id %}"><i class="bi bi-plus-circle"></i></a></td>
+          <td><a href="{% url 'fuelcharge' service.id %}" style="font-size: 12px;">View Charges</a></td>
+
           <td>{{ service.any_other_comments }}</td>
         
           <td>
@@ -563,7 +563,9 @@ function getCSRFToken() {
    // Function to toggle the sidebar visibility
    function toggleSidebar() {
      const sidebar = document.querySelector('.sidebar');
-     sidebar.classList.toggle('show');
+     if (window.innerWidth <= 768) {  // Only apply for mobile view
+        sidebar.classList.toggle('expanded');
+    }else{sidebar.classList.toggle('show');}
    }
    const notFoundDiv = document.getElementById('customer_not_found');
   const resultsDiv = document.getElementById('customer_results'); 

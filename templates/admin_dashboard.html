@@ -767,7 +767,7 @@ function selectCustomer(customer) {
 });
 
 function showFlashMessage(type, message) {
-    let flashContainer = document.getElementById("flash-messages");
+    let flashContainer = document.getElementById("flashMessages");
     if (!flashContainer) {
         flashContainer = document.createElement("div");
         flashContainer.id = "flash-messages";
@@ -973,7 +973,7 @@ document.getElementById("searchBtn").addEventListener("click", function () {
         query = `query=${searchBar.value.trim()}`;
     } else {
         // If no valid values exist, return early and prevent navigation
-        alert("Please enter a search value before proceeding.");
+        showFlashMessage("warning", "Please enter a search value before proceeding.");
         return;
     }
 
@@ -1156,19 +1156,33 @@ updatePlaceholder("date");
 </script>
 <script>
   function exportData() {
-      let status = "{{ current_filter|default:'all' }}"; // Ensure status is always set
-      let baseUrl = "{% url 'export_applied_services' status='__status__' %}".replace('__status__', status);
-      
-      let params = new URLSearchParams({
-          filterType: "{{ request.GET.filterType|default:'' }}",
-          query: "{{ request.GET.query|default:'' }}",
-          start: "{{ request.GET.start|default:'' }}",
-          end: "{{ request.GET.end|default:'' }}"
-      });
+    let status = "{{ current_filter|default:'all' }}"; // Ensure status is always set
+    let baseUrl = "{% url 'export_applied_services' status='__status__' %}".replace('__status__', status);
 
-      // Redirect with the dynamically generated URL
-      window.location.href = baseUrl + "?" + params.toString();
-  }
+    let params = new URLSearchParams({
+        filterType: "{{ request.GET.filterType|default:'' }}",
+        query: "{{ request.GET.query|default:'' }}",
+        start: "{{ request.GET.start|default:'' }}",
+        end: "{{ request.GET.end|default:'' }}"
+    });
+
+    fetch(baseUrl + "?" + params.toString(), { method: "GET" })
+    .then(response => {
+        if (response.status === 204) {
+            showFlashMessage("warning", "⚠️ No data found for the selected filters.");
+        } else if (response.ok) {
+          showFlashMessage("success", "Export completed successfully!");
+          window.location.href = baseUrl + "?" + params.toString();
+        } else {
+            showFlashMessage("danger", "❌ An error occurred while exporting.");
+        }
+    })
+    .catch(error => {
+        console.error("Export Error:", error);
+        showFlashMessage("danger", "❌ An unexpected error occurred.");
+    });
+
+}
 </script>
 </body>
 </html>
