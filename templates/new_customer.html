@@ -36,22 +36,20 @@ new customer
                     <td>{{ customer.address }}</td>
                     <td>{{ customer.contact_number }}</td>
                     <td>{{ customer.whatsapp_number }}</td>
-                    <td>{{ customer.reffered_by }}</td>
+                    <td>{{ customer.referred_by }}</td>
                     <td>
-                      <button 
-                        class="btn btn-sm btn-primary"
-                        data-bs-toggle="modal"
-                        data-bs-target="#updateCustomerModal{{ customer.id }}">
-                        Update
-                      </button>
-                      <form method="post" action="{% url 'delete_customer' customer.id %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCustomerModal{{ customer.id }}">
-                            Delete
-                        </button>
-                    </form>
-                    
-                    
+                      <div style="display: flex; align-items: center;">
+                        <a href="{% url 'update_customer' customer.id %}" class="edit-customer-btn" data-bs-toggle="modal" data-bs-target="#updateCustomerModal{{ customer.id }}">
+                            <i class="fa fa-pencil-alt" aria-hidden="true" title="Update"></i>
+                        </a>
+                <!-- Delete Button (Triggers Modal) -->
+                <form method="post" action="{% url 'delete_customer' customer.id %}" style="display:inline-block; margin-left:5px;">
+
+                    {% csrf_token %}
+                    <button type="button"  class="icon-link delete-icon" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteCustomerModal{{ customer.id }}">
+                      <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+                </form>
                     </div>
                     </td>
                   </tr>
@@ -64,6 +62,52 @@ new customer
         </div>
       </div>
     </div>
+
+<!--updateCustomerModal-->
+{% for customer in customers %}
+<div class="modal fade" id="updateCustomerModal{{ customer.id }}" tabindex="-1" aria-labelledby="updateCustomerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update Customer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'update_customer' customer.id %}">
+                    {% csrf_token %}
+                    
+                    <input type="hidden" name="customer_id" value="{{ customer.id }}">
+                      <div class="mb-3">
+                          <label class="form-label">Name:</label>
+                          <input type="text" name="name" class="form-control" value="{{ customer.name }}" required>
+                      </div>
+                      <div class="mb-3">
+                          <label  class="form-label">Address:</label>
+                          <textarea  name="address" class="form-control" rows="3">{{ customer.address }}</textarea>
+                      </div>
+                      <div class="mb-3">
+                          <label  class="form-label">Contact Number:</label>
+                          <input type="text"  name="contact_number" class="form-control" value="{{ customer.contact_number }}" required>
+                      </div>
+                      <div class="mb-3">
+                          <label  class="form-label">WhatsApp Number:</label>
+                          <input type="text"  name="whatsapp" class="form-control" value="{{ customer.whatsapp_number }}">
+                      </div>
+                      <div class="mb-3">
+                          <label  class="form-label">Referred By:</label>
+                          <input type="text" name="referred_by" class="form-control" value="{{ customer.referred_by }}">
+                      </div>
+                      <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                  </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- The Modal Add Customer-->
 <div class="modal" id="customerModal" style="display: none;">
