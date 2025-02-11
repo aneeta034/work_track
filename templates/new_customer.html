@@ -109,10 +109,12 @@ new customer
   </div>
 </div>
 
+
+
 <!-- The Modal Add Customer-->
-<div class="modal" id="customerModal" style="display: none;">
-  <div class="modal-dialog">
-    <div class="modal-content">
+<div class="modal"id="customerModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-sm ">
+    <div class="modal-content p-3" style="max-width: 90vw;">
       <div class="modal-header">
         <h5 class="modal-title">Add Customer</h5>
         <button type="button" class="close" onclick="closeCustomerModal()">
@@ -150,10 +152,11 @@ new customer
   </div>
 </div>
 
+
   <!-- Technician Modal -->
   <div class="modal" id="technicianModal" style="display: none;">
-    <div class="modal-dialog">
-      <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-sm ">
+      <div class="modal-content p-3" style="max-width: 90vw;">
         <div class="modal-header">
           <h5 class="modal-title">Add Technician</h5>
           <button type="button" class="close" onclick="closeTechnicianModal()">
@@ -175,7 +178,7 @@ new customer
               <label for="password">Password</label>
               <input type="password" class="form-control" name="password" id="password" required>
             </div>
-            <button type="submit" class="btn btn-primary">Save Technician</button>
+            <button type="submit" class="btn btn-primary">Save </button>
           </form>
         </div>
       </div>
@@ -185,108 +188,108 @@ new customer
 
 
 <!-- Add Service Modal -->
-<div id="addServiceModal" class="modal">
-  <div class="modal-content">
-    <!-- Top Bar -->
-    <div class="modal-topbar">
-      <h2>Add Service</h2>
-      <span class="close" onclick="closeModal()">&times;</span>
-    </div>
-
-    <form id="addServiceForm" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <div class="modal-grid">
-        <!-- Column 1 -->
-        <div class="modal-column">
-          <div class="form-group">
-            <label for="contact_number">Customer Number</label>
-            <input type="text" id="contact_number" name="contact_number" oninput="searchCustomer()">
-            <div id="customer_results"></div>
-            <div id="customer_not_found" class="text-danger" style="display: none;">Customer not found. Please enter details manually.</div>
-            <small id="customer_error" class="text-danger"></small>
-          </div>
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" readonly>
-          </div>
-          <div class="form-group">
-            <label for="address">Address</label>
-            <input type="text" id="address" name="address" readonly>
-          </div>
-          <div class="form-group">
-            <label for="whatsapp_number">WhatsApp Number</label>
-            <input type="text" id="whatsapp_number" name="whatsapp_number" readonly>
-          </div>
-          <div class="form-group checkbox-group">
-            <input type="checkbox" id="same_as_contact" onchange="copyContactToWhatsApp()">
-            <label for="same_as_contact">Same as Contact Number</label>
-          </div>
-          <div class="form-group">
-            <label for="referred_by">Referred By</label>
-            <input type="text" id="referred_by" name="referred_by" readonly>
-          </div>
-        </div>
-
-        <!-- Column 2 -->
-        <div class="modal-column">
-          <div class="form-group">
-            <label for="service_by">Service By</label>
-            <select id="service_by" name="service_by">
-              <option value="">Select a technician</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="work_type">Work Type</label>
-            <select id="work_type" name="work_type">
-              <option value="sale">Sale</option>
-              <option value="service">Service</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="item_name_or_number">Item Name/Number</label>
-            <input type="text" id="item_name_or_number" name="item_name_or_number">
-          </div>
-          <div class="form-group">
-            <label for="issue">Issue Description</label>
-            <textarea id="issue" name="issue" rows="7"></textarea>
-          </div>
-        </div>
-
-        <!-- Column 3 -->
-        <div class="modal-column">
-          <div class="form-group">
-            <label for="photos_of_item">Upload Photo</label>
-            <div class="file-input-container">
-                <input type="file" id="photos_of_item" name="photos_of_item" multiple>
-                <div id="fileNamesDisplay" class="file-names-display">No files chosen</div>
+   <div id="addServiceModal" class="modal">
+    <div class="modal-content">
+      <!-- Top Bar -->
+      <div class="modal-topbar">
+        <h2>Add Service</h2>
+        <span class="close" onclick="closeModal()">&times;</span>
+      </div>
+  
+      <form id="addServiceForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-grid">
+          <!-- Column 1 -->
+          <div class="modal-column">
+            <div class="form-group">
+              <label for="contact_number">Customer Number</label>
+              <input type="text" id="contact_number" name="contact_number" oninput="searchCustomer()">
+              <div id="customer_results"></div>
+              <div id="customer_not_found" class="text-danger" style="display: none;">Customer not found. Please enter details manually.</div>
+              <small id="customer_error" class="text-danger"></small>
             </div>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" readonly>
+            </div>
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input type="text" id="address" name="address" readonly>
+            </div>
+            <div class="form-group">
+              <label for="whatsapp_number">WhatsApp Number</label>
+              <input type="text" id="whatsapp_number" name="whatsapp_number" readonly>
+            </div>
+            <div class="form-group checkbox-group">
+              <input type="checkbox" id="same_as_contact" onchange="copyContactToWhatsApp()">
+              <label for="same_as_contact">Same as Contact Number</label>
+            </div>
+            <div class="form-group">
+              <label for="referred_by">Referred By</label>
+              <input type="text" id="referred_by" name="referred_by" readonly>
+            </div>
+          </div>
+  
+          <!-- Column 2 -->
+          <div class="modal-column">
+            <div class="form-group">
+              <label for="service_by">Service By</label>
+              <select id="service_by" name="service_by">
+                <option value="">Select a technician</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="work_type">Work Type</label>
+              <select id="work_type" name="work_type">
+                <option value="sale">Sale</option>
+                <option value="service">Service</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="item_name_or_number">Item Name/Number</label>
+              <input type="text" id="item_name_or_number" name="item_name_or_number">
+            </div>
+            <div class="form-group">
+              <label for="issue">Issue Description</label>
+              <textarea id="issue" name="issue" rows="7"></textarea>
+            </div>
+          </div>
+  
+          <!-- Column 3 -->
+          <div class="modal-column">
+            <div class="form-group">
+              <label for="photos_of_item">Upload Photo</label>
+              <div class="file-input-container">
+                  <input type="file" id="photos_of_item" name="photos_of_item" multiple>
+                  <div id="fileNamesDisplay" class="file-names-display">No files chosen</div>
+              </div>
+          </div>
+          <div class="form-group">
+            <label for="estimation_document">Upload Document</label>
+            <input type="file" id="estimation_document" name="estimation_document">
+            <div id="estimation_document_display" class="doc-display"></div>  <!--  Added this for display -->
         </div>
-        <div class="form-group">
-          <label for="estimation_document">Upload Document</label>
-          <input type="file" id="estimation_document" name="estimation_document">
-          <div id="estimation_document_display" class="doc-display"></div>  <!--  Added this for display -->
-      </div>
-          <div class="form-group">
-            <label for="estimated_price">Estimated Price</label>
-            <input type="text" id="estimated_price" name="estimated_price">
-          </div>
-          <div class="form-group">
-            <label for="estimated_date">Estimated Date</label>
-            <input type="date" id="estimated_date" name="estimated_date">
-          </div>
-          <div class="form-group">
-            <label for="any_other_comments">Comments</label>
-            <textarea id="any_other_comments" name="any_other_comments"></textarea>
+            <div class="form-group">
+              <label for="estimated_price">Estimated Price</label>
+              <input type="text" id="estimated_price" name="estimated_price">
+            </div>
+            <div class="form-group">
+              <label for="estimated_date">Estimated Date</label>
+              <input type="date" id="estimated_date" name="estimated_date">
+            </div>
+            <div class="form-group">
+              <label for="any_other_comments">Comments</label>
+              <textarea id="any_other_comments" name="any_other_comments"></textarea>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="form-submit">
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </div>
-    </form>
+        <div class="form-submit">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
- 
+   
 
 
 <!-- Delete Confirmation Modal -->
