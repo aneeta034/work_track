@@ -16,6 +16,8 @@ from django.db.models import Value
 from django.db.models import OuterRef, Subquery
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
+from django.utils import timezone
+
 
 import os
 
@@ -182,6 +184,17 @@ def add_service(request):
             apply_instance.photos_of_item = ",".join(image_paths)
             apply_instance.save()
              # Create the current status entry
+
+            # if not apply_instance.current_status_entries.exists():
+            #     CurrentStatus.objects.create(
+            #         date=apply_instance.estimated_date if apply_instance.estimated_date else timezone.now(),
+            #         technician_name=request.user.username,  # Use assigned technician
+            #         status="Assigned",
+            #         apply=apply_instance,
+            #         customer_name=apply_instance.name,
+            #         issue=apply_instance.issue,
+            #     )
+
             if customer.whatsapp_number:
                 message = f"Dear {customer.name}, your application for '{apply_instance.work_type}' has been successfully submitted and is currently 'assigned'."
                 encoded_message = urllib.parse.quote(message)
@@ -238,16 +251,51 @@ def get_users(request):
     technicians = CustomUser.objects.filter(role='technician').values('id', 'username')
     return JsonResponse(list(technicians), safe=False)
 # Create your views here. 
+
+from django.utils.timezone import now
+from django.shortcuts import redirect
+from django.http import JsonResponse
+
 def update_current_status(request, apply_id):
     if request.method == 'POST':
-        status_entry = get_object_or_404(CurrentStatus, id=apply_id)
-        status_entry.date = request.POST.get('date')
-        status_entry.status = request.POST.get('status')
-        
-        status_entry.technician_name = request.user.username  
+        try:
+            apply = get_object_or_404(Apply, id=apply_id)  
 
-        status_entry.save()
-        return redirect('technician_dashboard')
+            # Get latest status entry
+            latest_status = apply.current_status_entries.order_by('-date').first()
+
+            if latest_status:
+                new_status = request.POST.get('status', 'Pending')  # Default to "Pending"
+                status_date = request.POST.get('date', now().date())  # Use today's date if none is provided
+
+                latest_status.status = new_status
+                latest_status.date = status_date
+                latest_status.technician_name = request.user.username  # Assign logged-in user
+                latest_status.save()
+
+                # Also update Apply model
+                apply.status = new_status
+                apply.save()
+
+                return JsonResponse({"success": True, "status": new_status})
+            else:
+                return JsonResponse({"error": "No existing status entry found"}, status=400)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
+# def update_current_status(request, apply_id):
+#     if request.method == 'POST':
+#         status_entry = get_object_or_404(CurrentStatus, id=apply_id)
+#         status_entry.date = request.POST.get('date')
+#         status_entry.status = request.POST.get('status')
+        
+#         status_entry.technician_name = request.user.username  
+
+#         status_entry.save()
+#         return redirect('technician_dashboard')
   
 def tech_pending_services(request):
     pending_services = CurrentStatus.objects.filter(

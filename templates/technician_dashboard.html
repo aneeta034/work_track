@@ -2,6 +2,7 @@
 {% load static %}
 <html lang="en">
 <head>
+  <meta name="csrf-token" content="{{ csrf_token }}">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}
@@ -328,7 +329,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{% url 'update_current_status' service.current_status_entries.last.id %}" method="POST">
+                    <form action="{% url 'update_current_status' service.id %}" method="POST">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="technician_name{{ service.id }}" class="form-label">Technician Name</label>
@@ -433,9 +434,64 @@
     };
 </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const statusButtons = document.querySelectorAll('button[id^="statusButton"]');
+
+    statusButtons.forEach((button) => {
+        const estimatedDate = new Date(button.dataset.estimatedDate);
+        const currentStatus = button.dataset.currentStatus;
+        const currentDate = new Date();
+        const applyId = button.dataset.serviceId;
+
+        // If status is "Assigned" and the estimated date has passed, update it to "Pending"
+        if (currentStatus === 'Assigned' && currentDate > estimatedDate) {
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-danger');
+            button.textContent = 'Pending';
+
+            // Send update request to backend
+            fetch(`/technician/update-status/${applyId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCSRFToken(),
+                },
+                body: new URLSearchParams({
+                    status: 'Pending',
+                    date: new Date().toISOString().split('T')[0],  // Convert to YYYY-MM-DD
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    alert("Error updating status: " + data.error);
+                } else {
+                    console.log("Status updated successfully:", data);
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                alert("Failed to update status. Please try again.");
+            });
+        }
+    });
+});
+
+// CSRF Token Helper Function
+function getCSRFToken() {
+    const cookieValue = document.cookie.split('; ')
+        .find(row => row.startsWith('csrftoken='))
+        ?.split('=')[1];
+    return cookieValue || '';
+}
+
+</script>
+
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    {% comment %} document.addEventListener('DOMContentLoaded', function () {
       const statusButtons = document.querySelectorAll('button[id^="statusButton"]');
   
       statusButtons.forEach((button) => {
@@ -473,7 +529,7 @@
             });
         }
     });
-  });
+  }); {% endcomment %}
      
 </script>
 

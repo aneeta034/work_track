@@ -27,6 +27,10 @@
         color: black; /* Hover color */
         text-decoration: none; /* Ensure no underline on hover */
     }
+    .card:hover {
+      transform: none !important;
+      transition: none !important;
+  }
   </style>
 
 
@@ -261,13 +265,13 @@
           </td>
           <td>{{ service.any_other_comments }}</td>
           <td>
-            {% if service.latest_status %}
+            {% if service.status %}
                 <span class="
-                    {% if service.latest_status.status == 'Assigned' %}text-primary{% endif %}
-                    {% if service.latest_status.status == 'Pending' %}text-danger{% endif %}
-                    {% if service.latest_status.status == 'Completed' %}text-success{% endif %}
+                    {% if service.status == 'Assigned' %}text-primary{% endif %}
+                    {% if service.status == 'Pending' %}text-danger{% endif %}
+                    {% if service.status == 'Completed' %}text-success{% endif %}
                 ">
-                    {{ service.latest_status.status }}
+                    {{ service.status }}
                 </span>
             {% else %}
                 <span class="text-muted">No Status</span>
