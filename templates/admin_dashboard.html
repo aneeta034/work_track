@@ -28,9 +28,9 @@
         text-decoration: none; /* Ensure no underline on hover */
     }
     .card:hover {
-      transform: none !important;
-      transition: none !important;
-  }
+    transform: none !important;
+    transition: none !important;
+}
   </style>
 
 
@@ -71,43 +71,44 @@
     <!-- Cards Section -->
     <div class="row">
       <div class="col-md-4">
-        <div class="card p-3 mb-3">
-          <div class="d-flex align-items-center">
-            <i class="fas fa-users card-icon me-3"></i>
-            <div>
-              <h3 class="mb-1">
-                  <a class="card link-style" href="{% url 'new_customer' %}">Customers</a>
-              </h3>
+        <!-- Customers Card -->
+        <a href="{% url 'new_customer' %}" class="text-decoration-none">
+          <div class="card p-3 mb-3">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-users card-icon me-3"></i>
+              <div>
+                <h3 class="mb-1" style="color:grey;">Customers</h3>
+              </div>
+              <h1 class="ms-auto mb-0">{{ customer_count }}</h1>
             </div>
-            <h1 class="ms-auto mb-0">{{ customer_count }}</h1>
           </div>
-        </div>
+        </a>
       </div>
       <div class="col-md-4">
-        <div class="card p-3 mb-3">
-          <div class="d-flex align-items-center">
-            <i class="fas fa-user-cog card-icon me-3"></i>
-            <div>
-              <h3 class="mb-1">
-                  <a class="card link-style" href="{% url 'list_technicians' %}">Technicians</a>
-              </h3>            
+        <a href="{% url 'list_technicians' %}" class="text-decoration-none">
+          <div class="card p-3 mb-3">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-user-cog card-icon me-3"></i>
+              <div>
+                <h3 class="mb-1" style="color:grey">Technicians</h3>
+              </div>
+              <h1 class="ms-auto mb-0">{{ technician_count  }}</h1>
             </div>
-            <h1 class="ms-auto mb-0">{{ technician_count }}</h1>
           </div>
-        </div>
+        </a>
       </div>
       <div class="col-md-4">
-        <div class="card p-3 mb-3">
-          <div class="d-flex align-items-center">
-            <i class="fas fa-tools card-icon me-3"></i>
-            <div>
-              <h3 class="mb-1">
-                <a class="card link-style" href="{% url 'admin_dashboard' %}">Services</a>
-            </h3>            </div>
-            <h1 class="ms-auto mb-0">{{ total_services }}</h1>
+        <a href="{% url 'admin_dashboard' %}" class="text-decoration-none">
+          <div class="card p-3 mb-3">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-tools card-icon me-3"></i>
+              <div>
+                <h3 class="mb-1" style="color:grey">Services</h3>
+              </div>
+              <h1 class="ms-auto mb-0">{{ total_services   }}</h1>
+            </div>
           </div>
-        </div>
-      </div>
+        </a>
     </div>
 
     {% block content %}
