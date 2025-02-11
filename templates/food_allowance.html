@@ -43,50 +43,37 @@ food allowance
       </div>
   </nav>
 
-
-  <div class="col-md-6 offset-md-4" style="margin-left:480px; margin-top:30px;">
-      <div class="card">
-        <div class="card-header text-white text-left" style="background-color: #2973B2;">
-          <h4 class="card-title text-left">Food Allowance </h4>
-        </div>
+  <div class="container" style="max-width: 85%; margin-top: 5px; margin-left: 225px;">
+    <div class="card p-4">
         <div class="card-body">
-          <div class="form-group">
             <form action="{% url 'food_allowance' apply.id %}" method="post">
-              {% csrf_token %}
-              <div class="form-group">
-                <!-- First Row -->
+                {% csrf_token %}
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="technician_name">Technician Name</label>
                         <input type="text" class="form-control" id="technician_name" name="technician_name" value="{{ technician_name }}" required />
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="date">Date</label>
                         <input type="date" class="form-control" name="date" id="date" />
                     </div>
-                </div>
-    
-                <!-- Second Row -->
-                <div class="row mt-3">
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="purpose">Purpose</label>
                         <input type="text" class="form-control" id="purpose" name="purpose" />
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="cost">Cost</label>
                         <input type="number" class="form-control" id="cost" name="cost" />
                     </div>
                 </div>
-            </div>
-    
-            <div class="card-action text-center mt-3" style="margin-bottom:20px;">
-                <button class="btn btn-primary" type="submit">Add</button>
-            </div>
-        </form>
-    </div>
+                <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-primary" type="submit">Add</button>
+                </div>
+            </form>
         </div>
-      </div>
     </div>
+</div>
+
   </div>
   
 

@@ -73,6 +73,9 @@ def export_applied_services(request, status):
         applied_services = applied_services.filter(created_at__year__gte=start, created_at__year__lte=end)
    
     # Convert to DataFrame
+    if not applied_services.exists():
+        messages.warning(request, "No data found for the selected filters.")
+        return HttpResponse(status=204)  # No content response
     
     df = pd.DataFrame.from_records(
     applied_services.values(

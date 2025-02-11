@@ -44,60 +44,37 @@ item purchased
     </nav>
 
 
-
-    <div class="col-md-6 offset-md-4" style="margin-left:480px; margin-top:30px;">
-        <div class="card">
-          <div class="card-header text-white text-left" style="background-color: #2973B2;">
-            <h4 class="card-title text-left">Item Purchased </h4>
-          </div>
-          <div class="card-body">
-            <div class="form-group">
+    <div class="container" style="max-width: 85%; margin-top: 5px; margin-left: 225px;">
+        <div class="card p-4">
+            <div class="card-body">
                 <form action="{% url 'item_purchased' apply.id %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    
-                    <div class="container">
-                        <div class="row">
-                             <!-- First Row -->
-                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="item_name">Item Purchased</label>
-                                    <input type="text" class="form-control" id="item_name" name="item_name" placeholder="Item Name" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="date">Date</label>
-                                    <input type="date" class="form-control" id="date" name="date" required>
-                                </div>
-                            </div>            
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="item_name">Item Purchased</label>
+                            <input type="text" class="form-control" id="item_name" name="item_name" placeholder="Item Name" required>
                         </div>
-                
-                        <div class="row mt-3"> <!-- Second Row -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="price">Price</label>
-                                    <input type="number" class="form-control" id="price" name="price" placeholder="Price" required>
-                                </div>
-                            </div>
-                
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="bill_photo">Bill Photo</label>
-                                    <input type="file" class="form-control" id="bill_photo" name="bill_photo" accept="image/*" required>
-                                </div>
-                            </div>
+                        <div class="col-md-3">
+                            <label for="date">Date</label>
+                            <input type="date" class="form-control" id="date" name="date" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="price">Price</label>
+                            <input type="number" class="form-control" id="price" name="price" placeholder="Price" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="bill_photo">Bill Photo</label>
+                            <input type="file" class="form-control" id="bill_photo" name="bill_photo" accept="image/*" required>
                         </div>
                     </div>
-                
-                    <div class="text-center mt-3" style="margin-bottom: 20px;">
+                    <div class="d-flex justify-content-end mt-3">
                         <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </form>
-                
-            </div>                            
-          </div>
+            </div>
         </div>
-      </div>
+    </div>
+    
     </div>
     
 
@@ -126,8 +103,9 @@ item purchased
                     <td>{{ d.item_name }}</td>
                     <td>{{ d.price }}</td>
                     <td>
-                        <img src="{{ d.bill_photo.url }}" alt="Bill Photo" width="100" height="100">
+                        <a href="{{ d.bill_photo.url }}" target="_blank">View</a>
                     </td>
+                    
                     <td>
                         <div style="display: flex; align-items: center;">
                             <a href="{% url 'update_item_purchased' d.id %}" class="edit-itempurchased-btn" data-bs-toggle="modal" data-bs-target="#updateItemPurchasedModal{{ d.id }}">

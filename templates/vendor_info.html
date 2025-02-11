@@ -42,63 +42,42 @@
     </nav>
 
 
-
-    <div class="col-md-6 offset-md-4" style="margin-left:490px; margin-top:30px;">
-        <div class="card">
-          <div class="card-header text-white text-left" style="background-color: #2973B2;">
-            <h4 class="card-title text-left">Vendor Info</h4>
-          </div>
-          <div class="card-body">
-            <div class="form-group">
+    <div class="container" style="max-width: 85%; margin-top: 5px; margin-left: 225px;">
+        <div class="card p-4">
+            <div class="card-body">
                 <form action="{% url 'vendor_info' apply.id %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="vendor_name">Vendor Name</label>
-                                <input type="text" class="form-control" id="vendor_name" name="vendor_name" required>
-                            </div>
+                        <div class="col-md-3">
+                            <label for="vendor_name">Vendor Name</label>
+                            <input type="text" class="form-control" id="vendor_name" name="vendor_name" required>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="vendor_cost">Vendor Cost</label>
-                                <input type="number" class="form-control" id="vendor_cost" name="vendor_cost" required>
-                            </div>
+                        <div class="col-md-2">
+                            <label for="vendor_cost">Vendor Cost</label>
+                            <input type="number" class="form-control" id="vendor_cost" name="vendor_cost" required>
                         </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="date">Date</label>
-                                <input type="date" class="form-control" id="date" name="date" required>
-                            </div>
+                        <div class="col-md-2">
+                            <label for="date">Date</label>
+                            <input type="date" class="form-control" id="date" name="date" required>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="vendor_eta">Vendor ETA</label>
-                                <input type="date" class="form-control" id="vendor_eta" name="vendor_eta" required>
-                            </div>
+                        <div class="col-md-2">
+                            <label for="vendor_eta">Vendor ETA</label>
+                            <input type="date" class="form-control" id="vendor_eta" name="vendor_eta" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="vendor_bill_photo">Vendor Bill</label>
+                            <input type="file" class="form-control" id="vendor_bill_photo" name="vendor_bill_photo" accept="image/*" required>
                         </div>
                     </div>
-
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="vendor_bill_photo">Vendor Bill Photo</label>
-                                <input type="file" class="form-control" id="vendor_bill_photo" name="vendor_bill_photo" accept="image/*" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center mt-4 mb-3">
+    
+                    <div class="d-flex justify-content-end mt-3">
                         <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </form>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
+    
     </div>
 
    
@@ -125,7 +104,10 @@
                 <td>{{ d.issue }}</td>   
                 <td>{{ d.date }}</td>
                 <td>{{ d.vendor_name }}</td>
-                <td><img src="{{ d.vendor_bill_photo.url }}" alt="Bill Photo" width="100" height="100"></td>
+                <td>
+                    <a href="{{ d.vendor_bill_photo.url }}" target="_blank">View</a>
+                </td>
+                
                 <td>{{ d.vendor_eta }}</td>
                 <td>{{ d.vendor_cost }}</td>
                 <td>
