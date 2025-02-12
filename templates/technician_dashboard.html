@@ -317,6 +317,7 @@
 <!-- Update Status Modal -->
 {% if service.current_status_entries.last %}
     <div class="modal " id="updateStatusModal{{ service.id }}">
+      <div class="addmodal">
         <div class="modal-dialog" >
             <div class="modal-content">
                 <div class="modal-header">
@@ -344,11 +345,15 @@
                                 <option value="Completed" {% if service.current_status_entries.last.status == 'Completed' %}selected{% endif %}>Completed</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-success">Update</button>
+                        <div class="mb-3 d-flex justify-content-end">
+                          <button type="submit" class="btn btn-primary">Update</button>
+                      </div>
+                      
                     </form>
                 </div>
             </div>
         </div>
+      </div>
     </div>
 {% endif %}
 
