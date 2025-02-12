@@ -557,43 +557,6 @@ def update_customer(request, customer_id):
 
     return redirect('new_customer')
 
-# def add_customer(request):
-#     if 'term' in request.GET:
-#         term = request.GET.get('term', '').strip()
-#         qs = Customer.objects.filter(contact_number__istartswith=term)
-#         contact_numbers = [contact.contact_number for contact in qs]
-#         return JsonResponse(contact_numbers, safe=False)
-
-#     if request.method == "POST":
-#         name = request.POST.get('name', '').strip()
-#         address = request.POST.get('address', '').strip()
-#         contact_number = request.POST.get('contact_number', '').strip()
-#         whatsapp_number = request.POST.get('whatsapp_number', '').strip()
-#         reffered_by = request.POST.get('reffered_by', '').strip()
-
-#         # Validation checks
-#         if not name or not contact_number:
-#             messages.error(request, "Name and Contact Number are required.")
-#             return render(request, 'add_customer.html')
-
-#         if Customer.objects.filter(contact_number=contact_number).exists():
-#             messages.error(request, "A customer with this contact number already exists.")
-#             return render(request, 'add_customer.html')
-
-#         # Create the new customer
-#         Customer.objects.create(
-#             name=name,
-#             address=address,
-#             contact_number=contact_number,
-#             whatsapp_number=whatsapp_number,
-#             reffered_by=reffered_by,
-#         )
-
-#         messages.success(request, "Customer added successfully!")
-#         # Redirect to admin dashboard
-#         return redirect('admin_dashboard')  # Replace 'admin_dashboard' with the actual name of the URL pattern for the admin dashboard
-
-#     return render(request, 'add_customer.html')
 
 def update_customer(request, customer_id):
     if request.method == 'POST':

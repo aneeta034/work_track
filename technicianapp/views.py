@@ -361,7 +361,7 @@ def technician_add_service(request):
                 address=customer.address,
                 contact_number=customer.contact_number,
                 whatsapp_number=customer.whatsapp_number,
-                reffered_by=customer.reffered_by,
+                referred_by=customer.referred_by,
                 work_type=work_type,
                 item_name_or_number=item_name_or_number,
                 issue=issue,
