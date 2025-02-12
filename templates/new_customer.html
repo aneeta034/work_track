@@ -4,7 +4,6 @@ new customer
 {% endblock %}
 
 {% block content %}
-
 <div class="container">
   <div class="page-inner">
     <div class="row">
@@ -65,7 +64,7 @@ new customer
 
 <!--updateCustomerModal-->
 {% for customer in customers %}
-<div class="modal fade" id="updateCustomerModal{{ customer.id }}" tabindex="-1" aria-labelledby="updateCustomerModalLabel" aria-hidden="true">
+<div class="modal fade" id="updateCustomerModal{{ customer.id }}" tabindex="-1" aria-labelledby="updateCustomerModalLabel" aria-hidden="true" >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -333,10 +332,10 @@ $(document).ready(function() {
 
 <!-- Delete Confirmation Modal -->
 {% for customer in customers %}
-<div class="modal fade" id="deleteCustomerModal{{ customer.id }}" tabindex="-1" aria-labelledby="deleteCustomerLabel" aria-hidden="true">
+<div class="modal fade custom-modal" id="deleteCustomerModal{{ customer.id }}" tabindex="-1" aria-labelledby="deleteCustomerLabel" aria-hidden="true">
   <div class="modal-dialog">
       <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header custom-modal-header">
               <h5 class="modal-title">Confirm Delete</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>

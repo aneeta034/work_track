@@ -49,8 +49,6 @@
 
     
     <a href="#" onclick="openModal()" ><i class="fas fa-tools" ></i><span>Add Service</span</a>
-
-    <a href="#" onclick="openCustomerModal()"><i class="fas fa-user-plus"></i><span>Add Customer</span</a>
    
     <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
   </div>
@@ -364,46 +362,6 @@
 
 {% endblock %}
 
-<!-- The Modal Add Customer-->
-<div class="modal" id="customerModal" >
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Add Customer</h5>
-        <button type="button" class="close" onclick="closeCustomerModal()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="POST" enctype="multipart/form-data" action="{% url 'technician_add_customer' %}">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" class="form-control" id="name" name="name" required>
-          </div>
-          <div class="form-group">
-            <label for="contact_number">Contact Number:</label>
-            <input type="text" class="form-control" id="contact_number" name="contact_number" required>
-          </div>
-          <div class="form-group">
-            <label for="whatsapp_number">WhatsApp Number:</label>
-            <input type="text" class="form-control" id="whatsapp_number" name="whatsapp_number">
-          </div>
-          <div class="form-group">
-            <label for="address">Address:</label>
-            <input type="text"  class="form-control" id="address" name="address">
-          </div>
-          
-          <div class="form-group">
-            <label for="referred_by">Referred By:</label>
-            <input type="text" class="form-control" id="referred_by" name="referred_by">
-          </div>
-          <button type="submit" class="btn btn-primary">Save</button>     
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 
@@ -570,25 +528,6 @@ function getCSRFToken() {
      
 </script>
 
-<script>
-  // for add customer
-  // Open the modal
-  function openCustomerModal() {
-      document.getElementById("customerModal").style.display = "block";
-  }
-
-  // Close the modal
-  function closeCustomerModal() {
-      document.getElementById("customerModal").style.display = "none";
-  }
-
-  // Close modal if clicking outside of the modal dialog
-  window.onclick = function(event) {
-      if (event.target == document.getElementById("customerModal")) {
-          closeCustomerModal();
-      }
-  }
-</script>
 
 
 
