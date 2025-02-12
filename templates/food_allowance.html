@@ -92,7 +92,6 @@ food allowance
                             <thead>
                                 <tr>
                                     <th scope="col">Customer Name</th>
-                                    <th scope="col">Issue</th>
                                     <th scope="col">Technician Name</th>
                                     <th scope="col">Date</th>
                                     <th scope="col">Purpose</th>
@@ -104,7 +103,6 @@ food allowance
                                 {% for d in food_allowances %}
                                 <tr>
                                     <td>{{ d.customer_name }}</td>
-                                    <td>{{ d.issue }}</td>
                                     <td>{{ d.technician_name }}</td>
                                     <td>{{ d.date }}</td>
                                     <td>{{ d.purpose }}</td> 
