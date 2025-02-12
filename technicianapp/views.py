@@ -185,15 +185,15 @@ def add_service(request):
             apply_instance.save()
              # Create the current status entry
 
-            # if not apply_instance.current_status_entries.exists():
-            #     CurrentStatus.objects.create(
-            #         date=apply_instance.estimated_date if apply_instance.estimated_date else timezone.now(),
-            #         technician_name=request.user.username,  # Use assigned technician
-            #         status="Assigned",
-            #         apply=apply_instance,
-            #         customer_name=apply_instance.name,
-            #         issue=apply_instance.issue,
-            #     )
+            if not apply_instance.current_status_entries.exists():
+                CurrentStatus.objects.create(
+                    date=apply_instance.estimated_date if apply_instance.estimated_date else timezone.now(),
+                    technician_name=request.user.username,  # Use assigned technician
+                    status="Assigned",
+                    apply=apply_instance,
+                    customer_name=apply_instance.name,
+                    issue=apply_instance.issue,
+                )
 
             if customer.whatsapp_number:
                 message = f"Dear {customer.name}, your application for '{apply_instance.work_type}' has been successfully submitted and is currently 'assigned'."
@@ -451,7 +451,7 @@ def update_customer(request, customer_id):
         customer.address = request.POST.get('address', customer.address)
         customer.contact_number = request.POST.get('contact_number', customer.contact_number)
         customer.whatsapp_number = request.POST.get('whatsapp_number', customer.whatsapp_number)
-        customer.reffered_by = request.POST.get('reffered_by', customer.reffered_by)
+        customer.referred_by = request.POST.get('reffered_by', customer.referred_by)
         customer.save()
         messages.success(request, "Customer updated successfully!")
     return redirect('technician_new_customer')

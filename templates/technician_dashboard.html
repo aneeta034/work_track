@@ -20,7 +20,6 @@
   <!-- FontAwesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" href="{% static 'assets/img/kaiadmin/favicon.ico' %}" type="image/x-icon" />
   <!-- External CSS -->
   <link rel="stylesheet" href="{% static 'assets/css/admin_dashboard.css' %}">
   
@@ -329,26 +328,29 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{% url 'update_current_status' service.id %}" method="POST">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="technician_name{{ service.id }}" class="form-label">Technician Name</label>
-                            <input type="text" class="form-control" id="technician_name{{ service.id }}" name="technician_name" value="{{ request.user.username }}" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="date{{ service.id }}" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="date{{ service.id }}" name="date" value="{{ service.estimated_date|date:'Y-m-d'|default:'' }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="status{{ service.id }}" class="form-label">Status</label>
-                            <select class="form-control" id="status{{ service.id }}" name="status" required>
-                                <option value="Assigned" {% if service.current_status_entries.last.status == 'Assigned' %}selected{% endif %}>Assigned</option>
-                                <option value="Pending" {% if service.current_status_entries.last.status == 'Pending' %}selected{% endif %}>Pending</option>
-                                <option value="Completed" {% if service.current_status_entries.last.status == 'Completed' %}selected{% endif %}>Completed</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-success">Update</button>
-                    </form>
+                  <form id="updateStatusForm{{ service.id }}" data-service-id="{{ service.id }}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="technician_name{{ service.id }}" class="form-label">Technician Name</label>
+                        <input type="text" class="form-control" id="technician_name{{ service.id }}" name="technician_name" value="{{ request.user.username }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="date{{ service.id }}" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="date{{ service.id }}" name="date" value="{{ service.estimated_date|date:'Y-m-d'|default:'' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status{{ service.id }}" class="form-label">Status</label>
+                        <select class="form-control" id="status{{ service.id }}" name="status" required>
+                            <option value="Assigned" {% if service.current_status_entries.last.status == 'Assigned' %}selected{% endif %}>Assigned</option>
+                            <option value="Pending" {% if service.current_status_entries.last.status == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="Completed" {% if service.current_status_entries.last.status == 'Completed' %}selected{% endif %}>Completed</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success">Update</button>
+                </form>
+                
+                <!-- Success/Error Messages -->
+                <div id="statusMessage{{ service.id }}" class="mt-2"></div>
                 </div>
             </div>
         </div>
@@ -403,6 +405,41 @@
   </div>
 </div>
 
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $("form[id^='updateStatusForm']").submit(function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        var form = $(this);
+        var serviceId = form.data("service-id");
+        var url = "{% url 'update_current_status' 0 %}".replace("0", serviceId); // Dynamically update URL
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // Serialize form data
+            success: function(response) {
+                $("#statusMessage" + serviceId).html(
+                    '<div class="alert alert-success">Status updated to: ' + response.status + '</div>'
+                );
+            },
+            error: function(xhr) {
+                var errorMessage = "Something went wrong.";
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMessage = xhr.responseJSON.error;
+                }
+                $("#statusMessage" + serviceId).html(
+                    '<div class="alert alert-danger">' + errorMessage + '</div>'
+                );
+            }
+        });
+    });
+});
+</script>
 
 
 
