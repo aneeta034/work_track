@@ -507,30 +507,285 @@
   background: #888;
   border-radius: 3px;
 }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .topbar {
+/* Mobile Responsive Sidebar */
+@media (max-width: 768px) {
+  .topbar {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      z-index: 10;
-    }
-    .sidebar {
-      width: 100%;
-      height: auto;
-      position: relative;
-      margin-bottom: 10px;
-    }
-    .main-content {
-      margin-left: 0;
-    }
-    .table th, .table td {
-        padding: 8px; /* Reduce padding for smaller screens */
-        font-size: 12px; /* Adjust font size */
-      }
-      .files-list a {
-        font-size: 11px; /* Reduce font size for links */
-      }
+      z-index: 1100;
+      padding: 10px;
+      background-color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      height: 60px;
   }
+  
+  .hamburger {
+      position: relative;
+      margin-right: 1px;
+      z-index: 1100;
+      cursor: pointer;
+      order: -1; /* Move hamburger to the start */
+  }
+  
+  .topbar .logo {
+      display: flex;
+      align-items: center;
+      margin-left: -5px;
+  }
+  
+  .topbar .logo img {
+      height: 40px;
+      width: 120px;
+  }
+  
+  .sidebar {
+      width: 60px;
+      height: 100%;
+      min-height: calc(100vh - 60px);
+      position: fixed;
+      left: 0;
+      top: 60px;
+      transition: width 0.3s ease-in-out;
+      z-index: 900;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: var(--sidebar-color);
+      overflow: hidden;
+  }
+  
+  .sidebar.expanded {
+      width: 180px;
+  }
+  
+  .sidebar h2 {
+      display: none;
+  }
+  
+  .sidebar a {
+      text-align: center;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      position: relative;
+      color: var(--text-color);
+      white-space: nowrap;
+  }
+  
+  .sidebar a i {
+      font-size: 18px;
+      margin-right: 5px;
+      transition: margin-right 0.3s ease-in-out;
+  }
+  
+  .sidebar a span {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+  }
+  
+  .sidebar.expanded a span {
+      display: inline;
+      opacity: 1;
+  }
+  
+  .main-content {
+      margin-left: 60px;
+      padding: 5px;
+      margin-top: 60px;
+      position: relative;
+      padding-top: 10px;
+      width: 100%;
+      height: 100%;
+      min-height: calc(100vh - 60px);
+      z-index: 1000;
+      transition: margin-left 0.3s ease-in-out;
+  }
+  
+  .sidebar.expanded ~ .main-content {
+      margin-left: 180px;
+  }
+
+  body {
+    margin-top: 60px; /* Adjust according to the topbar height */
+  }
+}
+
+/* Navbar Adjustments for Mobile */
+@media (max-width: 768px) {
+  .navbar {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+  }
+
+  .nav-left {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      width: 100%;
+      overflow-x: auto;
+      gap: 2px;
+      margin-bottom: 5px;
+  }
+
+  .nav-right {
+      display: flex;
+      flex-wrap: nowrap; /* Prevents wrapping */
+      align-items: center;
+      justify-content: space-between; /* Distributes space evenly */
+      width: 100%;
+      margin-bottom: 5px;
+  }
+
+  .dropdown {
+      flex-grow: 1;
+      flex: 0 0 8%;
+      align-items: center;
+      justify-content: flex-start;
+  }
+
+  .dropdown button {
+      font-size: 13px;
+      padding: 4px;
+      width: 100%;
+  }
+
+  #searchBar {
+      flex: 1;
+      min-width: 100px;
+      max-width: 0px;
+      font-size: 13px;
+      padding: 2px 2px;
+  }
+
+  #rangeFields {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 2px;
+      align-items: center;
+      flex: 0 0 auto;
+      max-width: 30%; /* Ensures it doesn’t take too much space */
+      overflow: hidden;
+  }
+
+  #rangeFields input {
+      width: 50px;
+      font-size: 13px;
+      padding: 2px;
+  }
+
+  .nav-right-buttons {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: flex-end; /* Keeps buttons aligned */
+      align-items: center;
+      margin-left: 0px !important;
+      gap: 0 !important;
+      width: auto;
+      flex: 1;
+  }
+
+  .nav-right-buttons .btn {
+      flex: 1;
+      min-width: 0;
+      width: auto;
+      font-size: 13px;
+      text-align: center;
+      white-space: nowrap;
+      padding: 2px !important;
+      margin: 0 !important; 
+      border: none;
+      outline: none;
+  }
+  .navbar .nav-right  {
+    margin-right: 2px;
+    align-items: center;
+    display: flex;
+    gap: 0px !important;
+  }
+   
+    .btn-primary {
+      margin-left: 0px;
+}
+
+}
+
+/* Ensure Modal Appears Above Everything */
+@media screen and (max-width: 768px) {
+  /* Full-Screen Mobile Modal */
+  #addServiceModal {
+    position: fixed;
+    top: 0;
+    left: 0px;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999 !important; /* Higher than topbar & sidebar */
+    background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #addServiceModal .modal-content {
+    position: relative;
+    width: 95%;
+    height: auto;
+    max-height: 90vh;
+    background: #fff;
+    z-index: 10000 !important; /* Ensure modal content is above everything */
+    border-radius: 10px;
+    overflow-y: auto;
+    padding: 15px;
+  }
+
+  /* Fix Topbar Inside Modal */
+  #addServiceModal .modal-topbar {
+    position: relative;
+    top: 0;
+    z-index: 1600; /* Ensures it stays on top */
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  /* Change Grid to Single Column */
+  #addServiceModal .modal-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  /* Ensure Inputs Take Full Width */
+  #addServiceModal .modal-column {
+    width: 100%;
+  }
+
+  /* Hide Sidebar & Topbar when Modal is Open */
+  body.modal-open .sidebar,
+  body.modal-open .topbar {
+    display: none;
+/* Lower than modal */
+  }
+
+  /* Prevent Background Scroll When Modal is Open */
+  body.modal-open {
+    overflow: hidden;
+  }
+
+  /* Adjust Submit Button for Mobile */
+  #addServiceModal .form-submit {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  #addServiceModal .form-submit .btn.btn-primary {
+    width: 100%;
+    font-size: 16px;
+  }
+}

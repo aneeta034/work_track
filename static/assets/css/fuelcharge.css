@@ -1,0 +1,30 @@
+/* Default styling for larger screens (desktop view) */
+@media (min-width: 992px) {
+    .custom-navbar,
+    .custom-container,
+    .custom-table {
+        margin-left: 225px !important;
+        max-width: 85%;
+    }
+    .table-responsive {
+        padding-left: 230px;
+    }
+}
+
+/* Mobile view adjustments */
+@media (max-width: 991px) {
+    .custom-navbar,
+    .custom-container,
+    .custom-table {
+        margin-left: 0 !important;
+        max-width: 100%;
+        padding: 0 15px;
+    }
+    .navbar-nav {
+        flex-direction: column;
+        text-align: center;
+    }
+    .table-responsive {
+        padding-left: 2px;
+    }
+}

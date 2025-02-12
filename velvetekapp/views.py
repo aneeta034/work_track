@@ -73,6 +73,9 @@ def export_applied_services(request, status):
         applied_services = applied_services.filter(created_at__year__gte=start, created_at__year__lte=end)
    
     # Convert to DataFrame
+    if not applied_services.exists():
+        messages.warning(request, "No data found for the selected filters.")
+        return HttpResponse(status=204)  # No content response
     
     df = pd.DataFrame.from_records(
     applied_services.values(
@@ -309,10 +312,25 @@ def add_service(request):
             # Save image paths as a comma-separated string
             apply_instance.photos_of_item = ",".join(image_paths)
             apply_instance.save()
-            return JsonResponse({'success': True,'message': 'Service added successfully!',
-                'is_new_customer': is_new_customer,})
+            if customer.whatsapp_number:
+                message = f"Dear {customer.name}, your application for '{apply_instance.work_type}' has been successfully submitted and is currently 'assigned'."
+                encoded_message = urllib.parse.quote(message)
+                whatsapp_url = f"https://whatsapimanagment.onrender.com/send-message?phoneNumber={customer.whatsapp_number}&messageBody={encoded_message}"
+
+                try:
+                    response = requests.get(whatsapp_url)
+                    if response.status_code == 200:
+                        messages.success(request, "Service request submitted and WhatsApp message sent successfully!")
+                    else:
+                        messages.warning(request, "Service request submitted, but failed to send WhatsApp message.")
+                except requests.RequestException as e:
+                    messages.warning(request, f"Service request submitted, but error sending WhatsApp message: {e}")
+
+            return JsonResponse({'success': True, 'message': 'Service added successfully!', 'is_new_customer': is_new_customer})
+
         else:
             return JsonResponse({'success': False, 'errors': form.errors})
+
     return render(request, 'admin_dashboard.html')
 
 
@@ -506,6 +524,38 @@ def add_customer(request):
         return JsonResponse({"success": True, "message": "Customer added successfully!"})
 
     return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
+
+def update_customer(request, customer_id):
+    customer = get_object_or_404(Customer, id=customer_id)
+
+    if request.method == "POST":
+        name = request.POST.get('name', '').strip()
+        address = request.POST.get('address', '').strip()
+        contact_number = request.POST.get('contact_number', '').strip()
+        whatsapp = request.POST.get('whatsapp', '').strip()
+        referred_by = request.POST.get('referred_by', '').strip()
+
+        if not name or not contact_number:
+            messages.error(request, "Name and Contact Number are required.")
+            return redirect('new_customer')
+
+        if Customer.objects.filter(contact_number=contact_number).exclude(id=customer.id).exists():
+            messages.error(request, "A customer with this contact number already exists.")
+            return redirect('new_customer')
+
+        try:
+            customer.name = name
+            customer.address = address
+            customer.contact_number = contact_number
+            customer.whatsapp_number = whatsapp
+            customer.referred_by = referred_by
+            customer.save()
+
+            messages.success(request, "Customer updated successfully!")
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+
+    return redirect('new_customer')
 
 # def add_customer(request):
 #     if 'term' in request.GET:

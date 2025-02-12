@@ -52,11 +52,20 @@ class CurrentStatus(models.Model):
     technician_name = models.CharField(max_length=100)
     status = models.CharField(
         max_length=50, 
-        choices=[('Pending', 'Pending'), ('Completed', 'Completed'), ('Assigned', 'Assigned')], 
-        default='Assigned'  # Default to "Assigned"
+        choices=[('Pending', 'Pending'), ('Completed', 'Completed'), ('Assigned', 'Assigned')],
+        default='Assigned'
     )
-    apply = models.ForeignKey(Apply, on_delete=models.CASCADE, related_name='current_status_entries',blank=True,null=True)
+    apply = models.ForeignKey(Apply, on_delete=models.CASCADE, related_name='current_status_entries', blank=True, null=True)
     customer_name = models.CharField(max_length=225)
     issue = models.TextField()
+
+    def save(self, *args, **kwargs):
+        """ When a new status is added, update the Apply model """
+        super().save(*args, **kwargs)
+        if self.apply:
+            self.apply.update_status()
+
+    def __str__(self):
+        return f"{self.apply.name if self.apply else 'No Apply'} - {self.status}"
 
     

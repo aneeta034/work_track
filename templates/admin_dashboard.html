@@ -13,7 +13,6 @@
   <!-- FontAwesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" href="{% static 'assets/img/kaiadmin/favicon.ico' %}" type="image/x-icon" />
   <!-- External CSS -->
   <link rel="stylesheet" href="{% static 'assets/css/admin_dashboard.css' %}">
   <style>
@@ -27,6 +26,10 @@
         color: black; /* Hover color */
         text-decoration: none; /* Ensure no underline on hover */
     }
+    .card:hover {
+    transform: none !important;
+    transition: none !important;
+}
   </style>
 
 
@@ -49,58 +52,62 @@
     <span class="admin-text">Hi,{{user.username}}</span>
   </div>
 
-  <!-- Sidebar -->
   <div class="sidebar">
-    <h2>Admin Panel</h2>
-    <a href="{% url 'admin_dashboard' %}"><i class="fas fa-home"></i> Home</a>
-    <a href="#" onclick="openCustomerModal()"><i class="fas fa-user-plus"></i> Add Customer</a>
-    <a href="#" onclick="openTechnicianModal()"><i class="fas fa-user-cog"></i> Add Technician </a>
-    <a href="#" onclick="openModal()" ><i class="fas fa-tools"></i> Add Service</a>
-    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
-  </div>
+    <a href="{% url 'admin_dashboard' %}"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="#" onclick="openCustomerModal()"><i class="fas fa-user-plus"></i><span>Add Customer</span></a>
+    <a href="#" onclick="openTechnicianModal()"><i class="fas fa-user-cog"></i><span>Add Technician</span></a>
+    <a href="#" onclick="openModal()"><i class="fas fa-tools"></i><span>Add Service</span></a>
+    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+</div>
+
 
   <!-- Main Content -->
   <div class="main-content">
+    <!-- Flash Message Container -->
+<div id="flashMessageContainer" class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 1050;"></div>
+
+
     <!-- Cards Section -->
     <div class="row">
       <div class="col-md-4">
-        <div class="card p-3 mb-3">
-          <div class="d-flex align-items-center">
-            <i class="fas fa-users card-icon me-3"></i>
-            <div>
-              <h3 class="mb-1">
-                  <a class="card link-style" href="{% url 'new_customer' %}">Customers</a>
-              </h3>
-          </div>
-            <h1 class="ms-auto mb-0">{{ customer_count }}</h1>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card p-3 mb-3">
-          <div class="d-flex align-items-center">
-            <i class="fas fa-user-cog card-icon me-3"></i>
-            <div>
-              <h3 class="mb-1">
-                  <a class="card link-style" href="{% url 'list_technicians' %}">Technicians</a>
-              </h3>            
+        <!-- Customers Card -->
+        <a href="{% url 'new_customer' %}" class="text-decoration-none">
+          <div class="card p-3 mb-3">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-users card-icon me-3"></i>
+              <div>
+                <h3 class="mb-1" style="color:grey;">Customers</h3>
+              </div>
+              <h1 class="ms-auto mb-0">{{ customer_count }}</h1>
             </div>
-            <h1 class="ms-auto mb-0">{{ technician_count }}</h1>
           </div>
-        </div>
+        </a>
       </div>
       <div class="col-md-4">
-        <div class="card p-3 mb-3">
-          <div class="d-flex align-items-center">
-            <i class="fas fa-tools card-icon me-3"></i>
-            <div>
-              <h3 class="mb-1">
-                <a class="card link-style" href="{% url 'admin_dashboard' %}">Services</a>
-            </h3>            </div>
-            <h1 class="ms-auto mb-0">{{ total_services }}</h1>
+        <a href="{% url 'list_technicians' %}" class="text-decoration-none">
+          <div class="card p-3 mb-3">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-user-cog card-icon me-3"></i>
+              <div>
+                <h3 class="mb-1" style="color:grey">Technicians</h3>
+              </div>
+              <h1 class="ms-auto mb-0">{{ technician_count  }}</h1>
+            </div>
           </div>
-        </div>
+        </a>
       </div>
+      <div class="col-md-4">
+        <a href="{% url 'admin_dashboard' %}" class="text-decoration-none">
+          <div class="card p-3 mb-3">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-tools card-icon me-3"></i>
+              <div>
+                <h3 class="mb-1" style="color:grey">Services</h3>
+              </div>
+              <h1 class="ms-auto mb-0">{{ total_services   }}</h1>
+            </div>
+          </div>
+        </a>
     </div>
 
     {% block content %}
@@ -159,11 +166,13 @@
             <!-- Buttons -->
             <button type="button" class="btn btn-primary btn-sm ms-2" id="searchBtn">Search</button>
             <button type="button" class="btn btn-secondary btn-sm ms-2" id="resetBtn">Reset</button>
-            <button type="button" class="btn btn-secondary btn-sm ms-2" onclick="exportData()">Export Data</button>
+            <button type="button" class="btn btn-secondary btn-sm ms-2" onclick="exportData()">Export</button>
         </div>
     </form>
       
     </div>
+
+   
    <!-- Add Service Modal -->
 <div id="addServiceModal" class="modal">
   <div class="modal-content">
@@ -267,7 +276,7 @@
   </div>
 </div>
  
-
+ 
   <!-- Table Section -->
   <div class="table-responsive mt-2">
     <table class="table table-striped table-bordered">
@@ -360,13 +369,13 @@
           </td>
           <td>{{ service.any_other_comments }}</td>
           <td>
-            {% if service.latest_status %}
+            {% if service.status %}
                 <span class="
-                    {% if service.latest_status.status == 'Assigned' %}text-primary{% endif %}
-                    {% if service.latest_status.status == 'Pending' %}text-danger{% endif %}
-                    {% if service.latest_status.status == 'Completed' %}text-success{% endif %}
+                    {% if service.status == 'Assigned' %}text-primary{% endif %}
+                    {% if service.status == 'Pending' %}text-danger{% endif %}
+                    {% if service.status == 'Completed' %}text-success{% endif %}
                 ">
-                    {{ service.latest_status.status }}
+                    {{ service.status }}
                 </span>
             {% else %}
                 <span class="text-muted">No Status</span>
@@ -404,76 +413,14 @@
   </div>
 </div>
 {% endfor %}
-<!-- Update Service Modal -->
-<div class="modal" id="updateserviceModal"  >
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" >Update Service Details</h5>
-              <button type="button" class="close"  onclick="closeUpdateserviceModal()">
-                <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <div class="modal-body">
-          <form id="updateServiceForm" method="POST" enctype="multipart/form-data">
-              {% csrf_token %}
-              
-                  
-                  <div class="form-group">
-                    <label for="service_by">Service By:</label>
-                    <select name="service_by" id="service_by"  class="form-control" required>
-                        {% for user in users %}
-                            <option value="{{ user.id }}" {% if applied_service.service_by.id == user.id %}selected{% endif %}>
-                                {{ user.username }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                  </div>
 
-                  <div class="form-group">
-                    <label for="work_type">Work Type:</label>
-                    <select id="work_type" name="work_type" class="form-control">
-                        <option value="sale" {% if applied_service.work_type == 'sale' %} selected {% endif %}>Sale</option>
-                        <option value="service" {% if applied_service.work_type == 'service' %} selected {% endif %}>Service</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group">
-                      <label for="item_name_or_number">Item Name/Number:</label>
-                      <input type="text" id="item_name_or_number" name="item_name_or_number" class="form-control" value="{{ applied_service.item_name_or_number }}">
-                  </div>
-
-                  <div class="form-group">
-                    <label for="issue">Issue:</label>
-                    <textarea id="issue" name="issue" class="form-control">{{ applied_service.issue }}</textarea>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="estimated_price">Estimated Price:</label>
-                    <input type="text" id="estimated_price" name="estimated_price" class="form-control" value="{{ applied_service.estimated_price }}">
-                  </div>
-
-                  <div class="form-group">
-                    <label for="estimated_date">Estimated Date:</label>
-                    <input type="date" id="estimated_date" name="estimated_date" class="form-control" value="{{ applied_service.estimated_date|date:'Y-m-d' }}">
-                  </div>
-
-                  <div class="form-group">
-                    <label for="any_other_comments">Any Other Comments:</label>
-                    <textarea id="any_other_comments" name="any_other_comments" class="form-control">{{ applied_service.any_other_comments }}</textarea>
-                  </div>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" onclick="closeUpdateserviceModal()">Close</button>
-                  <button type="submit" class="btn btn-success">Update</button>
-              </div>
-          </form>
-      </div>
-  </div>
-</div>
 
 
 {% endblock %}
+
+   
+   
+  
 
 
 <!-- The Modal Add Customer-->
@@ -642,7 +589,10 @@ window.onclick = function(event) {
     // Function to toggle the sidebar visibility
     function toggleSidebar() {
       const sidebar = document.querySelector('.sidebar');
-      sidebar.classList.toggle('show');
+      
+      if (window.innerWidth <= 768) {  // Only apply for mobile view
+        sidebar.classList.toggle('expanded');
+    }else{sidebar.classList.toggle('show');}
     }
 
     
@@ -742,47 +692,100 @@ function selectCustomer(customer) {
             }
         });
     });
+    document.addEventListener("DOMContentLoaded", function () {
+    let flashData = sessionStorage.getItem("flashMessage");
+    if (flashData) {
+        let { type, text } = JSON.parse(flashData);
+        showFlashMessage(type, text);
+        sessionStorage.removeItem("flashMessage"); // ✅ Remove after displaying
+    }
+});
 
-  
-    // Handle form submission
-    document.getElementById('addServiceForm').addEventListener('submit', function(event) {
+function showFlashMessage(type, message) {
+    let flashContainer = document.getElementById("flashMessages");
+    if (!flashContainer) {
+        flashContainer = document.createElement("div");
+        flashContainer.id = "flash-messages";
+        flashContainer.style.position = "fixed";
+        flashContainer.style.top = "0";
+        flashContainer.style.left = "15%";
+        flashContainer.style.width = "100%";
+        flashContainer.style.zIndex = "1000";
+        flashContainer.style.textAlign = "left"; // ✅ Center text
+        flashContainer.style.padding = "15px";
+        flashContainer.style.fontSize = "16px";
+        document.body.prepend(flashContainer);
+    }
+
+    let flashMessage = document.createElement("div");
+    flashMessage.className = `alert alert-${type}`;
+    flashMessage.style.display = "inline-block";
+    flashMessage.style.padding = "15px 20px";
+    flashMessage.style.width = "100%";  // ✅ Full-width
+    flashMessage.style.margin = "0";  // ✅ No extra spacing
+    flashMessage.style.borderRadius = "0";  // ✅ Remove rounded edges
+    flashMessage.style.boxShadow = "0 2px 10px rgba(0,0,0,0.2)";
+    flashMessage.style.borderRadius = "12px"; 
+    flashMessage.style.fontWeight = "bold";
+    flashMessage.innerHTML = message;
+
+    flashContainer.appendChild(flashMessage);
+
+    setTimeout(() => {
+        flashMessage.remove();
+    }, 3000);
+}
+
+document.getElementById('addServiceForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
     const form = document.getElementById('addServiceForm');
     const formData = new FormData(this);
-    const serviceId = form.getAttribute("data-service-id");  // Get service ID if exists
-    let url = serviceId ? `/technician/update_service/${serviceId}/` : `/technician/add_service/`;  
+    const serviceId = form.getAttribute("data-service-id");
+    let url = serviceId ? `/technician/update_service/${serviceId}/` : `/technician/add_service/`;
 
-    // Append removed files if any
     if (window.removedFiles && window.removedFiles.length > 0) {
         formData.append("removed_files", JSON.stringify(window.removedFiles));
     }
-    console.log("Removed Files Sent:", formData.get("removed_files"));
+
     fetch(url, {
         method: 'POST',
         body: formData,
         headers: {
-            'X-CSRFToken': '{{ csrf_token }}'
+            'X-CSRFToken': document.querySelector("[name=csrfmiddlewaretoken]").value
         }
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            let message = serviceId ? 'Service updated successfully!' : 
-                         (data.is_new_customer ? 'Customer and service added successfully!' : 'Service added successfully!');
+            let message = serviceId ? "Service updated successfully!" :
+                         (data.is_new_customer ? "Customer and service added successfully!" : "Service added successfully!");
 
-            alert(message);
-            window.removedFiles = [];  // Clear removed files after successful update
-            window.location.reload();  // Optionally reload the page
+            // ✅ Store Flash Message in sessionStorage Before Reload
+            sessionStorage.setItem("flashMessage", JSON.stringify({ type: "success", text: message }));
+
+            // ✅ Close Modal Before Reloading Page
+            let modalElement = document.getElementById("addServiceModal");
+            let modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+
+            // ✅ Reload After Modal is Fully Closed
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+
         } else {
-            alert('Error: ' + (data.message || JSON.stringify(data.errors)));
+            showFlashMessage("danger", "Error: " + (data.message || JSON.stringify(data.errors)));
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again later.');
+        console.error("Error:", error);
+        showFlashMessage("danger", "An error occurred. Please try again later.");
     });
 });
+
 
     // Modal handling
     const modal = document.getElementById('addServiceModal');
@@ -905,7 +908,7 @@ document.getElementById("searchBtn").addEventListener("click", function () {
         query = `query=${searchBar.value.trim()}`;
     } else {
         // If no valid values exist, return early and prevent navigation
-        alert("Please enter a search value before proceeding.");
+        showFlashMessage("warning", "Please enter a search value before proceeding.");
         return;
     }
 
@@ -1088,19 +1091,33 @@ updatePlaceholder("date");
 </script>
 <script>
   function exportData() {
-      let status = "{{ current_filter|default:'all' }}"; // Ensure status is always set
-      let baseUrl = "{% url 'export_applied_services' status='__status__' %}".replace('__status__', status);
-      
-      let params = new URLSearchParams({
-          filterType: "{{ request.GET.filterType|default:'' }}",
-          query: "{{ request.GET.query|default:'' }}",
-          start: "{{ request.GET.start|default:'' }}",
-          end: "{{ request.GET.end|default:'' }}"
-      });
+    let status = "{{ current_filter|default:'all' }}"; // Ensure status is always set
+    let baseUrl = "{% url 'export_applied_services' status='__status__' %}".replace('__status__', status);
 
-      // Redirect with the dynamically generated URL
-      window.location.href = baseUrl + "?" + params.toString();
-  }
+    let params = new URLSearchParams({
+        filterType: "{{ request.GET.filterType|default:'' }}",
+        query: "{{ request.GET.query|default:'' }}",
+        start: "{{ request.GET.start|default:'' }}",
+        end: "{{ request.GET.end|default:'' }}"
+    });
+
+    fetch(baseUrl + "?" + params.toString(), { method: "GET" })
+    .then(response => {
+        if (response.status === 204) {
+            showFlashMessage("warning", "⚠️ No data found for the selected filters.");
+        } else if (response.ok) {
+          showFlashMessage("success", "Export completed successfully!");
+          window.location.href = baseUrl + "?" + params.toString();
+        } else {
+            showFlashMessage("danger", "❌ An error occurred while exporting.");
+        }
+    })
+    .catch(error => {
+        console.error("Export Error:", error);
+        showFlashMessage("danger", "❌ An unexpected error occurred.");
+    });
+
+}
 </script>
 </body>
 </html>

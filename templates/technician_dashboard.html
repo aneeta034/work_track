@@ -2,6 +2,7 @@
 {% load static %}
 <html lang="en">
 <head>
+  <meta name="csrf-token" content="{{ csrf_token }}">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}
@@ -19,7 +20,6 @@
   <!-- FontAwesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" href="{% static 'assets/img/kaiadmin/favicon.ico' %}" type="image/x-icon" />
   <!-- External CSS -->
   <link rel="stylesheet" href="{% static 'assets/css/admin_dashboard.css' %}">
   
@@ -45,15 +45,14 @@
 
   <!-- Sidebar -->
   <div class="sidebar">
-    <h5>Technician Dashboard</h5>
-    <a href="{% url 'technician_dashboard' %}"><i class="fas fa-home"></i> Home</a>
+    <a href="{% url 'technician_dashboard' %}"><i class="fas fa-home"></i> <span>Home</span></a>
 
     
-    <a href="#" onclick="openModal()" ><i class="fas fa-tools" ></i> Add Service</a>
+    <a href="#" onclick="openModal()" ><i class="fas fa-tools" ></i><span>Add Service</span</a>
 
-    <a href="#" onclick="openCustomerModal()"><i class="fas fa-user-plus"></i> Add Customer</a>
+    <a href="#" onclick="openCustomerModal()"><i class="fas fa-user-plus"></i><span>Add Customer</span</a>
    
-    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
   </div>
 
   <!-- Main Content -->
@@ -278,10 +277,10 @@
           <td>
             <ul class="files-list">
       {% if service.estimation_document %}
-        <li><a href="{{ service.estimation_document.url }}" target="_blank">Document</a>
+        <li><a href="{{ service.estimation_document.url }}" target="_blank">Document</a></li>
           {% endif %}
       {% if service.get_photos %}
-          <a href="{{ MEDIA_URL }}{{ service.get_photos.0 }}" data-lightbox="gallery-{{ service.id }}" data-title="Service Photos">Photo</a>
+          <li><a href="{{ MEDIA_URL }}{{ service.get_photos.0 }}" data-lightbox="gallery-{{ service.id }}" data-title="Service Photos">Photo</a></li>
 
           {% for photo in service.get_photos|slice:"1:" %}
             <a href="{{ MEDIA_URL }}{{ photo }}" data-lightbox="gallery-{{ service.id }}" style="display: none;"></a>
@@ -290,7 +289,8 @@
                          
             </ul>
           </td>
-          <td><a href="{% url 'fuelcharge' service.id %}"><i class="bi bi-plus-circle"></i></a></td>
+          <td><a href="{% url 'fuelcharge' service.id %}" style="font-size: 12px;">View Charges</a></td>
+
           <td>{{ service.any_other_comments }}</td>
         
           <td>
@@ -328,7 +328,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{% url 'update_current_status' service.current_status_entries.last.id %}" method="POST">
+                    <form action="{% url 'update_current_status' service.id %}" method="POST">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="technician_name{{ service.id }}" class="form-label">Technician Name</label>
@@ -433,9 +433,64 @@
     };
 </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const statusButtons = document.querySelectorAll('button[id^="statusButton"]');
+
+    statusButtons.forEach((button) => {
+        const estimatedDate = new Date(button.dataset.estimatedDate);
+        const currentStatus = button.dataset.currentStatus;
+        const currentDate = new Date();
+        const applyId = button.dataset.serviceId;
+
+        // If status is "Assigned" and the estimated date has passed, update it to "Pending"
+        if (currentStatus === 'Assigned' && currentDate > estimatedDate) {
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-danger');
+            button.textContent = 'Pending';
+
+            // Send update request to backend
+            fetch(`/technician/update-status/${applyId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCSRFToken(),
+                },
+                body: new URLSearchParams({
+                    status: 'Pending',
+                    date: new Date().toISOString().split('T')[0],  // Convert to YYYY-MM-DD
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    alert("Error updating status: " + data.error);
+                } else {
+                    console.log("Status updated successfully:", data);
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                alert("Failed to update status. Please try again.");
+            });
+        }
+    });
+});
+
+// CSRF Token Helper Function
+function getCSRFToken() {
+    const cookieValue = document.cookie.split('; ')
+        .find(row => row.startsWith('csrftoken='))
+        ?.split('=')[1];
+    return cookieValue || '';
+}
+
+</script>
+
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    {% comment %} document.addEventListener('DOMContentLoaded', function () {
       const statusButtons = document.querySelectorAll('button[id^="statusButton"]');
   
       statusButtons.forEach((button) => {
@@ -473,7 +528,7 @@
             });
         }
     });
-  });
+  }); {% endcomment %}
      
 </script>
 
@@ -507,7 +562,9 @@
    // Function to toggle the sidebar visibility
    function toggleSidebar() {
      const sidebar = document.querySelector('.sidebar');
-     sidebar.classList.toggle('show');
+     if (window.innerWidth <= 768) {  // Only apply for mobile view
+        sidebar.classList.toggle('expanded');
+    }else{sidebar.classList.toggle('show');}
    }
    const notFoundDiv = document.getElementById('customer_not_found');
   const resultsDiv = document.getElementById('customer_results'); 

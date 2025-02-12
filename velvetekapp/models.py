@@ -33,6 +33,21 @@ class Apply(models.Model):
     estimated_date = models.DateField(null=True)
     any_other_comments = models.CharField(max_length=255,null=True,blank=True)
     created_at = models.DateField(default=timezone.now)
+    status = models.CharField(
+        max_length=50, 
+        choices=[('Pending', 'Pending'), ('Completed', 'Completed'), ('Assigned', 'Assigned')],
+        default='Assigned'
+    )
+
+    def update_status(self):
+        """ Update status based on the latest CurrentStatus entry """
+        latest_status = self.current_status_entries.order_by('-date').first()
+        if latest_status:
+            self.status = latest_status.status
+            self.save()
+
+    def __str__(self):
+        return f"{self.name} - {self.status}"
 
     def __str__(self):
         return self.name
