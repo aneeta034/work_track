@@ -386,12 +386,13 @@
   </div> 
 </div>
 
+
 <!-- Delete Confirmation Modal -->
 {% for service in applied_services %}
-<div class="modal fade" id="deleteServiceModal{{ service.id }}" tabindex="-1" aria-labelledby="deleteServiceLabel" aria-hidden="true">
+<div class="modal fade custom-modal" id="deleteServiceModal{{ service.id }}" tabindex="-1" aria-labelledby="deleteServiceLabel" aria-hidden="true">
   <div class="modal-dialog">
       <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header custom-modal-header">
               <h5 class="modal-title">Confirm Delete</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
@@ -411,7 +412,6 @@
   </div>
 </div>
 {% endfor %}
-
 
 
 {% endblock %}
@@ -499,47 +499,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-  function openUpdateserviceModal() {
-    document.getElementById("updateserviceModal").style.display = "block";
-}
-
-// Close the modal
-function closeUpdateserviceModal() {
-  document.getElementById("updateserviceModal").style.display = "none";
-}
-
-// Close modal if clicking outside of the modal dialog
-window.onclick = function(event) {
-  if (event.target == document.getElementById("updateserviceModal")) {
-      closeUpdateserviceModal();
-  }
-}
-  
-
-  // Optional: Auto open modal with data when triggered
-  function openUpdateServiceModal(serviceId) {
-    // Open modal logic (can be filled with dynamic data)
-    const modal = document.getElementById("updateServiceModal");
-    var modalInstance = new bootstrap.Modal(modal);
-    modalInstance.show();
-    
-    // Fetch data dynamically for the service and populate fields
-    fetch(`/update-applied-service/${serviceId}/`)
-      .then(response => response.json())
-      .then(data => {
-        // Populate the form with data (example)
-        document.getElementById("service_by").value = data.service_by;  
-        document.getElementById("work_type").value = data.work_type;
-        document.getElementById("item_name_or_number").value = data.item_name_or_number;
-        document.getElementById("issue").value = data.issue;
-        document.getElementById("estimated_price").value = data.estimated_price;
-        document.getElementById("estimated_date").value = data.estimated_date;
-        document.getElementById("any_other_comments").value = data.any_other_comments;
-      });
-  }
-</script>
 
 <script>
   // for add cust
@@ -802,6 +761,8 @@ function openModal() {
 // Close the modal
 function closeModal() {
   notFoundDiv.style.display = 'none'; 
+  
+  document.getElementById('customer_results').innerHTML = '';
   document.getElementById('addServiceModal').style.display = 'none';
 }
 
