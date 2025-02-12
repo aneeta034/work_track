@@ -159,6 +159,7 @@ item purchased
 <!--update item purchased Modal -->
 {% for d in items %}
 <div class="modal fade" id="updateItemPurchasedModal{{ d.id }}" tabindex="-1" aria-labelledby="updateItemPurchasedModalLabel" aria-hidden="true">
+    <div class="addmodal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -201,6 +202,7 @@ item purchased
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endfor %}
 

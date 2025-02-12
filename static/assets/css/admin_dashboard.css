@@ -352,9 +352,9 @@
   border-color: #004085 !important;
   color: #fff !important;
 }
-/* Ensure modal only affects #customerModal and #technicianModal */
-#customerModal, 
-#technicianModal {
+
+/* Ensure modal only affects elements with class .addmodal */
+.addmodal {
   display: none; /* Hidden by default */
   position: fixed;
   z-index: 1050;
@@ -369,8 +369,7 @@
 }
 
 /* Modal Dialog */
-#customerModal .modal-dialog,
-#technicianModal .modal-dialog {
+.addmodal .modal-dialog {
   max-width: 400px; /* Adjust width */
   width: 90%;
   margin: 65px auto 0 auto; /* Add top margin of 65px */
@@ -380,8 +379,7 @@
 }
 
 /* Modal Content */
-#customerModal .modal-content,
-#technicianModal .modal-content {
+.addmodal .modal-content {
   background-color: #fff;
   border: none !important;
   border-radius: 10px;
@@ -391,8 +389,7 @@
 }
 
 /* Modal Header */
-#customerModal .modal-header,
-#technicianModal .modal-header {
+.addmodal .modal-header {
   background-color: var(--primary-color);
   color: #fff;
   padding: 15px 20px;
@@ -403,15 +400,13 @@
   align-items: center;
 }
 
-#customerModal .modal-header h5,
-#technicianModal .modal-header h5 {
+.addmodal .modal-header h5 {
   margin: 0;
   font-size: 22px;
   font-weight: bold;
 }
 
-#customerModal .modal-header .close,
-#technicianModal .modal-header .close {
+.addmodal .modal-header .close {
   color: #fff;
   font-size: 24px;
   font-weight: bold;
@@ -421,48 +416,41 @@
   outline: none;
 }
 
-#customerModal .modal-header .close:hover,
-#technicianModal .modal-header .close:hover {
+.addmodal .modal-header .close:hover {
   color: #ccc;
 }
 
 /* Modal Body */
-#customerModal .modal-body,
-#technicianModal .modal-body {
+.addmodal .modal-body {
   padding: 20px;
 }
 
 /* Form Fields */
-#customerModal .form-group,
-#technicianModal .form-group {
+.addmodal .form-group {
   display: flex;
   flex-direction: column;
   margin-bottom: 15px;
 }
 
-#customerModal .form-group label,
-#technicianModal .form-group label {
+.addmodal .form-group label {
   font-weight: bold;
   margin-bottom: 5px;
 }
 
-#customerModal .form-group input,
-#technicianModal .form-group input {
+.addmodal .form-group input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 14px;
 }
 
-/* Align Submit Button to the Right ONLY inside #customerModal and #technicianModal */
-#customerModal form,
-#technicianModal form {
+/* Align Submit Button to the Right ONLY inside .addmodal */
+.addmodal form {
   display: flex;
   flex-direction: column;
 }
 
-#customerModal form .btn-primary,
-#technicianModal form .btn-primary {
+.addmodal form .btn-primary {
   align-self: flex-end; /* Aligns the submit button to the right */
   background-color: #2973b2 !important;
   border: none !important;
@@ -474,8 +462,7 @@
   cursor: pointer;
 }
 
-#customerModal form .btn-primary:hover,
-#technicianModal form .btn-primary:hover {
+.addmodal form .btn-primary:hover {
   background-color: #004085 !important;
 }
 

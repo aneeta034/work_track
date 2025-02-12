@@ -127,7 +127,7 @@ fuelcharge
             <div class="modal fade" id="deleteFuelChargeModal{{ d.id }}" tabindex="-1" aria-labelledby="deleteFuelChargeLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header custom-modal-header">
                             <h5 class="modal-title">Confirm Delete</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
@@ -157,6 +157,7 @@ fuelcharge
 <!--update_fuelcharge Modal -->
 {% for d in fuel_charges %}
 <div class="modal fade" id="updateFuelModal{{ d.id }}" tabindex="-1" aria-labelledby="updateFuelModalLabel" aria-hidden="true">
+<div class="addmodal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -199,6 +200,7 @@ fuelcharge
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endfor %}
 

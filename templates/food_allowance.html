@@ -155,6 +155,7 @@ food allowance
 <!--update food allowance Modal -->
 {% for d in food_allowances %}
 <div class="modal fade" id="updateFoodAllowanceModal{{ d.id }}" tabindex="-1" aria-labelledby="updateFoodAllowanceModalLabel" aria-hidden="true">
+    <div class="addmodal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -195,6 +196,7 @@ food allowance
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endfor %}
 
