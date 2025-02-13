@@ -389,7 +389,7 @@
 
 <!-- Delete Confirmation Modal -->
 {% for service in applied_services %}
-<div class="modal fade custom-modal" id="deleteServiceModal{{ service.id }}" tabindex="-1" aria-labelledby="deleteServiceLabel" aria-hidden="true">
+<div class="modal fade custom-modal" id="deleteServiceModal{{ service.id }}" tabindex="-1" aria-labelledby="deleteServiceLabel" aria-hidden="true" data-bs-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">
   <div class="modal-dialog">
       <div class="modal-content">
           <div class="modal-header custom-modal-header">

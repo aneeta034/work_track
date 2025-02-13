@@ -64,8 +64,8 @@ new customer
 
 <!--updateCustomerModal-->
 {% for customer in customers %}
-<div class="modal fade" id="updateCustomerModal{{ customer.id }}" tabindex="-1" aria-labelledby="updateCustomerModalLabel" aria-hidden="true" >
-  
+<div class="modal fade" id="updateCustomerModal{{ customer.id }}" tabindex="-1" aria-labelledby="updateCustomerModalLabel" aria-hidden="true" data-bs-backdrop="false">
+  <div class="addmodal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -103,6 +103,7 @@ new customer
                 </div>
             </div>
         </div>
+      </div>
         {% endfor %}
       </div>
     </div>
@@ -291,7 +292,7 @@ new customer
 
 <!-- Delete Confirmation Modal -->
 {% for customer in customers %}
-<div class="modal fade custom-modal" id="deleteCustomerModal{{ customer.id }}" tabindex="-1" aria-labelledby="deleteCustomerLabel" aria-hidden="true">
+<div class="modal fade custom-modal" id="deleteCustomerModal{{ customer.id }}" tabindex="-1" aria-labelledby="deleteCustomerLabel" aria-hidden="true" >
   <div class="modal-dialog">
       <div class="modal-content">
           <div class="modal-header custom-modal-header">
