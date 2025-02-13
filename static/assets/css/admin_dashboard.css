@@ -767,7 +767,11 @@
       z-index: 800;
       transition: margin-left 0.3s ease-in-out;
   }
-  
+  body {
+    position: relative;
+    z-index: auto;
+}
+
   .sidebar.expanded ~ .main-content {
       margin-left: 180px;
   }
@@ -783,18 +787,23 @@
       display: flex;
       flex-direction: column;
       width: 100%;
+      margin-left: 10px;
   }
 
   .nav-left {
       display: flex;
       flex-wrap: nowrap;
       justify-content: space-between;
+      padding-right: 1px;
       width: 100%;
       overflow-x: auto;
       gap: 2px;
       margin-bottom: 5px;
   }
-
+  .nav-left a{
+    margin-right: 3px;
+    padding-right: 3px;
+  }
   .nav-right {
       display: flex;
       flex-wrap: nowrap; /* Prevents wrapping */
@@ -903,7 +912,6 @@
     z-index: 1000 !important; /* Ensure modal content is above everything */
     border-radius: 10px;
     overflow-y: auto;
-    padding: 15px;
   }
 
   /* Fix Topbar Inside Modal */
@@ -950,4 +958,5 @@
     width: 100%;
     font-size: 16px;
   }
+  
 }
