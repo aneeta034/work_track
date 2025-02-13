@@ -283,35 +283,36 @@
           <th>ID</th>
           <th>Customer Name</th>
           <th>Address</th>
-          <th style="width: 18%;">Contact Details</th> <!-- Increased width -->
+          <th>Contact Details</th> 
           <th>Referred By</th>
           <th>Work Type</th>
           <th>Item Name/Number</th>
-          <th colspan="2">Issue</th> <!-- Two-column width space -->
+          <th>Issue</th>
           <th>Estimated Price</th>
           <th>Estimated Date</th>
           <th>Service By</th>
-          <th style="width: 20%;">Files</th>
+          <th>Files</th>
+          <th>Additional Charges</th>
           <th>Comments</th>
           <th>status</th> 
         </tr>
       </thead>
       <tbody>
-        {% for service in applied_services %}
+        {% for entry in services_with_total_cost %}
         <tr>
           <td>
             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-              <span>{{ service.id }}</span> <!-- Display ID on the first line, centered -->
+              <span>{{ entry.service.id }}</span> <!-- Display ID on the first line, centered -->
               <div style="display: flex; margin-top: 5px;">
-                <button class="edit-service-btn" data-service-id="{{ service.id }}" data-toggle="modal" data-target="#serviceModal" 
+                <button class="edit-service-btn" data-service-id="{{ entry.service.id }}" data-toggle="modal" data-target="#serviceModal" 
                           style="border: none; background: none; padding: 0; cursor: pointer;">
                           <i class="fas fa-pen" style="font-size: 14px; color: #4A90E2;"></i>
                       </button>
                 
                 
-              <form action="{% url 'delete_applied_service' service.id %}" method="post" style="display:inline-block; margin-left: 5px;">
+              <form action="{% url 'delete_applied_service' entry.service.id %}" method="post" style="display:inline-block; margin-left: 5px;">
                 {% csrf_token %}
-                <button type="button" class="icon-link delete-icon" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteServiceModal{{ service.id }}">
+                <button type="button" class="icon-link delete-icon" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteServiceModal{{ entry.service.id }}">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </button>
             </form>
@@ -321,59 +322,67 @@
             </div>
           </td>
           
-          <td>{{ service.name }}</td>
-          <td>{{ service.address }}</td>
+          <td>{{ entry.service.name }}</td>
+          <td>{{ entry.service.address }}</td>
           <td>
             <!-- Handle Contact Number -->
             <div>
               <i class="fa fa-phone" aria-hidden="true"></i> 
-              {% if service.contact_number|slice:":1" == "+" %}
-                {{ service.contact_number|slice:"3:" }}
+              {% if entry.service.contact_number|slice:":1" == "+" %}
+                {{ entry.service.contact_number|slice:"3:" }}
               {% else %}
-                {{ service.contact_number }}
+                {{ entry.service.contact_number }}
               {% endif %}
             </div>
             <!-- Handle WhatsApp Number -->
             <div>
               <i class="fab fa-whatsapp" aria-hidden="true"></i> 
-              {% if service.whatsapp_number|slice:":1" == "+" %}
-                {{ service.whatsapp_number|slice:"3:" }}
+              {% if entry.service.whatsapp_number|slice:":1" == "+" %}
+                {{ entry.service.whatsapp_number|slice:"3:" }}
               {% else %}
-                {{ service.whatsapp_number }}
+                {{ entry.service.whatsapp_number }}
               {% endif %}
             </div>
           </td>
-          <td>{{ service.referred_by }}</td>
-          <td>{{ service.get_work_type_display }}</td>
-          <td>{{ service.item_name_or_number }}</td>
-          <td colspan="2">{{ service.issue }}</td> <!-- Span across two columns -->
-          <td>{{ service.estimated_price }}</td>
-          <td>{{ service.estimated_date }}</td>
-          <td>{{ service.service_by.username }}</td>
+          <td>{{ entry.service.referred_by }}</td>
+          <td>{{ entry.service.get_work_type_display }}</td>
+          <td>{{ entry.service.item_name_or_number }}</td>
+          <td>{{ entry.service.issue }}</td> <!-- Span across two columns -->
+          <td>{{ entry.service.estimated_price }}</td>
+          <td>{{ entry.service.estimated_date }}</td>
+          <td>{{ entry.service.service_by.username }}</td>
           <td>
             <ul class="files-list">
-              {% if service.estimation_document %}
-        <li><a href="{{ service.estimation_document.url }}" target="_blank">Document</a>
+              {% if entry.service.estimation_document %}
+        <li><a href="{{ entry.service.estimation_document.url }}" target="_blank">Document</a></li>
           {% endif %}
-      {% if service.get_photos %}
-          <a href="{{ MEDIA_URL }}{{ service.get_photos.0 }}" data-lightbox="gallery-{{ service.id }}" data-title="Service Photos">Photo</a>
+      {% if entry.service.get_photos %}
+         <li> <a href="{{ MEDIA_URL }}{{ entry.service.get_photos.0 }}" data-lightbox="gallery-{{ entry.service.id }}" data-title="Service Photos">Photo</a></li>
 
-          {% for photo in service.get_photos|slice:"1:" %}
-            <a href="{{ MEDIA_URL }}{{ photo }}" data-lightbox="gallery-{{ service.id }}" style="display: none;"></a>
+          {% for photo in entry.service.get_photos|slice:"1:" %}
+            <a href="{{ MEDIA_URL }}{{ photo }}" data-lightbox="gallery-{{ entry.service.id }}" style="display: none;"></a>
           {% endfor %}
       {% endif %}
-              <li><a href="{% url 'extra_work_admin' service.id %}">Additional Charges</a></li>
+              
             </ul>
           </td>
-          <td>{{ service.any_other_comments }}</td>
           <td>
-            {% if service.status %}
+            {% if entry.total_cost and entry.total_cost > 0 %}
+                <a href="{% url 'extra_work_admin' entry.service.id %}">{{ entry.total_cost }}</a>
+            {% else %}
+                None
+            {% endif %}
+        </td>
+        
+          <td>{{ entry.service.any_other_comments }}</td>
+          <td>
+            {% if entry.service.status %}
                 <span class="
-                    {% if service.status == 'Assigned' %}text-primary{% endif %}
-                    {% if service.status == 'Pending' %}text-danger{% endif %}
-                    {% if service.status == 'Completed' %}text-success{% endif %}
+                    {% if entry.service.status == 'Assigned' %}text-primary{% endif %}
+                    {% if entry.service.status == 'Pending' %}text-danger{% endif %}
+                    {% if entry.service.status == 'Completed' %}text-success{% endif %}
                 ">
-                    {{ service.status }}
+                    {{ entry.service.status }}
                 </span>
             {% else %}
                 <span class="text-muted">No Status</span>
@@ -680,7 +689,7 @@ function selectCustomer(customer) {
     document.getElementById('name').value = customer.name;
     document.getElementById('address').value = customer.address;
     document.getElementById('whatsapp_number').value = customer.whatsapp_number;
-    document.getElementById('referred_by').value = customer.reffered_by;
+    document.getElementById('referred_by').value = customer.referred_by;
 
     // Make the fields read-only again
     document.getElementById('name').readOnly = true;

@@ -22,7 +22,7 @@
   
   .topbar .logo img {
     height: 50px;
-    width: 180px;
+    width: 200px;
     padding-right: 10px;
   }
   
@@ -32,6 +32,7 @@
   }
   
   .topbar .hamburger {
+    display: none;
     font-size: 28px;
     cursor: pointer;
     padding-left: 5px;
@@ -41,7 +42,7 @@
   /* Sidebar */
   .sidebar {
     height: calc(100vh - 50px);
-    width: 230px;
+    width: 225px;
     background-color: var(--sidebar-color);
     color: var(--text-color);
     position: absolute;
@@ -82,7 +83,7 @@
   
   /* Main Content Wrapper */
   .main-content {
-    margin-left: 235px;
+    margin-left: 230px;
     padding: 10px;
     background-color: var(--secondary-color);
     min-height: calc(100vh - 60px);
@@ -525,9 +526,48 @@
   }
   .table {
     width: 100%; /* Ensure table spans container width */
-    white-space: nowrap; 
+    word-wrap: break-word; /* Break long words */
+    white-space: normal;
+    table-layout: auto;
     border-collapse: collapse;/* Prevent text wrapping for narrow columns */
   }
+
+  
+  .table th:nth-child(2), .table td:nth-child(2) { /* Contact Details column */
+    min-width: 100px !important;
+    max-width: 150px !important;
+  }
+  
+  .table th:nth-child(3), .table td:nth-child(3) { /* Contact Details column */
+    min-width: 150px !important;
+    max-width: 200px !important;
+  }
+  
+  .table th:nth-child(4), .table td:nth-child(4) { /* Contact Details column */
+    min-width: 150px !important; /* Increase column width */
+    max-width: 150px !important;
+  }
+  
+  .table th:nth-child(7), .table td:nth-child(7) { /* Contact Details column */
+    min-width: 150px !important;
+    max-width: 180px !important;
+  }
+  
+  .table th:nth-child(8), .table td:nth-child(8) { /* Contact Details column */
+    min-width: 250px !important; /* Increase column width */
+    max-width: 300px !important;
+  }
+  
+  .table th:nth-child(11), .table td:nth-child(11) { /* Contact Details column */
+    min-width: 100px !important;
+    max-width: 150px !important;
+  }
+  .table th:nth-child(14), .table td:nth-child(14) { /* Contact Details column */
+    min-width: 200px !important;
+    max-width: 250px !important;
+  }
+
+
   .table th, .table td {
     padding: 10px !important;
     text-align: left !important;
@@ -685,6 +725,7 @@
   }
   
   .hamburger {
+      display: inline-block !important;
       position: relative;
       margin-right: 1px;
       z-index: 800;

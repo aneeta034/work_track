@@ -233,9 +233,9 @@ def filter_applied_services(request):
         applied_services = applied_services.filter(created_at__year__gte=start, created_at__year__lte=end)
         # Gather statistics for the dashboard
     apply_services = Apply.objects.all()
-    customer_count = apply_services.values('name').distinct().count()
-    technician_count = apply_services.values('service_by').distinct().count()
-    total_services = apply_services.count()
+    customer_count = Customer.objects.count()
+    total_services = Apply.objects.count()
+    technician_count = CustomUser.objects.filter(role='technician').count()
 
     # Prepare context to render the filtered data
     context = {
@@ -253,9 +253,9 @@ def reset_filter_applied_services(request):
     applied_services = Apply.objects.all()
 
     # Gather statistics for the dashboard
-    customer_count = applied_services.values('name').distinct().count()
-    technician_count = applied_services.values('service_by').distinct().count()
-    total_services = applied_services.count()
+    customer_count = Customer.objects.count()
+    total_services = Apply.objects.count()
+    technician_count = CustomUser.objects.filter(role='technician').count()
 
     # Prepare context to render all services
     context = {
@@ -427,6 +427,15 @@ def extra_work_admin(request, service_id):
     items_purchased = ItemPurchased.objects.filter(apply=apply_instance)
     vendors_info = VendorInfo.objects.filter(apply=apply_instance)
     current_status_entries = CurrentStatus.objects.filter(apply=apply_instance)
+    cards = []
+    if fuel_charges:
+        cards.append("fuel")
+    if food_allowances:
+        cards.append("food")
+    if vendors_info:
+        cards.append("vendors")
+    if items_purchased:
+        cards.append("items")
 
     context = {
         'apply_instance': apply_instance,
@@ -439,7 +448,7 @@ def extra_work_admin(request, service_id):
         'food_total': food_allowances.aggregate(total=Sum('cost'))['total'] or 0,
         'items_total': items_purchased.aggregate(total=Sum('price'))['total'] or 0,
         'vendor_total': vendors_info.aggregate(total=Sum('vendor_cost'))['total'] or 0,
-    
+        "cards": cards,
     }
     return render(request, 'additional_charges.html', context)
 

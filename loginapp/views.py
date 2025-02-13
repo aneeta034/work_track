@@ -9,6 +9,10 @@ from django.contrib import messages
 from django.conf import settings
 import requests
 import urllib
+from django.db.models import Sum
+
+from technicianapp.models import FuelCharge,FoodAllowance,ItemPurchased,VendorInfo,CurrentStatus
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -42,13 +46,25 @@ def admin_dashboard(request):
     customer_count = Customer.objects.count()
     total_services = Apply.objects.count()
     technician_count = CustomUser.objects.filter(role='technician').count()
-    
+    services_with_total_cost = []
    
     for service in applied_services:
         service.latest_status = service.current_status_entries.last()  
+        fuel_total = FuelCharge.objects.filter(apply=service).aggregate(total=Sum('cost'))['total'] or 0
+        food_total = FoodAllowance.objects.filter(apply=service).aggregate(total=Sum('cost'))['total'] or 0
+        items_total = ItemPurchased.objects.filter(apply=service).aggregate(total=Sum('price'))['total'] or 0
+        vendor_total = VendorInfo.objects.filter(apply=service).aggregate(total=Sum('vendor_cost'))['total'] or 0
+        
+        # Calculate total cost
+        total_cost = fuel_total + food_total + items_total + vendor_total
+
+        services_with_total_cost.append({
+            'service': service,
+            'total_cost': total_cost
+        })
 
     context = {
-        'applied_services': applied_services,
+        'services_with_total_cost': services_with_total_cost,
         'customer_count': customer_count,
         'total_services': total_services,
         'technician_count': technician_count, 
