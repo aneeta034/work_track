@@ -999,5 +999,32 @@
     width: 100%;
     font-size: 16px;
   }
-  
+  #addServiceModal #customer_results {
+    width: 45%;
+  }
+  #addServiceModal #service_by {
+        font-size: 14px; /* Adjust font size */
+        padding: 8px; /* Adjust padding */
+        width: 100%; /* Make it full width if needed */
+    }
+    #addServiceModal #service_by option {
+      font-size: 10px; /* Adjust the option text size */
+      padding: 10px; /* Adjust spacing inside options */
+      max-width: 40%;
+  }
+  #addServiceModal #work_type {
+    font-size: 14px; /* Adjust font size */
+    padding: 8px; /* Adjust padding */
+    width: 100%; /* Make it full width if needed */
+}
+#addServiceModal #work_type option {
+  font-size: 10px; /* Adjust the option text size */
+  padding: 10px; /* Adjust spacing inside options */
+  max-width: 40%;
+}
+}
+@media (max-width: 768px) {
+  .addservicebtn {
+      display: none;
+  }
 }

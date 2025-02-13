@@ -104,7 +104,8 @@
         <a href="{% url 'switch_tasks_filter' status='Completed' %}" class="filter-option {% if current_filter == 'Completed' %}selected{% endif %}">Completed</a>
       </div>
       <div class="nav-right">
-        <button class="btn btn-primary btn-sm" onclick="openModal()">Add Service</button>
+        <div class="addservicebtn">
+        <button class="btn btn-primary btn-sm" onclick="openModal()">Add Service</button></div>
       </div>
     </div>
   
@@ -294,10 +295,11 @@
           <td>
             {% if service.current_status_entries.last %}
               <button 
-                class="btn btn-sm 
-                  {% if service.current_status_entries.last.status == 'Assigned' %}btn-primary{% endif %}
-                  {% if service.current_status_entries.last.status == 'Pending' %}btn-danger{% endif %}
-                  {% if service.current_status_entries.last.status == 'Completed' %}btn-success{% endif %}"
+                  class="btn btn-sm rounded-pill 
+
+                  {% if service.current_status_entries.last.status == 'Assigned' %}btn-outline-primary{% endif %}
+                  {% if service.current_status_entries.last.status == 'Pending' %}btn-outline-danger{% endif %}
+                  {% if service.current_status_entries.last.status == 'Completed' %}btn-outline-success{% endif %}"
                 
                 onclick="openUpdateStatusModal( {{ service.id }}) "
                 data-estimated-date="{{ service.estimated_date|date:'Y-m-d' }}"  
@@ -345,7 +347,10 @@
                             <option value="Completed" {% if service.current_status_entries.last.status == 'Completed' %}selected{% endif %}>Completed</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-success">Update</button>
+                    <div class="text-end">
+                      <button type="submit" class="btn btn-primary">Update</button>
+                  </div>
+                  
                 </form>
                 
                 <!-- Success/Error Messages -->
