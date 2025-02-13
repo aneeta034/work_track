@@ -499,6 +499,8 @@ def view_current_status_details(request, apply_id):
 
 def add_customer(request):
     if request.method == "POST":
+        print("Received POST Data:", request.POST.dict())  # Debugging
+
         name = request.POST.get('name', '').strip()
         address = request.POST.get('address', '').strip()
         contact_number = request.POST.get('contact_number', '').strip()
@@ -513,7 +515,7 @@ def add_customer(request):
             return JsonResponse({"success": False, "error": "A customer with this contact number already exists."}, status=400)
 
         # Create the new customer
-        Customer.objects.create(
+        customer = Customer.objects.create(
             name=name,
             address=address,
             contact_number=contact_number,
@@ -521,7 +523,8 @@ def add_customer(request):
             referred_by=referred_by,
         )
 
-        return JsonResponse({"success": True, "message": "Customer added successfully!"})
+        print("Customer Created:", customer)  # Debugging Line
+        return JsonResponse({"success": True, "message": "Customer added successfully!"}, status=201)
 
     return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
 
