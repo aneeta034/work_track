@@ -280,8 +280,14 @@ new customer
             </div>
             <div class="form-group">
               <label for="password">Password</label>
-              <input type="password" class="form-control" name="password" id="password" required>
+              <div class="position-relative">
+                <input type="password" class="form-control pr-4" name="password" id="password" required>
+                <i id="eyeIcon" class="fa fa-eye position-absolute" 
+                   style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;" 
+                   onclick="togglePassword()"></i>
+              </div>
             </div>
+            
             <button type="submit" class="btn btn-primary">Save</button>     
           </form>
           

@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Admin Dashboard{% endblock %}</title>
 
+  <!--password-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Lightbox CSS -->
@@ -40,7 +44,7 @@
   <div class="topbar">
     <div class="d-flex align-items-center">
       <!-- Logo -->
-      <a href="#" class="logo">
+      <a href="{% url 'admin_dashboard' %}" class="logo">
         <img src="{% static 'assets/img/velvetek.jpg' %}" alt="navbar brand" />
       </a>
       <!-- Hamburger Menu -->
@@ -466,21 +470,52 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
+  $(document).ready(function() {
+    function loadCustomers() {
+        $.ajax({
+            url: "{% url 'new_customer' %}",
+            type: "GET",
+            success: function(response) {
+                console.log("Customers list loaded:", response); // Debugging
+                $("#customerList").empty();
+                response.customers.forEach(function(customer) {
+                    $("#customerList").append(
+                        `<li class="list-group-item">${customer.name} - ${customer.email}</li>`
+                    );
+                });
+            },
+            error: function() {
+                console.error("Error fetching customers.");
+            }
+        });
+    }
+
+    loadCustomers(); // Load customer list on page load
+
     $("#customerForm").submit(function(event) {
-        event.preventDefault(); // Prevent form from submitting normally
+        event.preventDefault();
 
         $.ajax({
             type: "POST",
             url: "{% url 'add_customer' %}",
-            data: $(this).serialize(), // Serialize form data
+            data: $(this).serialize(),
             success: function(response) {
+                console.log("Customer added response:", response); // Debugging
+                
                 $("#customerMessage").html(
                     '<div class="alert alert-success">' + response.message + '</div>'
                 );
-                $("#customerForm")[0].reset(); // Reset the form after success
+
+                setTimeout(function() {
+                    $("#customerModal").modal("hide"); // Close modal properly
+                }, 1000);
+
+                $("#customerForm")[0].reset(); // Reset form after success
+                
+                loadCustomers(); // Reload customer list dynamically
             },
             error: function(xhr) {
+                console.error("Error adding customer:", xhr.responseText); // Debugging
                 var errorMessage = "Something went wrong.";
                 if (xhr.responseJSON && xhr.responseJSON.error) {
                     errorMessage = xhr.responseJSON.error;
@@ -491,9 +526,14 @@ $(document).ready(function() {
             }
         });
     });
-});
-</script>
 
+    // Ensure modal properly hides with Bootstrap
+    $("#customerModal").on("hidden.bs.modal", function () {
+        $("#customerMessage").html(""); // Clear messages when closing
+    });
+
+  });
+</script>
 
 
 
@@ -520,8 +560,14 @@ $(document).ready(function() {
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" name="password" id="password" required>
+            <div class="position-relative">
+              <input type="password" class="form-control pr-4" name="password" id="password" required>
+              <i id="eyeIcon" class="fa fa-eye position-absolute" 
+                 style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;" 
+                 onclick="togglePassword()"></i>
+            </div>
           </div>
+          
           <button type="submit" class="btn btn-primary">Save</button>     
         </form>
         
@@ -534,21 +580,72 @@ $(document).ready(function() {
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
+  function togglePassword() {
+    let passwordField = document.getElementById("password");
+    let eyeIcon = document.getElementById("eyeIcon");
+
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      eyeIcon.classList.remove("fa-eye");
+      eyeIcon.classList.add("fa-eye-slash");
+    } else {
+      passwordField.type = "password";
+      eyeIcon.classList.remove("fa-eye-slash");
+      eyeIcon.classList.add("fa-eye");
+    }
+  }
+</script>
+
+
+<script>
+  $(document).ready(function() {
+    function loadTechnicians() {
+        $.ajax({
+            url: "{% url 'list_technicians' %}",
+            type: "GET",
+            success: function(response) {
+                console.log("Technicians list loaded:", response); // Debugging
+                $("#technicianList").empty();
+                response.technicians.forEach(function(technician) {
+                    $("#technicianList").append(
+                        `<li class="list-group-item">${technician.username} - ${technician.email}</li>`
+                    );
+                });
+            },
+            error: function() {
+                console.error("Error fetching technicians.");
+            }
+        });
+    }
+
+    loadTechnicians(); // Load on page load
+
     $("#technicianForm").submit(function(event) {
-        event.preventDefault(); // Prevent default form submission
+        event.preventDefault();
 
         $.ajax({
             type: "POST",
             url: "{% url 'add_technician' %}",
-            data: $(this).serialize(), // Serialize form data
+            data: $(this).serialize(),
             success: function(response) {
+                console.log("Technician added response:", response); // Debugging
+                
                 $("#technicianMessage").html(
                     '<div class="alert alert-success">' + response.message + '</div>'
                 );
-                $("#technicianForm")[0].reset(); // Reset form fields on success
+
+                setTimeout(function() {
+                    $("#technicianModal").hide();
+                    $("body").removeClass("modal-open");
+                    $(".modal-backdrop").remove();
+                }, 1000);
+
+                $("#technicianForm")[0].reset();
+                
+                loadTechnicians(); // Reload the technician list dynamically
             },
             error: function(xhr) {
+                console.error("Error adding technician:", xhr.responseText); // Debugging
                 var errorMessage = "Something went wrong.";
                 if (xhr.responseJSON && xhr.responseJSON.error) {
                     errorMessage = xhr.responseJSON.error;
@@ -562,11 +659,11 @@ $(document).ready(function() {
 });
 </script>
 
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-  // for add cust
   // Open the modal
   function openCustomerModal() {
       document.getElementById("customerModal").style.display = "block";
@@ -587,7 +684,7 @@ $(document).ready(function() {
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  // Technician
+  // Technician Modal Functions
   function openTechnicianModal() {
     document.getElementById('technicianModal').style.display = "block";
   }
@@ -595,14 +692,13 @@ $(document).ready(function() {
   function closeTechnicianModal() {
     document.getElementById('technicianModal').style.display = "none";
   }
+
   // Close modal if clicking outside of the modal dialog
   window.onclick = function(event) {
     if (event.target == document.getElementById("technicianModal")) {
-        closeTechnician---Modal();
+      closeTechnicianModal();
     }
-}
-
-  
+  };
 </script>
 
 
@@ -680,7 +776,7 @@ function selectCustomer(customer) {
     document.getElementById('name').value = customer.name;
     document.getElementById('address').value = customer.address;
     document.getElementById('whatsapp_number').value = customer.whatsapp_number;
-    document.getElementById('referred_by').value = customer.reffered_by;
+    document.getElementById('referred_by').value = customer.referred_by;
 
     // Make the fields read-only again
     document.getElementById('name').readOnly = true;

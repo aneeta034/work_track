@@ -31,7 +31,7 @@
   <div class="topbar">
     <div class="d-flex align-items-center">
       <!-- Logo -->
-      <a href="#" class="logo">
+      <a href="{% url 'admin_dashboard' %}" class="logo">
         <img src="{% static 'assets/img/velvetek.jpg' %}" alt="navbar brand" />
       </a>
       <!-- Hamburger Menu -->
@@ -607,7 +607,7 @@ function selectCustomer(customer) {
     document.getElementById('name').value = customer.name;
     document.getElementById('address').value = customer.address;
     document.getElementById('whatsapp_number').value = customer.whatsapp_number;
-    document.getElementById('referred_by').value = customer.reffered_by;
+    document.getElementById('referred_by').value = customer.referred_by;
 
     // Make the fields read-only again
     document.getElementById('name').readOnly = true;
