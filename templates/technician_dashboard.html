@@ -317,6 +317,7 @@
 <!-- Update Status Modal -->
 {% if service.current_status_entries.last %}
     <div class="modal " id="updateStatusModal{{ service.id }}">
+      <div class="addmodal">
         <div class="modal-dialog" >
             <div class="modal-content">
                 <div class="modal-header">
@@ -352,6 +353,7 @@
                 </div>
             </div>
         </div>
+      </div>
     </div>
 {% endif %}
 

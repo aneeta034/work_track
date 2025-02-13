@@ -131,10 +131,11 @@
 </form>
 
 <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteVendorInfoModal{{ d.id }}" tabindex="-1" aria-labelledby="deleteVendorInfoLabel" aria-hidden="true">
+<div class="modal fade custom-modal" id="deleteVendorInfoModal{{ d.id }}" tabindex="-1" aria-labelledby="deleteVendorInfoLabel" aria-hidden="true">
+    
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header custom-modal-header">
                 <h5 class="modal-title">Confirm Delete</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -164,6 +165,7 @@
 <!--update Item Purchased Modal -->
 {% for d in vendors %}
 <div class="modal fade" id="updateVendorInfoModal{{ d.id }}" tabindex="-1" aria-labelledby="updateVendorInfoModalLabel" aria-hidden="true">
+    <div class="addmodal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -182,15 +184,18 @@
                         <input type="text" class="form-control" name="vendor_name" value="{{ d.vendor_name}}">
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Date</label>
-                        <input type="date" class="form-control" name="date" value="{{ d.date|date:'Y-m-d' }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-control" name="date" value="{{ d.date|date:'Y-m-d' }}">
+                        </div>
+                    
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Vendor ETA</label>
+                            <input type="date" class="form-control" name="vendor_eta" value="{{ d.vendor_eta|date:'Y-m-d' }}">
+                        </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Vendor ETA</label>
-                        <input type="date" class="form-control" name="vendor_eta" value="{{ d.vendor_eta|date:'Y-m-d' }}">
-                    </div>
+                    
 
                     <div class="mb-3">
                         <label class="form-label">Vendor Bill Photo</label>
@@ -215,6 +220,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endfor %}
 

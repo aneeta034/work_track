@@ -126,10 +126,10 @@ item purchased
                             </form>
                             
                             <!-- Delete Confirmation Modal -->
-                            <div class="modal fade" id="deleteItemPurchasedModal{{ d.id }}" tabindex="-1" aria-labelledby="deleteItemPurchasedLabel" aria-hidden="true">
+                            <div class="modal fade custom-modal" id="deleteItemPurchasedModal{{ d.id }}" tabindex="-1" aria-labelledby="deleteItemPurchasedLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <div class="modal-header">
+                                        <div class="modal-header custom-modal-header">
                                             <h5 class="modal-title">Confirm Delete</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
@@ -159,6 +159,7 @@ item purchased
 <!--update item purchased Modal -->
 {% for d in items %}
 <div class="modal fade" id="updateItemPurchasedModal{{ d.id }}" tabindex="-1" aria-labelledby="updateItemPurchasedModalLabel" aria-hidden="true">
+    <div class="addmodal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -201,6 +202,7 @@ item purchased
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endfor %}
 
