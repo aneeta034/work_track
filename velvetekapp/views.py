@@ -525,67 +525,67 @@ def add_customer(request):
 
     return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
 
-def update_customer(request, customer_id):
-    customer = get_object_or_404(Customer, id=customer_id)
+# def update_customer(request, customer_id):
+#     customer = get_object_or_404(Customer, id=customer_id)
 
-    if request.method == "POST":
-        name = request.POST.get('name', '').strip()
-        address = request.POST.get('address', '').strip()
-        contact_number = request.POST.get('contact_number', '').strip()
-        whatsapp = request.POST.get('whatsapp', '').strip()
-        referred_by = request.POST.get('referred_by', '').strip()
+#     if request.method == "POST":
+#         name = request.POST.get('name', '').strip()
+#         address = request.POST.get('address', '').strip()
+#         contact_number = request.POST.get('contact_number', '').strip()
+#         whatsapp = request.POST.get('whatsapp', '').strip()
+#         referred_by = request.POST.get('referred_by', '').strip()
 
-        if not name or not contact_number:
-            messages.error(request, "Name and Contact Number are required.")
-            return redirect('new_customer')
+#         if not name or not contact_number:
+#             messages.error(request, "Name and Contact Number are required.")
+#             return redirect('new_customer')
 
-        if Customer.objects.filter(contact_number=contact_number).exclude(id=customer.id).exists():
-            messages.error(request, "A customer with this contact number already exists.")
-            return redirect('new_customer')
+#         if Customer.objects.filter(contact_number=contact_number).exclude(id=customer.id).exists():
+#             messages.error(request, "A customer with this contact number already exists.")
+#             return redirect('new_customer')
 
-        try:
-            customer.name = name
-            customer.address = address
-            customer.contact_number = contact_number
-            customer.whatsapp_number = whatsapp
-            customer.referred_by = referred_by
-            customer.save()
+#         try:
+#             customer.name = name
+#             customer.address = address
+#             customer.contact_number = contact_number
+#             customer.whatsapp_number = whatsapp
+#             customer.referred_by = referred_by
+#             customer.save()
 
-            messages.success(request, "Customer updated successfully!")
-        except Exception as e:
-            messages.error(request, f"An error occurred: {str(e)}")
+#             messages.success(request, "Customer updated successfully!")
+#         except Exception as e:
+#             messages.error(request, f"An error occurred: {str(e)}")
 
-    return redirect('new_customer')
+#     return redirect('new_customer')
 
 
-def update_customer(request, customer_id):
-    if request.method == 'POST':
-        try:
-            customer = get_object_or_404(Customer, id=customer_id)
+# def update_customer(request, customer_id):
+#     if request.method == 'POST':
+#         try:
+#             customer = get_object_or_404(Customer, id=customer_id)
 
-            # Update customer details
-            customer.name = request.POST.get('name', customer.name).strip()
-            customer.address = request.POST.get('address', customer.address).strip()
-            customer.contact_number = request.POST.get('contact_number', customer.contact_number).strip()
-            customer.whatsapp_number = request.POST.get('whatsapp', customer.whatsapp_number).strip()
-            customer.referred_by = request.POST.get('referred_by', customer.referred_by).strip()
-            customer.save()
+#             # Update customer details
+#             customer.name = request.POST.get('name', customer.name).strip()
+#             customer.address = request.POST.get('address', customer.address).strip()
+#             customer.contact_number = request.POST.get('contact_number', customer.contact_number).strip()
+#             customer.whatsapp_number = request.POST.get('whatsapp', customer.whatsapp_number).strip()
+#             customer.referred_by = request.POST.get('referred_by', customer.referred_by).strip()
+#             customer.save()
 
-            return JsonResponse({
-                "success": True,
-                "message": "Customer updated successfully!",
-                "customer_id": customer.id,
-                "updated_name": customer.name,
-                "updated_address": customer.address,
-                "updated_contact": customer.contact_number,
-                "updated_whatsapp": customer.whatsapp_number,
-                "updated_referred_by": customer.referred_by
-            })
+#             return JsonResponse({
+#                 "success": True,
+#                 "message": "Customer updated successfully!",
+#                 "customer_id": customer.id,
+#                 "updated_name": customer.name,
+#                 "updated_address": customer.address,
+#                 "updated_contact": customer.contact_number,
+#                 "updated_whatsapp": customer.whatsapp_number,
+#                 "updated_referred_by": customer.referred_by
+#             })
 
-        except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=400)
+#         except Exception as e:
+#             return JsonResponse({"success": False, "error": str(e)}, status=400)
 
-    return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
+#     return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
 
 
 def delete_customer(request, customer_id):

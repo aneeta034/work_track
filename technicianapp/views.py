@@ -454,7 +454,7 @@ def update_customer(request, customer_id):
         customer.referred_by = request.POST.get('reffered_by', customer.referred_by)
         customer.save()
         messages.success(request, "Customer updated successfully!")
-    return redirect('technician_new_customer')
+    return redirect('new_customer')
 
 def extra_work_technician(request, apply_id):
     try:

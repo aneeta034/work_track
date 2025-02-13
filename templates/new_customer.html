@@ -71,78 +71,148 @@ new customer
       <div class="modal-header">
         <h5 class="modal-title">Update Customer</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'update_customer' customer.id %}">
+                    {% csrf_token %}
+                    
+                    <input type="hidden" name="customer_id" value="{{ customer.id }}">
+                      <div class="mb-3">
+                          <label class="form-label">Name:</label>
+                          <input type="text" name="name" class="form-control" value="{{ customer.name }}" required>
+                      </div>
+                      <div class="mb-3">
+                          <label  class="form-label">Address:</label>
+                          <textarea  name="address" class="form-control" rows="3">{{ customer.address }}</textarea>
+                      </div>
+                      <div class="mb-3">
+                          <label  class="form-label">Contact Number:</label>
+                          <input type="text"  name="contact_number" class="form-control" value="{{ customer.contact_number }}" required>
+                      </div>
+                      <div class="mb-3">
+                          <label  class="form-label">WhatsApp Number:</label>
+                          <input type="text"  name="whatsapp" class="form-control" value="{{ customer.whatsapp_number }}">
+                      </div>
+                      <div class="mb-3">
+                          <label  class="form-label">Referred By:</label>
+                          <input type="text" name="referred_by" class="form-control" value="{{ customer.referred_by }}">
+                      </div>
+                      <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                  </div>
+                </div>
+            </div>
+        </div>
       </div>
-      <div class="modal-body">
-        <form method="POST" action="{% url 'update_customer' customer.id %}" class="update-customer-form">
-          {% csrf_token %}
-          
-          <input type="hidden" name="customer_id" value="{{ customer.id }}">
-          <div class="mb-3">
-            <label class="form-label">Name:</label>
-            <input type="text" name="name" class="form-control" value="{{ customer.name }}" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Address:</label>
-            <textarea name="address" class="form-control" rows="3">{{ customer.address }}</textarea>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Contact Number:</label>
-            <input type="text" name="contact_number" class="form-control" value="{{ customer.contact_number }}" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">WhatsApp Number:</label>
-            <input type="text" name="whatsapp" class="form-control" value="{{ customer.whatsapp_number }}">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Referred By:</label>
-            <input type="text" name="referred_by" class="form-control" value="{{ customer.referred_by }}">
-          </div>
-          <button type="submit" class="btn btn-primary">Update</button>
-        </form>
+        {% endfor %}
       </div>
     </div>
   </div>
 </div>
-{% endfor %}
 
+<!-- Add Service Modal -->
+<div id="addServiceModal" class="modal">
+  <div class="modal-content">
+    <!-- Top Bar -->
+    <div class="modal-topbar">
+      <h2>Add Service</h2>
+      <span class="close" onclick="closeModal()">&times;</span>
+    </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-    $(".update-customer-form").submit(function(event) {
-        event.preventDefault(); // Prevent form from reloading the page
+    <form id="addServiceForm" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="modal-grid">
+        <!-- Column 1 -->
+        <div class="modal-column">
+          <div class="form-group">
+            <label for="contact_number">Customer Number</label>
+            <input type="text" id="contact_number" name="contact_number" oninput="searchCustomer()">
+            <div id="customer_results"></div>
+            <div id="customer_not_found" class="text-danger" style="display: none;">Customer not found. Please enter details manually.</div>
+            <small id="customer_error" class="text-danger"></small>
+          </div>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" readonly>
+          </div>
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" readonly>
+          </div>
+          <div class="form-group">
+            <label for="whatsapp_number">WhatsApp Number</label>
+            <input type="text" id="whatsapp_number" name="whatsapp_number" readonly>
+          </div>
+          <div class="form-group checkbox-group">
+            <input type="checkbox" id="same_as_contact" onchange="copyContactToWhatsApp()">
+            <label for="same_as_contact">Same as Contact Number</label>
+          </div>
+          <div class="form-group">
+            <label for="referred_by">Referred By</label>
+            <input type="text" id="referred_by" name="referred_by" readonly>
+          </div>
+        </div>
 
-        var form = $(this);
-        var formData = form.serialize(); // Serialize form data
-        var actionUrl = form.attr("action"); // Get form action URL
+        <!-- Column 2 -->
+        <div class="modal-column">
+          <div class="form-group">
+            <label for="service_by">Service By</label>
+            <select id="service_by" name="service_by">
+              <option value="">Select a technician</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="work_type">Work Type</label>
+            <select id="work_type" name="work_type">
+              <option value="sale">Sale</option>
+              <option value="service">Service</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="item_name_or_number">Item Name/Number</label>
+            <input type="text" id="item_name_or_number" name="item_name_or_number">
+          </div>
+          <div class="form-group">
+            <label for="issue">Issue Description</label>
+            <textarea id="issue" name="issue" rows="7"></textarea>
+          </div>
+        </div>
 
-        $.ajax({
-            type: "POST",
-            url: actionUrl,
-            data: formData,
-            success: function(response) {
-                if (response.success) {
-                    $("#updateCustomerModal" + response.customer_id).modal('hide'); // Close modal
-
-                    // Update customer details in the UI
-                    $("#customerName" + response.customer_id).text(response.updated_name);
-                    $("#customerAddress" + response.customer_id).text(response.updated_address);
-                    $("#customerContact" + response.customer_id).text(response.updated_contact);
-                    $("#customerWhatsApp" + response.customer_id).text(response.updated_whatsapp);
-                    $("#customerReferredBy" + response.customer_id).text(response.updated_referred_by);
-
-                    alert("Customer updated successfully!");
-                } else {
-                    alert("Error: " + response.error);
-                }
-            },
-            error: function(xhr) {
-                alert("An error occurred: " + xhr.responseText);
-            }
-        });
-    });
-});
-</script>
+        <!-- Column 3 -->
+        <div class="modal-column">
+          <div class="form-group">
+            <label for="photos_of_item">Upload Photo</label>
+            <div class="file-input-container">
+                <input type="file" id="photos_of_item" name="photos_of_item" multiple>
+                <div id="fileNamesDisplay" class="file-names-display">No files chosen</div>
+            </div>
+        </div>
+        <div class="form-group">
+          <label for="estimation_document">Upload Document</label>
+          <input type="file" id="estimation_document" name="estimation_document">
+          <div id="estimation_document_display" class="doc-display"></div>  <!--  Added this for display -->
+      </div>
+          <div class="form-group">
+            <label for="estimated_price">Estimated Price</label>
+            <input type="text" id="estimated_price" name="estimated_price">
+          </div>
+          <div class="form-group">
+            <label for="estimated_date">Estimated Date</label>
+            <input type="date" id="estimated_date" name="estimated_date">
+          </div>
+          <div class="form-group">
+            <label for="any_other_comments">Comments</label>
+            <textarea id="any_other_comments" name="any_other_comments"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+ 
 
 <!-- The Modal Add Customer-->
 <div class="modal addmodal" id="customerModal" style="display: none;">
@@ -155,7 +225,7 @@ $(document).ready(function() {
         </button>
       </div>
       <div class="modal-body">
-        <form id="customerForm">
+        <form method="POST" enctype="multipart/form-data" action="{% url 'add_customer' %}">
           {% csrf_token %}
           <div class="form-group">
             <label for="name">Name:</label>
@@ -171,169 +241,61 @@ $(document).ready(function() {
           </div>
           <div class="form-group">
             <label for="address">Address:</label>
-            <input type="text" class="form-control" id="address" name="address">
+            <input type="text"  class="form-control" id="address" name="address">
           </div>
+          
           <div class="form-group">
             <label for="referred_by">Referred By:</label>
             <input type="text" class="form-control" id="referred_by" name="referred_by">
           </div>
           <button type="submit" class="btn btn-primary">Save</button>     
         </form>
-        
-        <!-- Success/Error Messages -->
-        <div id="customerMessage" class="mt-2"></div>
       </div>
     </div>
   </div>
 </div>
-
-
 
   <!-- Technician Modal -->
-<div class="modal addmodal" id="technicianModal" style="display: none;">
-  <div class="modal-dialog modal-dialog-centered modal-lg modal-sm ">
-    <div class="modal-content p-3" style="max-width: 90vw;">
-      <div class="modal-header">
-        <h5 class="modal-title">Add Technician</h5>
-        <button type="button" class="close" onclick="closeTechnicianModal()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="technicianForm">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" class="form-control" name="username" id="username" required>
-          </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" class="form-control" name="email" id="email" required>
-          </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" name="password" id="password" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Save</button>     
-        </form>
-        
-        <!-- Success/Error Messages -->
-        <div id="technicianMessage" class="mt-2"></div>
+  <div class="modal addmodal" id="technicianModal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Technician</h5>
+          <button type="button" class="close" onclick="closeTechnicianModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" enctype="multipart/form-data" action="{% url 'add_technician' %}">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" name="username" id="username" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" name="email" id="email" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" name="password" id="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Technician</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 
 
-<!-- Add Service Modal -->
-   <div id="addServiceModal" class="modal">
-    <div class="modal-content">
-      <!-- Top Bar -->
-      <div class="modal-topbar">
-        <h2>Add Service</h2>
-        <span class="close" onclick="closeModal()">&times;</span>
-      </div>
   
-      <form id="addServiceForm" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="modal-grid">
-          <!-- Column 1 -->
-          <div class="modal-column">
-            <div class="form-group">
-              <label for="contact_number">Customer Number</label>
-              <input type="text" id="contact_number" name="contact_number" oninput="searchCustomer()">
-              <div id="customer_results"></div>
-              <div id="customer_not_found" class="text-danger" style="display: none;">Customer not found. Please enter details manually.</div>
-              <small id="customer_error" class="text-danger"></small>
-            </div>
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" name="name" readonly>
-            </div>
-            <div class="form-group">
-              <label for="address">Address</label>
-              <input type="text" id="address" name="address" readonly>
-            </div>
-            <div class="form-group">
-              <label for="whatsapp_number">WhatsApp Number</label>
-              <input type="text" id="whatsapp_number" name="whatsapp_number" readonly>
-            </div>
-            <div class="form-group checkbox-group">
-              <input type="checkbox" id="same_as_contact" onchange="copyContactToWhatsApp()">
-              <label for="same_as_contact">Same as Contact Number</label>
-            </div>
-            <div class="form-group">
-              <label for="referred_by">Referred By</label>
-              <input type="text" id="referred_by" name="referred_by" readonly>
-            </div>
-          </div>
-  
-          <!-- Column 2 -->
-          <div class="modal-column">
-            <div class="form-group">
-              <label for="service_by">Service By</label>
-              <select id="service_by" name="service_by">
-                <option value="">Select a technician</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="work_type">Work Type</label>
-              <select id="work_type" name="work_type">
-                <option value="sale">Sale</option>
-                <option value="service">Service</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="item_name_or_number">Item Name/Number</label>
-              <input type="text" id="item_name_or_number" name="item_name_or_number">
-            </div>
-            <div class="form-group">
-              <label for="issue">Issue Description</label>
-              <textarea id="issue" name="issue" rows="7"></textarea>
-            </div>
-          </div>
-  
-          <!-- Column 3 -->
-          <div class="modal-column">
-            <div class="form-group">
-              <label for="photos_of_item">Upload Photo</label>
-              <div class="file-input-container">
-                  <input type="file" id="photos_of_item" name="photos_of_item" multiple>
-                  <div id="fileNamesDisplay" class="file-names-display">No files chosen</div>
-              </div>
-          </div>
-          <div class="form-group">
-            <label for="estimation_document">Upload Document</label>
-            <input type="file" id="estimation_document" name="estimation_document">
-            <div id="estimation_document_display" class="doc-display"></div>  <!--  Added this for display -->
-        </div>
-            <div class="form-group">
-              <label for="estimated_price">Estimated Price</label>
-              <input type="text" id="estimated_price" name="estimated_price">
-            </div>
-            <div class="form-group">
-              <label for="estimated_date">Estimated Date</label>
-              <input type="date" id="estimated_date" name="estimated_date">
-            </div>
-            <div class="form-group">
-              <label for="any_other_comments">Comments</label>
-              <textarea id="any_other_comments" name="any_other_comments"></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="form-submit">
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
    
 
 
 <!-- Delete Confirmation Modal -->
 {% for customer in customers %}
-<div class="modal fade custom-modal" id="deleteCustomerModal{{ customer.id }}" tabindex="-1" aria-labelledby="deleteCustomerLabel" aria-hidden="true" >
+<div class="modal fade custom-modal" id="deleteCustomerModal{{ customer.id }}" tabindex="-1" aria-labelledby="deleteCustomerLabel" aria-hidden="true">
   <div class="modal-dialog">
       <div class="modal-content">
           <div class="modal-header custom-modal-header">
@@ -354,9 +316,9 @@ $(document).ready(function() {
           </div>
       </div>
   </div>
-  {% endfor %}
+</div> 
+{% endfor %} 
 
-    
 
    
 {% endblock %}
