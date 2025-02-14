@@ -41,7 +41,7 @@
   
   /* Sidebar */
   .sidebar {
-    height: calc(100vh - 50px);
+    height: 100%;
     width: 225px;
     background-color: var(--sidebar-color);
     color: var(--text-color);
@@ -204,7 +204,7 @@
   border: 1px solid #888;
   width: 90%; /* Adjust width as needed */
   max-width: 1200px; /* Limit maximum width */
-  height: 85vh !important; /* Limit height to 85% of viewport height */
+  height: 100% !important; /* Limit height to 85% of viewport height */
   border-radius: 10px;
   position: relative;
 }

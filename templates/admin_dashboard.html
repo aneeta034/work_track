@@ -382,7 +382,7 @@
                     {% if service.status == 'Pending' %}text-danger{% endif %}
                     {% if service.status == 'Completed' %}text-success{% endif %}
                 ">
-                    {{.service.status }}
+                    {{service.status }}
                 </span>
             {% else %}
                 <span class="text-muted">No Status</span>
