@@ -46,7 +46,7 @@ def admin_dashboard(request):
     customer_count = Customer.objects.count()
     total_services = Apply.objects.count()
     technician_count = CustomUser.objects.filter(role='technician').count()
-    services_with_total_cost = []
+    service_costs = {}
    
     for service in applied_services:
         service.latest_status = service.current_status_entries.last()  
@@ -58,13 +58,12 @@ def admin_dashboard(request):
         # Calculate total cost
         total_cost = fuel_total + food_total + items_total + vendor_total
 
-        services_with_total_cost.append({
-            'service': service,
-            'total_cost': total_cost
-        })
+        service_costs[service.id] = total_cost
+
 
     context = {
-        'services_with_total_cost': services_with_total_cost,
+        'applied_services': applied_services,
+        'service_costs': service_costs,
         'customer_count': customer_count,
         'total_services': total_services,
         'technician_count': technician_count, 

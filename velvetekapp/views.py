@@ -97,7 +97,7 @@ def export_applied_services(request, status):
         'created_at',
         'latest_status'
     )
-)
+    )
     # Construct a dynamic filename
     filename_parts = ["applied_services"]
     if status.lower() != "all":
