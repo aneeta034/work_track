@@ -391,6 +391,9 @@ $(document).ready(function() {
                 $("#statusMessage" + serviceId).html(
                     '<div class="alert alert-success">Status updated to: ' + response.status + '</div>'
                 );
+                setTimeout(() => {
+                location.reload();
+            }, 500);
             },
             error: function(xhr) {
                 var errorMessage = "Something went wrong.";
@@ -790,10 +793,4 @@ document.getElementById('addServiceModal').addEventListener('click', function (e
                   <span class="file-name">${file.name}</span>
                   <span class="delete-btn" onclick="removeFile(${index}, event)">×</span>
               `;
-              fileNamesDisplay.appendChild(fileItem);
-          });
-      }
-  }
-</script>
-</body>
-</html>
+              fileNamesDisplay.appe

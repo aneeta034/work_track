@@ -560,6 +560,7 @@ def add_customer(request):
             whatsapp_number=whatsapp_number,
             referred_by=referred_by,
         )
+        customer.save()
 
         print("Customer Created:", customer)  # Debugging Line
         return JsonResponse({"success": True, "message": "Customer added successfully!"}, status=201)

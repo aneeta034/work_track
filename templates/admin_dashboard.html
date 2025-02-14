@@ -521,7 +521,9 @@
 
                 $("#customerForm")[0].reset(); // Reset form after success
                 
-                loadCustomers(); // Reload customer list dynamically
+                setTimeout(() => {
+                location.reload();
+            }, 500);
             },
             error: function(xhr) {
                 console.error("Error adding customer:", xhr.responseText); // Debugging
@@ -647,11 +649,13 @@
                     $("#technicianModal").hide();
                     $("body").removeClass("modal-open");
                     $(".modal-backdrop").remove();
-                }, 1000);
+                }, 4000);
 
                 $("#technicianForm")[0].reset();
                 
-                loadTechnicians(); // Reload the technician list dynamically
+                setTimeout(() => {
+                location.reload();
+            }, 500);
             },
             error: function(xhr) {
                 console.error("Error adding technician:", xhr.responseText); // Debugging
