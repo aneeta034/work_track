@@ -23,7 +23,22 @@
   <!-- External CSS -->
   <link rel="stylesheet" href="{% static 'assets/css/admin_dashboard.css' %}">
   
- 
+  <style>
+    .link-style {
+        color: grey; /* Initial color */
+        text-decoration: none; /* Remove underline */
+        transition: color 0.3s ease; /* Smooth transition for hover effect */
+    }
+  
+    .link-style:hover {
+        color: black; /* Hover color */
+        text-decoration: none; /* Ensure no underline on hover */
+    }
+    .card:hover {
+    transform: none !important;
+    transition: none !important;
+}
+  </style>
 
 </head>
 <body>
