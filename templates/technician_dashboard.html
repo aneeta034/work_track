@@ -246,7 +246,7 @@
           <td>{{ service.id }}</td>
           
           <td>{{ service.name }}</td>
-          <td><a href="{% url 'fuelcharge' service.id %}" style="font-size: 12px;">View Charges</a></td>
+          <td><a href="{% url 'fuelcharge' service.id %}" style="font-size: 12px;">View</a></td>
           <td>{{ service.address }}</td>
           <td>
             <!-- Handle Contact Number -->
@@ -497,48 +497,7 @@ function getCSRFToken() {
 </script>
 
 
-<script>
-    {% comment %} document.addEventListener('DOMContentLoaded', function () {
-      const statusButtons = document.querySelectorAll('button[id^="statusButton"]');
-  
-      statusButtons.forEach((button) => {
-          const estimatedDate = new Date(button.dataset.estimatedDate);
-          const currentStatus = button.dataset.currentStatus;
-          const currentDate = new Date();
-          const applyId = button.dataset.serviceId; // Correct: Get apply ID
-  
-          // Check if the status is 'Assigned' and the current date is greater than the estimated date
-          if (currentStatus === 'Assigned' && currentDate > estimatedDate) {
-            // Update the button styles and text
-            button.classList.remove('btn-primary');
-            button.classList.add('btn-danger');
-            button.textContent = 'Pending';
 
-            // Perform the fetch request to update the status
-            fetch(`/update-status/${applyId}/`, {  // Ensure URL uses applyId
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}',  // CSRF token for security
-                },
-                body: JSON.stringify({
-                    status: 'Pending',  // Sending the status as "Pending"
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Status updated successfully:", data);
-                // Optionally update the UI further based on the response if needed
-            })
-            .catch(error => {
-                console.error('Error updating status:', error);
-                alert("Failed to update status. Please try again.");
-            });
-        }
-    });
-  }); {% endcomment %}
-     
-</script>
 
 
 

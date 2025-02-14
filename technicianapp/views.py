@@ -513,53 +513,7 @@ def fuelcharge(request, apply_id):
         'fuel_charges': fuel_charges,
         'technician_name': technician_name  
     })
-# def update_fuelcharge(request, fuel_id):
-#     fuel = get_object_or_404(FuelCharge, id=fuel_id)
 
-#     if request.method == "POST":
-#         technician_name = request.POST.get('technician_name')
-#         date = request.POST.get('date')
-#         purpose = request.POST.get('purpose')
-#         kilometers = request.POST.get('kilometers')
-#         cost = request.POST.get('cost')
-
-#         if not all([technician_name, date, purpose, kilometers, cost]):
-#             messages.error(request, "All fields are required.")
-#             return redirect('update_fuelcharge', fuel_id=fuel_id)
-
-#         try:
-#             fuel.technician_name = technician_name
-#             fuel.date = date
-#             fuel.purpose = purpose
-#             fuel.kilometers = kilometers
-#             fuel.cost = cost
-#             fuel.save()
-
-#             messages.success(request, "Fuel charge updated successfully!")
-#             return redirect('fuelcharge', apply_id=fuel.apply.id)  
-#         except Exception as e:
-#             messages.error(request, f"An error occurred: {str(e)}")
-#             return redirect('update_fuelcharge', fuel_id=fuel_id)
-
-#     return render(request, '', {'fuel': fuel})
-
-# def update_fuelcharge(request, fuel_id):
-#     fuel = get_object_or_404(FuelCharge, id=fuel_id)
-
-#     if request.method == "POST":
-#         try:
-#             fuel.technician_name = request.POST.get('technician_name')
-#             fuel.date = request.POST.get('date')
-#             fuel.purpose = request.POST.get('purpose')
-#             fuel.kilometers = request.POST.get('kilometers')
-#             fuel.cost = request.POST.get('cost')
-#             fuel.save()
-
-#             messages.success(request, "Fuel charge updated successfully!")
-#         except Exception as e:
-#             messages.error(request, f"An error occurred: {str(e)}")
-
-#     return redirect('fuelcharge', apply_id=fuel.apply.id)  # Ensure `apply_id` exists
 
 def update_fuelcharge(request, fuel_id):
     """Update an existing fuel charge entry."""
