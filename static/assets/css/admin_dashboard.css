@@ -538,27 +538,27 @@
     max-width: 150px !important;
   }
   
-  .table th:nth-child(3), .table td:nth-child(3) { /* Contact Details column */
+  .table th:nth-child(4), .table td:nth-child(4) { /* Contact Details column */
     min-width: 150px !important;
     max-width: 200px !important;
   }
   
-  .table th:nth-child(4), .table td:nth-child(4) { /* Contact Details column */
+  .table th:nth-child(5), .table td:nth-child(5) { /* Contact Details column */
     min-width: 150px !important; /* Increase column width */
     max-width: 150px !important;
   }
   
-  .table th:nth-child(7), .table td:nth-child(7) { /* Contact Details column */
+  .table th:nth-child(8), .table td:nth-child(8) { /* Contact Details column */
     min-width: 150px !important;
     max-width: 180px !important;
   }
   
-  .table th:nth-child(8), .table td:nth-child(8) { /* Contact Details column */
+  .table th:nth-child(9), .table td:nth-child(9) { /* Contact Details column */
     min-width: 250px !important; /* Increase column width */
     max-width: 300px !important;
   }
   
-  .table th:nth-child(11), .table td:nth-child(11) { /* Contact Details column */
+  .table th:nth-child(12), .table td:nth-child(12) { /* Contact Details column */
     min-width: 100px !important;
     max-width: 150px !important;
   }
