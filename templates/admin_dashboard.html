@@ -1259,17 +1259,17 @@ updatePlaceholder("date");
     fetch(baseUrl + "?" + params.toString(), { method: "GET" })
     .then(response => {
         if (response.status === 204) {
-            showFlashMessage("warning", "⚠️ No data found for the selected filters.");
+            showFlashMessage("warning", " No data found for the selected filters.");
         } else if (response.ok) {
           showFlashMessage("success", "Export completed successfully!");
           window.location.href = baseUrl + "?" + params.toString();
         } else {
-            showFlashMessage("danger", "❌ An error occurred while exporting.");
+            showFlashMessage("danger", " An error occurred while exporting.");
         }
     })
     .catch(error => {
         console.error("Export Error:", error);
-        showFlashMessage("danger", "❌ An unexpected error occurred.");
+        showFlashMessage("danger", "An unexpected error occurred.");
     });
 
 }
