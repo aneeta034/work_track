@@ -1,0 +1,92 @@
+{% extends 'technician_dashboard.html' %}
+{% block title %}
+Updates
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-6 col-md-3" style="padding-top:270px; margin-left:350px;">
+      <div class="card card-stats card-round">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-icon">
+              
+            </div>
+            <div class="col col-stats ms-3 ms-sm-0">
+              <div class="numbers">
+                <a href="{% url 'fuelcharge' apply_instance.id %}">Fuel Charge</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3" style="padding-top:270px;">
+      <div class="card card-stats card-round">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-icon">
+              
+            </div>
+            <div class="col col-stats ms-3 ms-sm-0">
+              <div class="numbers">
+                <a href="{% url 'food_allowance' apply_instance.id %}">Food Allowance</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-sm-6 col-md-3" style="margin-left:200px;">
+        <div class="card card-stats card-round">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-icon">
+              
+              </div>
+              <div class="col col-stats ms-3 ms-sm-0" >
+                <div class="numbers">
+                  <a href="{% url 'item_purchased' apply_instance.id %}">Item Purchased</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <div class="card card-stats card-round">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-icon">
+                
+                
+              </div>
+              <div class="col col-stats ms-3 ms-sm-0">
+                <div class="numbers">
+                  <a href="{% url 'vendor_info' apply_instance.id %}">Ventor Info</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <div class="card card-stats card-round">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-icon">
+                
+              </div>
+              <div class="col col-stats ms-3 ms-sm-0">
+                <div class="numbers">
+                  <a href="{% url 'current_status' apply_instance.id %}">Current Status</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

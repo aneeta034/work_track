@@ -474,6 +474,8 @@ def extra_work_admin(request, service_id):
     }
     return render(request, 'additional_charges.html', context)
 
+
+
 def add_customer(request):
     if request.method == "POST":
         print("Received POST Data:", request.POST.dict())  # Debugging
@@ -506,6 +508,7 @@ def add_customer(request):
 
     return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
 
+
 def delete_customer(request, customer_id):
     if request.method == "POST":
         try:
@@ -531,6 +534,16 @@ def new_customer(request):
     }
 
     return render(request,'new_customer.html',context)
+
+
+
+def view_applied_services(request):
+    dict_services = {
+        'applied_services': Apply.objects.all()
+    }
+    return render(request, 'display_applied_services.html',dict_services)
+
+
 
 def update_applied_service(request, service_id):
     applied_service = get_object_or_404(Apply, id=service_id)
@@ -584,6 +597,8 @@ def update_applied_service(request, service_id):
         'users': users,
     }
     return render(request, 'admin_dashboard.html', context)
+
+
 
 def delete_applied_service(request, service_id):
     if request.method == "POST":
