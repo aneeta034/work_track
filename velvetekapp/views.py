@@ -119,8 +119,6 @@ def export_applied_services(request, status):
 
     return response
 
-
-
 def switch_task(request, status=None):
     # Extract search filters
     filter_type = request.GET.get('filterType', '')
@@ -185,7 +183,6 @@ def switch_task(request, status=None):
     }
 
     return render(request, 'admin_dashboard.html', context)
-
 
 # Filter applied services based on the filter type
 def filter_applied_services(request):
@@ -267,9 +264,9 @@ def reset_filter_applied_services(request):
     }
     return render(request, 'admin_dashboard.html', context)
 
-
 # View to handle form submission
 def add_service(request):
+
     if request.method == 'POST':
         # Extract customer data from the form
         name = request.POST.get('name')
@@ -333,8 +330,6 @@ def add_service(request):
 
     return render(request, 'admin_dashboard.html')
 
-
-
 # View to handle dynamic customer search
 
 def search_customer(request):
@@ -374,7 +369,6 @@ def technician_list(request):
     technicians = CustomUser.objects.filter(role="technician").values("username", "email")
     return JsonResponse({"technicians": list(technicians)})
 
-
 def add_technician(request):
     if request.method == "POST":
         username = request.POST.get('username', '').strip()
@@ -409,7 +403,6 @@ def add_technician(request):
         })
 
     return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
-
 
 def list_technicians(request):
     technicians = CustomUser.objects.filter(role='technician')
@@ -481,60 +474,6 @@ def extra_work_admin(request, service_id):
     }
     return render(request, 'additional_charges.html', context)
 
-def view_fuelcharge_details(request, apply_id):
-    apply_instance = get_object_or_404(Apply, id=apply_id)
-    fuel_details = FuelCharge.objects.filter(apply=apply_instance)
-
-    context = {
-        'apply_instance': apply_instance,
-        'fuel_details': fuel_details
-    }
-
-    return render(request, 'view_fuelcharge.html', context)
-
-def view_food_allowance_details(request, apply_id):
-    apply_instance = get_object_or_404(Apply, id=apply_id)
-    food_allowances = FoodAllowance.objects.filter(apply=apply_instance)
-
-    context = {
-        'apply_instance': apply_instance,
-        'food_allowances': food_allowances
-    }
-
-    return render(request, 'view_food_allowance.html', context)
-
-def view_item_purchased_details(request, apply_id):
-    apply_instance = get_object_or_404(Apply, id=apply_id)
-    items = ItemPurchased.objects.filter(apply=apply_instance)
-
-    context = {
-        'apply': apply_instance,
-        'items': items,
-    }
-    return render(request, 'view_item_purchased.html', context)
-
-def view_vendor_info_details(request, apply_id):
-    apply_instance = get_object_or_404(Apply, id=apply_id)
-    vendors = VendorInfo.objects.filter(apply=apply_instance)
-
-    context = {
-        'apply': apply_instance,
-        'vendors': vendors,
-    }
-
-    return render(request, 'view_vendor_info.html', context)
-
-def view_current_status_details(request, apply_id):
-    apply_instance = get_object_or_404(Apply, id=apply_id)
-    statuses = CurrentStatus.objects.filter(apply=apply_instance)
-
-    context = {
-        'apply': apply_instance,
-        'statuses': statuses,
-    }
-
-    return render(request, 'view_current_status.html', context)
-
 def add_customer(request):
     if request.method == "POST":
         print("Received POST Data:", request.POST.dict())  # Debugging
@@ -567,7 +506,6 @@ def add_customer(request):
 
     return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
 
-
 def delete_customer(request, customer_id):
     if request.method == "POST":
         try:
@@ -593,16 +531,6 @@ def new_customer(request):
     }
 
     return render(request,'new_customer.html',context)
-
-
-
-def view_applied_services(request):
-    dict_services = {
-        'applied_services': Apply.objects.all()
-    }
-    return render(request, 'display_applied_services.html',dict_services)
-
-
 
 def update_applied_service(request, service_id):
     applied_service = get_object_or_404(Apply, id=service_id)
@@ -656,8 +584,6 @@ def update_applied_service(request, service_id):
         'users': users,
     }
     return render(request, 'admin_dashboard.html', context)
-
-
 
 def delete_applied_service(request, service_id):
     if request.method == "POST":

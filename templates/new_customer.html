@@ -62,7 +62,7 @@ new customer
       </div>
     </div>
 
-<!--updateCustomerModal-->
+<!--Update Customer-->
 {% for customer in customers %}
 <div class="modal fade" id="updateCustomerModal{{ customer.id }}" tabindex="-1" aria-labelledby="updateCustomerModalLabel" aria-hidden="true" data-bs-backdrop="false">
   <div class="addmodal">
@@ -71,44 +71,114 @@ new customer
       <div class="modal-header">
         <h5 class="modal-title">Update Customer</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{% url 'update_customer' customer.id %}">
-                    {% csrf_token %}
-                    
-                    <input type="hidden" name="customer_id" value="{{ customer.id }}">
-                      <div class="mb-3">
-                          <label class="form-label">Name:</label>
-                          <input type="text" name="name" class="form-control" value="{{ customer.name }}" required>
-                      </div>
-                      <div class="mb-3">
-                          <label  class="form-label">Address:</label>
-                          <textarea  name="address" class="form-control" rows="3">{{ customer.address }}</textarea>
-                      </div>
-                      <div class="mb-3">
-                          <label  class="form-label">Contact Number:</label>
-                          <input type="text"  name="contact_number" class="form-control" value="{{ customer.contact_number }}" required>
-                      </div>
-                      <div class="mb-3">
-                          <label  class="form-label">WhatsApp Number:</label>
-                          <input type="text"  name="whatsapp" class="form-control" value="{{ customer.whatsapp_number }}">
-                      </div>
-                      <div class="mb-3">
-                          <label  class="form-label">Referred By:</label>
-                          <input type="text" name="referred_by" class="form-control" value="{{ customer.referred_by }}">
-                      </div>
-                      <button type="submit" class="btn btn-primary">Update</button>
-                    </form>
-                  </div>
-                </div>
-            </div>
-        </div>
       </div>
-        {% endfor %}
+      <div class="modal-body">
+        <form id="updateCustomerForm{{ customer.id }}" method="POST" data-url="{% url 'update_customer' customer.id %}">
+          {% csrf_token %}
+          
+          <input type="hidden" name="customer_id" value="{{ customer.id }}">
+          
+          <div class="mb-3">
+            <label class="form-label">Name:</label>
+            <input type="text" name="name" class="form-control" value="{{ customer.name }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Address:</label>
+            <textarea name="address" class="form-control" rows="3">{{ customer.address }}</textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contact Number:</label>
+            <input type="text" name="contact_number" class="form-control" value="{{ customer.contact_number }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">WhatsApp Number:</label>
+            <input type="text" name="whatsapp" class="form-control" value="{{ customer.whatsapp_number }}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Referred By:</label>
+            <input type="text" name="referred_by" class="form-control" value="{{ customer.referred_by }}">
+          </div>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+        <!-- Success/Error Message Alert -->
+        <div id="alertMessage{{ customer.id }}" class="alert d-none"></div>
       </div>
     </div>
   </div>
 </div>
+</div>
+{% endfor %}
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+   <script>
+     $(document).ready(function () {
+       $(document).on("submit", "form[id^='updateCustomerForm']", function (event) {
+         event.preventDefault(); // Prevent default form submission
+   
+         let form = $(this);
+         let formData = new FormData(this);
+         let customerId = form.attr("id").replace("updateCustomerForm", ""); // Extract customer ID
+         let alertDiv = $("#alertMessage" + customerId);
+         let url = form.data("url"); // Get the dynamic URL from the form's data-url attribute
+   
+         $.ajax({
+           url: url,
+           type: "POST",
+           data: formData,
+           processData: false,
+           contentType: false,
+           beforeSend: function (xhr) {
+             xhr.setRequestHeader("X-CSRFToken", formData.get("csrfmiddlewaretoken")); // Add CSRF Token manually
+           },
+           success: function (response) {
+             console.log("Success:", response); // Debugging
+   
+             // Show success message
+             alertDiv
+               .removeClass("d-none alert-danger")
+               .addClass("alert alert-success")
+               .html(response.message);
+   
+             // Close modal and refresh page after 2 seconds
+             setTimeout(() => {
+               alertDiv.addClass("d-none");
+               let modalElement = document.getElementById("updateCustomerModal" + customerId);
+               let modalInstance = bootstrap.Modal.getInstance(modalElement);
+               if (modalInstance) modalInstance.hide();
+               location.reload(); // Refresh to reflect changes
+             }, 2000);
+           },
+           error: function (xhr) {
+             console.error("Error updating customer:", xhr.responseText); // Debugging
+             let errorMessage = "Something went wrong.";
+   
+             // Extract error message if available
+             if (xhr.responseJSON && xhr.responseJSON.error) {
+               errorMessage = xhr.responseJSON.error;
+             }
+   
+             // Show error message
+             alertDiv
+               .removeClass("d-none alert-success")
+               .addClass("alert alert-danger")
+               .html(errorMessage);
+   
+             // Hide error message after 3 seconds
+             setTimeout(() => {
+               alertDiv.addClass("d-none");
+             }, 3000);
+           },
+         });
+       });
+     });
+   </script>
+   
+
+
+
+
 
 <!-- Add Service Modal -->
 <div id="addServiceModal" class="modal">
