@@ -18,5 +18,6 @@ urlpatterns = [
     path('search_customer/', views.search_customer, name='search_customer'),
     path('get_users/', views.get_users, name='get_users'),
     path('export-applied-services/<str:status>/', views.export_applied_services, name='export_applied_services'),
+    path('calculate-total-cost/<int:service_id>/', views.calculate_total_cost, name='calculate_total_cost'),
     
 ]

@@ -24,7 +24,19 @@ from technicianapp.models import CurrentStatus
 import urllib.parse
 from django.db.models import Sum
 
+def calculate_total_cost(request, service_id):
+    """Calculate the total cost for a given service_id and return JSON response."""
 
+    service = get_object_or_404(Apply, id=service_id)
+
+    fuel_total = FuelCharge.objects.filter(apply=service).aggregate(total=Sum('cost'))['total'] or 0
+    food_total = FoodAllowance.objects.filter(apply=service).aggregate(total=Sum('cost'))['total'] or 0
+    items_total = ItemPurchased.objects.filter(apply=service).aggregate(total=Sum('price'))['total'] or 0
+    vendor_total = VendorInfo.objects.filter(apply=service).aggregate(total=Sum('vendor_cost'))['total'] or 0
+
+    total_cost = fuel_total + food_total + items_total + vendor_total
+
+    return JsonResponse({'total_cost': total_cost,'service_id': service_id})
 
 def export_applied_services(request, status):
     # Get the latest status for each Apply instance

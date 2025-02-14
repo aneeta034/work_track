@@ -328,13 +328,7 @@
           </td>
           
           <td>{{ service.name }}</td>
-          <td>
-            {% if total_cost and total_cost > 0 %}
-                <a href="{% url 'extra_work_admin' service.id %}">{{ total_cost }}</a>
-            {% else %}
-                None
-            {% endif %}
-        </td>
+          <td id="total-cost-{{ service.id }}" class="total-cost" data-service-id="{{ service.id }}">Loading...</td>
           <td>{{ service.address }}</td>
           <td>
             <!-- Handle Contact Number -->
@@ -403,12 +397,11 @@
 
 
 <!-- Delete Confirmation Modal -->
-{% for entry in services_with_total_cost %}
- <!-- Delete Confirmation Modal -->
- <div class="modal fade" id="deleteServiceModal{{ entry.service.id }}" tabindex="-1" aria-labelledby="deleteServiceLabel" aria-hidden="true">
+{% for service in applied_services %}
+<div class="modal fade custom-modal" id="deleteServiceModal{{ service.id }}" tabindex="-1" aria-labelledby="deleteServiceLabel" aria-hidden="true" data-bs-backdrop="false" style="background-color: rgba(0, 0, 0, 0.5);">
   <div class="modal-dialog">
       <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header custom-modal-header">
               <h5 class="modal-title">Confirm Delete</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
@@ -417,9 +410,9 @@
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-
-              <!-- Corrected Delete Form -->
-              <form action="{% url 'delete_applied_service' entry.service.id %}" method="post">
+              
+              <!-- Delete Form (Confirmed on Click) -->
+              <form action="{% url 'delete_applied_service' service.id %}" method="post">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-danger">Delete</button>
               </form>
@@ -428,7 +421,6 @@
   </div>
 </div>
 {% endfor %}
-
 
 
 {% endblock %}
@@ -481,70 +473,100 @@
   </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  $(document).ready(function () {
-    // Attach event listener to all update customer forms
-    $("form[id^='updateCustomerForm']").submit(function (event) {
-      event.preventDefault(); // Prevent default form submission
+$(document).ready(function() {
+    $(".total-cost").each(function() {
+        var serviceId = $(this).data("service-id");
+        var costElement = $(this);
 
-      let form = $(this);
-      let formData = new FormData(this);
-      let customerId = form.attr("id").replace("updateCustomerForm", ""); // Extract customer ID
-      let alertDiv = $("#alertMessage" + customerId);
-
-      $.ajax({
-        url: "{% url 'update_customer' 0 %}".replace("0", customerId), // Dynamic URL replacement
-        type: "POST",
-        data: formData,
-        processData: false,
-        contentType: false,
-        headers: {
-          "X-CSRFToken": formData.get("csrfmiddlewaretoken"),
-        },
-        success: function (response) {
-          console.log("Success:", response); // Debugging
-
-          // Show success message
-          alertDiv
-            .removeClass("d-none alert-danger")
-            .addClass("alert alert-success")
-            .html(response.message);
-
-          // Close modal and refresh page after 2 seconds
-          setTimeout(() => {
-            alertDiv.addClass("d-none");
-            let modalElement = document.getElementById("updateCustomerModal" + customerId);
-            let modalInstance = bootstrap.Modal.getInstance(modalElement);
-            if (modalInstance) modalInstance.hide();
-            location.reload(); // Refresh to reflect changes
-          }, 2000);
-        },
-        error: function (xhr) {
-          console.error("Error updating customer:", xhr.responseText); // Debugging
-          let errorMessage = "Something went wrong.";
-
-          // Extract error message if available
-          if (xhr.responseJSON && xhr.responseJSON.error) {
-            errorMessage = xhr.responseJSON.error;
-          }
-
-          // Show error message
-          alertDiv
-            .removeClass("d-none alert-success")
-            .addClass("alert alert-danger")
-            .html(errorMessage);
-
-          // Hide error message after 3 seconds
-          setTimeout(() => {
-            alertDiv.addClass("d-none");
-          }, 3000);
-        },
-      });
+        $.ajax({
+            url: `/velvetekapp/calculate-total-cost/${serviceId}/`,
+            type: "GET",
+            dataType: "json",
+            success: function(data) {
+              console.log("Response for service", serviceId, ":", data);
+                if (data.total_cost > 0) {
+                    costElement.html(`<a href="/velvetekapp/extra_work_admin/${serviceId}/">${data.total_cost}</a>`);
+                } else {
+                    costElement.html("None");
+                }
+            },
+            error: function() {
+                costElement.html("Error fetching cost");
+            }
+        });
     });
+});
+</script>
+<script>
+  $(document).ready(function() {
+    function loadCustomers() {
+        $.ajax({
+            url: "{% url 'new_customer' %}",
+            type: "GET",
+            success: function(response) {
+                console.log("Customers list loaded:", response); // Debugging
+                $("#customerList").empty();
+                response.customers.forEach(function(customer) {
+                    $("#customerList").append(
+                        `<li class="list-group-item">${customer.name} - ${customer.email}</li>`
+                    );
+                });
+            },
+            error: function() {
+                console.error("Error fetching customers.");
+            }
+        });
+    }
+
+    loadCustomers(); // Load customer list on page load
+
+    $("#customerForm").submit(function(event) {
+        event.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'add_customer' %}",
+            data: $(this).serialize(),
+            success: function(response) {
+                console.log("Customer added response:", response); // Debugging
+                
+                $("#customerMessage").html(
+                    '<div class="alert alert-success">' + response.message + '</div>'
+                );
+
+                setTimeout(function() {
+                    $("#customerModal").modal("hide"); // Close modal properly
+                }, 1000);
+
+                $("#customerForm")[0].reset(); // Reset form after success
+                
+                setTimeout(() => {
+                location.reload();
+            }, 500);
+            },
+            error: function(xhr) {
+                console.error("Error adding customer:", xhr.responseText); // Debugging
+                var errorMessage = "Something went wrong.";
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMessage = xhr.responseJSON.error;
+                }
+                $("#customerMessage").html(
+                    '<div class="alert alert-danger">' + errorMessage + '</div>'
+                );
+            }
+        });
+    });
+
+    // Ensure modal properly hides with Bootstrap
+    $("#customerModal").on("hidden.bs.modal", function () {
+        $("#customerMessage").html(""); // Clear messages when closing
+    });
+
   });
 </script>
+
 
 
 <!-- Technician Modal -->
@@ -1250,58 +1272,6 @@ updatePlaceholder("date");
     });
 
 }
-</script>
-
-
-<!-- JavaScript (Handles All Forms Dynamically) -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll("form[id^='updateCustomerForm']").forEach(form => {
-      form.addEventListener("submit", function(event) {
-        event.preventDefault();  // Prevent default form submission
-
-        let formData = new FormData(this);
-        let customerId = this.getAttribute("id").replace("updateCustomerForm", ""); // Extract customer ID
-        let alertDiv = document.getElementById("alertMessage" + customerId);
-
-        fetch("{% url 'update_customer' 0 %}".replace("0", customerId), {
-          method: "POST",
-          body: formData,
-          headers: {
-            "X-CSRFToken": formData.get("csrfmiddlewaretoken"),
-          },
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data); // Debugging: Ensure response contains success message
-
-          if (data.success) {
-            alertDiv.className = "alert alert-success";
-            alertDiv.innerHTML = data.message;
-          } else {
-            alertDiv.className = "alert alert-danger";
-            alertDiv.innerHTML = data.message;
-          }
-
-          alertDiv.classList.remove("d-none");
-
-          // Auto close modal after 2 seconds
-          setTimeout(() => {
-            alertDiv.classList.add("d-none");
-            let modalElement = document.getElementById("updateCustomerModal" + customerId);
-            let modalInstance = bootstrap.Modal.getInstance(modalElement);
-            if (modalInstance) {
-              modalInstance.hide();
-            }
-            location.reload(); // Reload page to reflect changes
-          }, 2000);
-        })
-        .catch(error => {
-          console.error("Error:", error);
-        });
-      });
-    });
-  });
 </script>
 </body>
 </html>
