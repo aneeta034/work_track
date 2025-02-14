@@ -17,8 +17,7 @@ from django.db.models import OuterRef, Subquery
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from django.utils import timezone
-
-
+from django.utils.timezone import now
 import os
 
 
@@ -49,7 +48,6 @@ def get_service(request, service_id):
     }
 
     return JsonResponse(service_data)
-
 
 def update_service(request, service_id):
     if request.method == "POST":
@@ -216,7 +214,6 @@ def add_service(request):
 
     return render(request, 'admin_dashboard.html')
 
-
 # View to handle dynamic customer searc
 def search_customer(request):
     query = request.GET.get('q', '').strip()  # Get the query and remove any leading/trailing spaces
@@ -250,11 +247,6 @@ def search_customer(request):
 def get_users(request):
     technicians = CustomUser.objects.filter(role='technician').values('id', 'username')
     return JsonResponse(list(technicians), safe=False)
-# Create your views here. 
-
-from django.utils.timezone import now
-from django.shortcuts import redirect
-from django.http import JsonResponse
 
 def update_current_status(request, apply_id):
     if request.method == 'POST':
@@ -285,17 +277,6 @@ def update_current_status(request, apply_id):
             return JsonResponse({"error": str(e)}, status=400)
 
     return JsonResponse({"error": "Invalid request method"}, status=405)
-
-# def update_current_status(request, apply_id):
-#     if request.method == 'POST':
-#         status_entry = get_object_or_404(CurrentStatus, id=apply_id)
-#         status_entry.date = request.POST.get('date')
-#         status_entry.status = request.POST.get('status')
-        
-#         status_entry.technician_name = request.user.username  
-
-#         status_entry.save()
-#         return redirect('technician_dashboard')
   
 def tech_pending_services(request):
     pending_services = CurrentStatus.objects.filter(
@@ -444,17 +425,32 @@ def technician_new_customer(request):
     customers = Customer.objects.all()
     return render(request, 'technician_add_customer.html', {'customers': customers})
 
+
 def update_customer(request, customer_id):
     if request.method == 'POST':
-        customer = get_object_or_404(Customer, id=customer_id)
-        customer.name = request.POST.get('name', customer.name)
-        customer.address = request.POST.get('address', customer.address)
-        customer.contact_number = request.POST.get('contact_number', customer.contact_number)
-        customer.whatsapp_number = request.POST.get('whatsapp_number', customer.whatsapp_number)
-        customer.referred_by = request.POST.get('reffered_by', customer.referred_by)
-        customer.save()
-        messages.success(request, "Customer updated successfully!")
-    return redirect('new_customer')
+        try:
+            customer = get_object_or_404(Customer, id=customer_id)
+            new_contact_number = request.POST.get('contact_number', customer.contact_number)
+
+            # Check if the contact number already exists in another customer
+            if Customer.objects.filter(contact_number=new_contact_number).exclude(id=customer_id).exists():
+                return JsonResponse({"success": False, "error": "This contact number is already in use!"}, status=400)
+
+            # Update customer details
+            customer.name = request.POST.get('name', customer.name)
+            customer.address = request.POST.get('address', customer.address)
+            customer.contact_number = new_contact_number
+            customer.whatsapp_number = request.POST.get('whatsapp', customer.whatsapp_number)
+            customer.referred_by = request.POST.get('referred_by', customer.referred_by)
+            customer.save()
+
+            return JsonResponse({"success": True, "message": "Customer updated successfully!"})
+
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=400)
+
+    return JsonResponse({"success": False, "error": "Invalid request!"}, status=400)
+
 
 def extra_work_technician(request, apply_id):
     try:
