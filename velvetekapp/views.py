@@ -287,10 +287,9 @@ def add_service(request):
         whatsapp_number = request.POST.get('whatsapp_number')
         referred_by = request.POST.get('referred_by')
 
-        # Check if the customer already exists using all parameters
+        # Check if the customer already exists using  parameters
         customer = Customer.objects.filter(
             contact_number=contact_number,
-            whatsapp_number=whatsapp_number,
         ).first()
 
         is_new_customer = False
@@ -320,6 +319,7 @@ def add_service(request):
     
             # Save image paths as a comma-separated string
             apply_instance.photos_of_item = ",".join(image_paths)
+            apply_instance.customer = customer
             apply_instance.save()
             if customer.whatsapp_number:
                 message = f"Dear {customer.name}, your application for '{apply_instance.work_type}' has been successfully submitted and is currently 'assigned'."

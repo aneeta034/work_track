@@ -150,7 +150,6 @@ def add_service(request):
         # Check if the customer already exists using all parameters
         customer = Customer.objects.filter(
             contact_number=contact_number,
-            whatsapp_number=whatsapp_number,
         ).first()
 
         is_new_customer = False

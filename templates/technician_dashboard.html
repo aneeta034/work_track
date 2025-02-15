@@ -144,22 +144,22 @@
         <!-- Column 1 -->
         <div class="modal-column">
           <div class="form-group">
-            <label for="contact_number">Customer Number</label>
+            <label for="contact_number">Customer Number <span class="required">*</span></label>
             <input type="text" id="contact_number" name="contact_number" oninput="searchCustomer()">
             <div id="customer_results"></div>
             <div id="customer_not_found" class="text-danger" style="display: none;">Customer not found. Please enter details manually.</div>
             <small id="customer_error" class="text-danger"></small>
           </div>
           <div class="form-group">
-            <label for="name">Name</label>
+            <label for="name">Name <span class="required">*</span></label>
             <input type="text" id="name" name="name" readonly>
           </div>
           <div class="form-group">
-            <label for="address">Address</label>
+            <label for="address">Address <span class="required">*</span></label>
             <input type="text" id="address" name="address" readonly>
           </div>
           <div class="form-group">
-            <label for="whatsapp_number">WhatsApp Number</label>
+            <label for="whatsapp_number">WhatsApp Number <span class="required">*</span></label>
             <input type="text" id="whatsapp_number" name="whatsapp_number" readonly>
           </div>
           <div class="form-group checkbox-group">
@@ -167,7 +167,7 @@
             <label for="same_as_contact">Same as Contact Number</label>
           </div>
           <div class="form-group">
-            <label for="referred_by">Referred By</label>
+            <label for="referred_by">Referred By <span class="required">*</span></label>
             <input type="text" id="referred_by" name="referred_by" readonly>
           </div>
         </div>
@@ -175,20 +175,20 @@
         <!-- Column 2 -->
         <div class="modal-column">
           <div class="form-group">
-            <label for="service_by">Service By</label>
+            <label for="service_by">Service By <span class="required">*</span></label>
             <select id="service_by" name="service_by">
               <option value="">Select a technician</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="work_type">Work Type</label>
+            <label for="work_type">Work Type <span class="required">*</span></label>
             <select id="work_type" name="work_type">
               <option value="sale">Sale</option>
               <option value="service">Service</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="item_name_or_number">Item Name/Number</label>
+            <label for="item_name_or_number">Item Name/Number <span class="required">*</span></label>
             <input type="text" id="item_name_or_number" name="item_name_or_number">
           </div>
           <div class="form-group">
@@ -215,7 +215,7 @@
             <input type="text" id="estimated_price" name="estimated_price">
           </div>
           <div class="form-group">
-            <label for="estimated_date">Estimated Date</label>
+            <label for="estimated_date">Estimated Date <span class="required">*</span></label>
             <input type="date" id="estimated_date" name="estimated_date">
           </div>
           <div class="form-group">
@@ -228,6 +228,9 @@
         <button type="submit" class="btn btn-primary">Submit</button>
       </div>
     </form>
+    <!-- Flash Message Container Inside Modal -->
+    <div id="serviceMessage"></div>
+
   </div>
 </div>
 
@@ -241,6 +244,8 @@
           <th>Customer Name</th>
           
           <th>Extra Charge</th>
+          
+          <th>Status</th> 
           <th>Address</th>
           <th style="width: 18%;">Contact Details</th> <!-- Increased width -->
           <th>Referred By</th>
@@ -252,7 +257,6 @@
           <th>Service By</th>
           <th style="width: 20%;">Files</th>
           <th>Comments</th>
-          <th>Status</th> 
         </tr>
       </thead>
       <tbody>
@@ -262,6 +266,26 @@
           
           <td>{{ service.name }}</td>
           <td><a href="{% url 'fuelcharge' service.id %}" style="font-size: 12px;">View</a></td>
+          <td>
+            {% if service.current_status_entries.last %}
+              <button 
+                  class="btn btn-sm rounded-pill 
+
+                  {% if service.current_status_entries.last.status == 'Assigned' %}btn-outline-primary{% endif %}
+                  {% if service.current_status_entries.last.status == 'Pending' %}btn-outline-danger{% endif %}
+                  {% if service.current_status_entries.last.status == 'Completed' %}btn-outline-success{% endif %}"
+                
+                onclick="openUpdateStatusModal( {{ service.id }}) "
+                data-estimated-date="{{ service.estimated_date|date:'Y-m-d' }}"  
+                data-current-status="{{ service.current_status_entries.last.status }}"
+                data-service-id="{{ service.id }}" 
+                id="statusButton{{ service.id }}">
+                {{ service.current_status_entries.last.status }} <!-- Show current status -->
+              </button>
+            {% else %}
+              <span class="text-muted">No status available</span>
+            {% endif %}
+          </td>
           <td>{{ service.address }}</td>
           <td>
             <!-- Handle Contact Number -->
@@ -275,11 +299,13 @@
             </div>
             <!-- Handle WhatsApp Number -->
             <div>
+              {% if service.whatsapp_number %}
               <i class="fab fa-whatsapp" aria-hidden="true"></i> 
               {% if service.whatsapp_number|slice:":1" == "+" %}
                 {{ service.whatsapp_number|slice:"3:" }}
               {% else %}
                 {{ service.whatsapp_number }}
+              {% endif %}
               {% endif %}
             </div>
           </td>
@@ -309,26 +335,7 @@
 
           <td>{{ service.any_other_comments }}</td>
         
-          <td>
-            {% if service.current_status_entries.last %}
-              <button 
-                  class="btn btn-sm rounded-pill 
-
-                  {% if service.current_status_entries.last.status == 'Assigned' %}btn-outline-primary{% endif %}
-                  {% if service.current_status_entries.last.status == 'Pending' %}btn-outline-danger{% endif %}
-                  {% if service.current_status_entries.last.status == 'Completed' %}btn-outline-success{% endif %}"
-                
-                onclick="openUpdateStatusModal( {{ service.id }}) "
-                data-estimated-date="{{ service.estimated_date|date:'Y-m-d' }}"  
-                data-current-status="{{ service.current_status_entries.last.status }}"
-                data-service-id="{{ service.id }}" 
-                id="statusButton{{ service.id }}">
-                {{ service.current_status_entries.last.status }} <!-- Show current status -->
-              </button>
-            {% else %}
-              <span class="text-muted">No status available</span>
-            {% endif %}
-        </td>
+          
         
         
       </tr>
@@ -632,6 +639,7 @@ function selectCustomer(customer) {
       event.preventDefault();
       const form = document.getElementById('addServiceForm');
       const formData = new FormData(this);
+      let messageContainer = document.getElementById("serviceMessage");
       fetch('/technician/add_service/', {
         method: 'POST',
         body: formData,
@@ -642,19 +650,40 @@ function selectCustomer(customer) {
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-            if (data.is_new_customer) {
-                alert('Customer and service added successfully!');  // Display this message only for new customers
-            } else {
-                alert('Service added successfully!');  // Display this message for existing customers
-            }
-            window.location.reload();  // Optionally reload the page or update the UI
+          let message = data.is_new_customer 
+                ? "Customer and service added successfully!" 
+                : "Service added successfully!";
+
+            messageContainer.innerHTML = `<div class="alert alert-success">${message}</div>`;
+
+            let modalElement = document.getElementById("addServiceModal");
+            let modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement); // Ensures modal instance exists
+
+            setTimeout(function () {
+                if (modalInstance) {
+                    modalInstance.hide(); // Close modal
+                }
+                messageContainer.innerHTML = ""; 
+
+                // ✅ Reload After Modal is Fully Closed
+                setTimeout(function () {
+                    location.reload();
+                }, 500); // Small delay to ensure the modal closes before reload
+
+            }, 2000);
         } else {
-            alert('Error: ' + (data.message || JSON.stringify(data.errors)));
+          let message = `Error: ${data.message || JSON.stringify(data.errors)}`;
+
+          if (data.warning_message) {
+              message += `<br><span class="text-warning">${data.warning_message}</span>`;
+          }
+
+          messageContainer.innerHTML = `<div class="alert alert-danger">${message}</div>`;
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred. Please try again later.');
+        messageContainer.innerHTML = `<div class="alert alert-danger">An error occurred. Please try again later.</div>`;
     });
 });
 

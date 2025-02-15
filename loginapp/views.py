@@ -47,23 +47,14 @@ def admin_dashboard(request):
     total_services = Apply.objects.count()
     technician_count = CustomUser.objects.filter(role='technician').count()
     service_costs = {}
-   
-    for service in applied_services:
-        service.latest_status = service.current_status_entries.last()  
-        fuel_total = FuelCharge.objects.filter(apply=service).aggregate(total=Sum('cost'))['total'] or 0
-        food_total = FoodAllowance.objects.filter(apply=service).aggregate(total=Sum('cost'))['total'] or 0
-        items_total = ItemPurchased.objects.filter(apply=service).aggregate(total=Sum('price'))['total'] or 0
-        vendor_total = VendorInfo.objects.filter(apply=service).aggregate(total=Sum('vendor_cost'))['total'] or 0
-        
-        # Calculate total cost
-        total_cost = fuel_total + food_total + items_total + vendor_total
-
-        service_costs[service.id] = total_cost
+    for service in Apply.objects.prefetch_related('current_status_entries').all():
+        print(service.customer)  # Should print Customer instance or None
+        if service.customer:
+            print(service.customer.name)
 
 
     context = {
         'applied_services': applied_services,
-        'service_costs': service_costs,
         'customer_count': customer_count,
         'total_services': total_services,
         'technician_count': technician_count, 
