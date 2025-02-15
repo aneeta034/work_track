@@ -24,6 +24,8 @@ fuel details
                                 <th>Purpose</th>
                                 <th>Kilometers</th>
                                 <th>Cost</th>
+                                <th>Review</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -34,6 +36,7 @@ fuel details
                                 <td>{{ charge.purpose }}</td>
                                 <td>{{ charge.kilometers }} km</td>
                                 <td>{{ charge.cost }}</td>
+                                <td>{{ charge.review }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -62,6 +65,7 @@ fuel details
                                 <th>Technician</th>
                                 <th>Purpose</th>
                                 <th>Cost</th>
+                                <th>Review</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,6 +75,7 @@ fuel details
                                 <td>{{ allowance.technician_name }}</td>
                                 <td>{{ allowance.purpose }}</td>
                                 <td>{{ allowance.cost }}</td>
+                                <td>{{ allowance.review }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -101,6 +106,7 @@ fuel details
                                 <th>ETA</th>
                                 <th>Bill Photo</th>
                                 <th>Cost</th>
+                                <th>Review</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -115,6 +121,7 @@ fuel details
                                     {% endif %}
                                 </td>
                                 <td>{{ vendor.vendor_cost }}</td>
+                                <td>{{ vendor.review}}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -143,6 +150,7 @@ fuel details
                                 <th>Item Name</th>
                                 <th>Bill Photo</th>
                                 <th>Price</th>
+                                <th>Review</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -156,6 +164,7 @@ fuel details
                                     {% endif %}
                                 </td>
                                 <td>{{ item.price }}</td>
+                                <td>{{ item.review }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
