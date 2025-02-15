@@ -4,20 +4,20 @@ from .models import FuelCharge,FoodAllowance,ItemPurchased,VendorInfo,CurrentSta
 
 # Register your models here.
 class FuelChargeAdmin(admin.ModelAdmin):
-    list_display=('id','customer_name','issue','technician_name','date','purpose','kilometers','cost')
+    list_display=('id','customer_name','issue','technician_name','date','purpose','kilometers','cost','review')
 admin.site.register(FuelCharge, FuelChargeAdmin)
 
 class FoodAllowanceAdmin(admin.ModelAdmin):
-    list_display=('id','customer_name','issue','technician_name','date','purpose','cost')
+    list_display=('id','customer_name','issue','technician_name','date','purpose','cost','review')
 admin.site.register(FoodAllowance, FoodAllowanceAdmin)
 
 class ItemPurchasedAdmin(admin.ModelAdmin):
-    list_display=('id','customer_name','issue','date','item_name','price','bill_photo')
+    list_display=('id','customer_name','issue','date','item_name','price','bill_photo','review')
 admin.site.register(ItemPurchased, ItemPurchasedAdmin)
 
 
 class VendorInfodAdmin(admin.ModelAdmin):
-    list_display=('id','customer_name','issue','date','vendor_name','vendor_bill_photo','vendor_eta','vendor_cost')
+    list_display=('id','customer_name','issue','date','vendor_name','vendor_bill_photo','vendor_eta','vendor_cost','review')
 admin.site.register(VendorInfo, VendorInfodAdmin)
 
 class CurrentStatusdAdmin(admin.ModelAdmin):

@@ -8,7 +8,12 @@
         width:1288px; /* Ensure both navbar and table have the same width */
         margin-left: auto; /* Push both to the right */
         margin-right: 0;
-    }   
+    } 
+    .required {
+        color: red;
+        font-weight: bold;
+        margin-left: 2px;
+      }  
 </style>
 
 <!-- Remove the container around navbar -->
@@ -58,30 +63,37 @@
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-3">
-                            <label for="vendor_name">Vendor Name</label>
+                            <label for="vendor_name">Vendor Name<span class="required">*</span></label>
                             <input type="text" class="form-control" id="vendor_name" name="vendor_name" required>
                         </div>
                         <div class="col-md-2">
-                            <label for="vendor_cost">Vendor Cost</label>
+                            <label for="vendor_cost">Vendor Cost<span class="required">*</span></label>
                             <input type="number" class="form-control" id="vendor_cost" name="vendor_cost" required>
                         </div>
                         <div class="col-md-2">
                             <label for="date">Date</label>
-                            <input type="date" class="form-control" id="date" name="date" required>
+                            <input type="date" class="form-control" id="date" name="date" value="{{ current_date|date:'Y-m-d' }}">
                         </div>
                         <div class="col-md-2">
-                            <label for="vendor_eta">Vendor ETA</label>
+                            <label for="vendor_eta">Vendor ETA<span class="required">*</span></label>
                             <input type="date" class="form-control" id="vendor_eta" name="vendor_eta" required>
                         </div>
                         <div class="col-md-3">
                             <label for="vendor_bill_photo">Vendor Bill</label>
-                            <input type="file" class="form-control" id="vendor_bill_photo" name="vendor_bill_photo" accept="image/*" required>
+                            <input type="file" class="form-control" id="vendor_bill_photo" name="vendor_bill_photo" accept="image/*" >
                         </div>
                     </div>
-    
-                    <div class="d-flex justify-content-end mt-3">
-                        <button type="submit" class="btn btn-primary">Add</button>
+                
+                    <div class="row mt-3 align-items-end">
+                        <div class="col-md-3">
+                            <label for="review">Review</label>
+                            <input type="text" class="form-control" id="review" name="review" placeholder="Enter review (if any)">
+                        </div>
+                        <div class="col-md-9 d-flex justify-content-end">
+                            <button class="btn btn-primary mt-4" type="submit">Add</button>
+                        </div>
                     </div>
+                  
                 </form>
             </div>
         </div>
@@ -103,6 +115,7 @@
                     <th>Vendor Bill Photo</th>
                     <th>Vendor ETA</th>
                     <th>Vendor Cost</th>
+                    <th>Review</th>
                 </tr>
             </thead>
             <tbody>
@@ -156,6 +169,7 @@
                 
                 <td>{{ d.vendor_eta }}</td>
                 <td>{{ d.vendor_cost }}</td>
+                <td>{{ d.review }}</td>
                 
             </tr>
                 

@@ -21,12 +21,5 @@ class AppliedServiceForm(forms.ModelForm):
 
 
 
-class FuelChargeForm(forms.ModelForm):
-    class Meta:
-        model = FuelCharge
-        fields = ['technician_name', 'date', 'purpose', 'kilometers', 'cost']
-        widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
-            'technician_name': forms.TextInput(attrs={'readonly': True}),
-        }
+
 
