@@ -1,804 +1,581 @@
 :root {
-  --primary-color: #2973B2;
-  /* Indigo */
-  --secondary-color: #F3F4F6;
-  /* Light Gray */
-  --accent-color: #441172;
-  /* Purple */
-  --text-color: #1F2937;
-  /* Dark Gray */
-  --white: #ffffff;
-  --sidebar-color: #DDEAF7;
-  /* Light Indigo */
-}
-
-/* Topbar */
-.topbar {
-  background-color: var(--primary-color);
-  height: 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  padding-left: 15px;
-  color: var(--white);
-  margin-bottom: 10px;
-}
-
-.topbar .logo img {
-  height: 50px;
-  width: 200px;
-  padding-right: 10px;
-}
-
-.topbar .admin-text {
-  font-size: 18px;
-  font-weight: 500;
-}
-
-.topbar .hamburger {
-  display: none;
-  font-size: 28px;
-  cursor: pointer;
-  padding-left: 5px;
-  margin-right: 30px;
-}
-
-/* Sidebar */
-.sidebar {
-  height: 100%;
-  width: 225px;
-  background-color: var(--sidebar-color);
-  color: var(--text-color);
-  position: absolute;
-  top: 60px;
-  left: 0;
-  /* Initially hidden */
-  padding: 20px 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  transition: left 0.3s ease;
-}
-
-.sidebar.show {
-  left: -250px;
-  /* Show sidebar */
-}
-
-.sidebar a {
-  text-decoration: none;
-  color: var(--text-color);
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.sidebar a:hover {
-  background-color: var(--primary-color);
-  color: var(--white);
-}
-
-.sidebar a i {
-  margin-right: 10px;
-}
-
-.sidebar h4 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-/* Main Content Wrapper */
-.main-content {
-  margin-left: 230px;
-  padding: 10px;
-  background-color: var(--secondary-color);
-  min-height: calc(100vh - 60px);
-  margin-top: 5px;
-  margin-right: 10px;
-}
-
-/* Cards Styling */
-.card {
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.card .card-icon {
-  font-size: 40px;
-  color: var(--primary-color);
-}
-
-
-/* Navbar */
-.navbar {
-  display: flex;
-  position: relative;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--white);
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.navbar .nav-left {
-  display: flex;
-  position: relative;
-  align-items: center;
-  padding-left: 10px;
-}
-
-.navbar .nav-left a {
-  margin-right: 12px;
-  text-decoration: none;
-  color: var(--text-color);
-  cursor: pointer;
-  transition: font-weight 0.3s ease;
-}
-
-
-.navbar .nav-right {
-  margin-right: 10px;
-  align-items: center;
-  display: flex;
-  gap: 2px;
-}
-
-.navbar .nav-right .custom-search {
-  height: 30px;
-  /* Adjust height */
-  font-size: 14px;
-  width: auto;
-  /* Optional: Adjust font size */
-}
-
-.btn-primary {
-  background-color: var(--primary-color) !important;
-  border-color: var(--primary-color) !important;
-  /* Update the border color as well */
-  color: #fff !important;
-  /* Ensure text remains visible */
-}
-
-button.btn.btn-primary.btn-sm:hover {
-  background-color: #004085 !important;
-  /* Replace with a darker shade of your primary color */
-  border-color: #004085 !important;
-  color: #fff !important;
-}
-
-/* Topbar */
-.topbar {
-  background-color: var(--primary-color);
-  height: 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  padding-left: 15px;
-  color: var(--white);
-  margin-bottom: 10px;
-}
-
-.topbar .logo img {
-  height: 50px;
-  width: 200px;
-  padding-right: 10px;
-}
-
-.topbar .admin-text {
-  font-size: 18px;
-  font-weight: 500;
-}
-
-.topbar .hamburger {
-  display: none;
-  font-size: 28px;
-  cursor: pointer;
-  padding-left: 5px;
-  margin-right: 30px;
-}
-
-/* Sidebar */
-.sidebar {
-  height: calc(100vh - 50px);
-  width: 225px;
-  background-color: var(--sidebar-color);
-  color: var(--text-color);
-  position: absolute;
-  top: 60px;
-  left: 0; /* Initially hidden */
-  padding: 20px 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  transition: left 0.3s ease;
-}
-
-.sidebar.show {
-  left: -250px; /* Show sidebar */
-}
-
-.sidebar a {
-  text-decoration: none;
-  color: var(--text-color);
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-.sidebar a:hover {
-  background-color: var(--primary-color);
-  color: var(--white);
-}
-.sidebar a i {
-  margin-right: 10px;
-}
-.sidebar h4 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-/* Main Content Wrapper */
-.main-content {
-  margin-left: 230px;
-  padding: 10px;
-  background-color: var(--secondary-color);
-  min-height: calc(100vh - 60px);
-  margin-top: 5px;
-  margin-right: 10px;
-}
-
-/* Cards Styling */
-.card {
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.card .card-icon {
-  font-size: 40px;
-  color: var(--primary-color);
-}
-
-
-/* Navbar */
-.navbar {
-  display: flex;
-  position: relative;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--white);
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.navbar .nav-left {
-  display: flex;
-  position: relative;
-  align-items: center;
-  padding-left: 10px;
-}
-
-.navbar .nav-left a {
-  margin-right: 12px;
-  text-decoration: none;
-  color: var(--text-color);
-  cursor: pointer;
-  transition: font-weight 0.3s ease;
-}
-
-
-.navbar .nav-right  {
-  margin-right: 10px;
-  align-items: center;
-  display: flex;
-  gap: 2px;
-}
-
-.navbar .nav-right .custom-search {
-  height: 30px;           /* Adjust height */
-  font-size: 14px;   
-  width: auto;     /* Optional: Adjust font size */
+    --primary-color: #2973B2; /* Indigo */
+    --secondary-color: #F3F4F6; /* Light Gray */
+    --accent-color: #441172; /* Purple */
+    --text-color: #1F2937; /* Dark Gray */
+    --white: #ffffff;
+    --sidebar-color: #DDEAF7; /* Light Indigo */
   }
- 
-  .btn-primary {
-    background-color: var(--primary-color) !important;
-    border-color: var(--primary-color) !important; /* Update the border color as well */
-    color: #fff !important; /* Ensure text remains visible */
+  
+  /* Topbar */
+  .topbar {
+    background-color: var(--primary-color);
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    padding-left: 15px;
+    color: var(--white);
+    margin-bottom: 10px;
   }
-
-  button.btn.btn-primary.btn-sm:hover {
-    background-color: #004085 !important; /* Replace with a darker shade of your primary color */
-    border-color: #004085 !important;
-    color: #fff !important;
+  
+  .topbar .logo img {
+    height: 50px;
+    width: 200px;
+    padding-right: 10px;
   }
+  
+  .topbar .admin-text {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  
+  .topbar .hamburger {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+    padding-left: 5px;
+    margin-right: 30px;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    height: 100%;
+    width: 225px;
+    background-color: var(--sidebar-color);
+    color: var(--text-color);
+    position: absolute;
+    top: 60px;
+    left: 0; /* Initially hidden */
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    transition: left 0.3s ease;
+  }
+  
+  .sidebar.show {
+    left: -250px; /* Show sidebar */
+  }
+  
+  .sidebar a {
+    text-decoration: none;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  .sidebar a:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+  }
+  .sidebar a i {
+    margin-right: 10px;
+  }
+  .sidebar h4 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Main Content Wrapper */
+  .main-content {
+    margin-left: 230px;
+    padding: 10px;
+    background-color: var(--secondary-color);
+    min-height: calc(100vh - 60px);
+    margin-top: 5px;
+    margin-right: 10px;
+  }
+  
+  /* Cards Styling */
+  .card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card .card-icon {
+    font-size: 40px;
+    color: var(--primary-color);
+  }
+  
+  
+  /* Navbar */
+  .navbar {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--white);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar .nav-left {
+    display: flex;
+    position: relative;
+    align-items: center;
+    padding-left: 10px;
+  }
+  
+  .navbar .nav-left a {
+    margin-right: 12px;
+    text-decoration: none;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: font-weight 0.3s ease;
+  }
+  
+  
+  .navbar .nav-right  {
+    margin-right: 10px;
+    align-items: center;
+    display: flex;
+    gap: 2px;
+  }
+  
+  .navbar .nav-right .custom-search {
+    height: 30px;           /* Adjust height */
+    font-size: 14px;   
+    width: auto;     /* Optional: Adjust font size */
+    }
+   
+    .btn-primary {
+      background-color: var(--primary-color) !important;
+      border-color: var(--primary-color) !important; /* Update the border color as well */
+      color: #fff !important; /* Ensure text remains visible */
+    }
+  
+    button.btn.btn-primary.btn-sm:hover {
+      background-color: #004085 !important; /* Replace with a darker shade of your primary color */
+      border-color: #004085 !important;
+      color: #fff !important;
+    }
 
-.filter-option.selected {
-  font-weight: bold;
-  color: #2973B2;
-  /* Change to your preferred color */
-  border-bottom: 2.5px solid #2973B2;
-  /* Add a persistent underline */
-  text-decoration: none;
-  /* Remove default underline if any */
+
+  .filter-option.selected {
+    font-weight: bold;
+    color: #2973B2; /* Change to your preferred color */
+    border-bottom: 2.5px solid #2973B2; /* Add a persistent underline */
+    text-decoration: none; /* Remove default underline if any */
 }
-
 /* Custom placeholder for month inputs */
 .month-placeholder::before {
-  content: attr(data-placeholder);
-  color: #6c757d;
-  /* Placeholder text color */
-  position: absolute;
-  pointer-events: none;
-  padding-left: 0.5rem;
+content: attr(data-placeholder);
+color: #6c757d; /* Placeholder text color */
+position: absolute;
+pointer-events: none;
+padding-left: 0.5rem;
 }
 
 .month-placeholder::-webkit-datetime-edit {
-  color: transparent;
-  /* Hide the default text */
+color: transparent; /* Hide the default text */
 }
 
 .month-placeholder::-webkit-datetime-edit-fields-wrapper {
-  visibility: hidden;
-  /* Hide the default fields */
+visibility: hidden; /* Hide the default fields */
 }
-
-/* Modal Styles */
+ /* Modal Styles */
 #addServiceModal.modal {
-  display: none;
-  /* Hidden by default */
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  /* Black background with opacity */
+display: none; /* Hidden by default */
+position: fixed;
+z-index: 1000;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
 }
 
 #addServiceModal .modal-content {
   background-color: #fff;
-  margin: 5% auto;
-  /* Center the modal */
-  padding: 0;
-  /* Remove padding to allow top bar to span full width */
+  margin: 5% auto; /* Center the modal */
+  padding: 0; /* Remove padding to allow top bar to span full width */
   border: 1px solid #888;
   width: 90%; /* Adjust width as needed */
   max-width: 1200px; /* Limit maximum width */
-  height: 100% !important; /* Limit height to 85% of viewport height */
+  height: 90% !important; /* Limit height to 85% of viewport height */
   border-radius: 10px;
   position: relative;
 }
 
 /* Top Bar */
 #addServiceModal .modal-topbar {
-  background-color: var(--primary-color);
-  /* Primary color */
-  color: #fff;
-  padding: 15px 20px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+background-color: var(--primary-color); /* Primary color */
+color: #fff;
+padding: 15px 20px;
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+display: flex;
+justify-content: space-between;
+align-items: center;
 }
 
 #addServiceModal .modal-topbar h2 {
-  margin: 0;
-  font-size: 24px;
+margin: 0;
+font-size: 24px;
 }
 
 #addServiceModal .close {
-  color: #fff;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
+color: #fff;
+font-size: 28px;
+font-weight: bold;
+cursor: pointer;
 }
 
 #addServiceModal .close:hover,
 #addServiceModal .close:focus {
-  color: #ccc;
-  text-decoration: none;
+color: #ccc;
+text-decoration: none;
 }
 
 /* Modal Grid Layout */
 #addServiceModal .modal-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  /* 3 equal columns */
-  gap: 20px;
-  /* Space between columns */
-  padding: 20px;
-  /* Add padding inside the modal */
+display: grid;
+grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+gap: 20px; /* Space between columns */
+padding: 20px; /* Add padding inside the modal */
 }
 
 #addServiceModal .modal-column {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  /* Space between form groups */
+display: flex;
+flex-direction: column;
+gap: 15px; /* Space between form groups */
 }
 
 #addServiceModal .form-group {
-  display: flex;
-  flex-direction: column;
+display: flex;
+flex-direction: column;
 }
 
 #addServiceModal .form-group label {
-  font-weight: bold;
-  margin-bottom: 5px;
+font-weight: bold;
+margin-bottom: 5px;
 }
 
 #addServiceModal .form-group input,
 #addServiceModal .form-group select,
 #addServiceModal .form-group textarea {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
+padding: 8px;
+border: 1px solid #ccc;
+border-radius: 4px;
+font-size: 14px;
 }
 
 #addServiceModal .form-group textarea {
-  resize: vertical;
-  /* Allow vertical resizing */
+resize: vertical; /* Allow vertical resizing */
 }
 
 /* Checkbox Styling */
 #addServiceModal .checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-direction: row;
-  margin-top: -10px;
-  margin-bottom: 0px !important;
-  padding-bottom: 0 !important;
+display: flex;
+align-items: center;
+gap: 8px;
+flex-direction: row;
+margin-top: -10px;
+margin-bottom: 0px !important;
+padding-bottom: 0 !important;
 }
 
 #addServiceModal .checkbox-group input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  margin: 0;
+width: 16px;
+height: 16px;
+margin: 0;
 }
 
 #addServiceModal .checkbox-group label {
-  font-weight: normal;
-  font-size: 14px;
-  margin: 0;
+font-weight: normal;
+font-size: 14px;
+margin: 0;
 }
 
 /* Customer Results Dropdown */
 #addServiceModal #customer_results {
-  position: absolute;
-  z-index: 1000;
-  background: white;
-  border: 1px #ccc;
-  border-radius: 8px;
-  max-height: 150px;
-  overflow-y: auto;
-  width: 31%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 70px;
+position: absolute;
+z-index: 1000;
+background: white;
+border: 1px  #ccc;
+border-radius: 8px;
+max-height: 150px;
+overflow-y: auto;
+width: 31%;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+margin-top: 70px;
 }
 
 #addServiceModal #customer_results div {
-  cursor: pointer;
-  /* Change cursor to pointer on hover */
-  transition: background-color 0.2s ease;
-  /* Smooth transition for hover effect */
+cursor: pointer; /* Change cursor to pointer on hover */
+transition: background-color 0.2s ease; /* Smooth transition for hover effect */
 }
 
 #addServiceModal #customer_results div:hover {
-  background-color: #f0f0f0;
-  /* Light gray background on hover */
+background-color: #f0f0f0; /* Light gray background on hover */
 }
 
 /* Customer Not Found Message */
 #addServiceModal #customer_not_found {
-  margin-top: 5px;
-  /* Add some space between the input field and the message */
-  font-size: 14px;
-  /* Adjust font size */
-  color: #dc3545;
-  /* Red color for error messages */
+margin-top: 5px; /* Add some space between the input field and the message */
+font-size: 14px; /* Adjust font size */
+color: #dc3545; /* Red color for error messages */
 }
 
 /* Comments Field */
 #addServiceModal #any_other_comments {
-  height: 68px;
-  /* Increase height of comments field */
+height: 68px; /* Increase height of comments field */
 }
 
 /* Submit Button */
 #addServiceModal .form-submit {
-  text-align: right;
-  padding: 5px;
-  margin-right: 10px;
+text-align: right;
+padding: 5px;
+margin-right: 10px;
 }
 
 #addServiceModal .form-submit .btn.btn-primary {
-  background-color: #2973b2 !important;
-  border-color: var(--primary-color) !important;
-  /* Update the border color as well */
-  color: #fff !important;
-  /* Ensure text remains visible */
-  height: 50px !important;
+background-color: #2973b2 !important;
+border-color: var(--primary-color) !important; /* Update the border color as well */
+color: #fff !important; /* Ensure text remains visible */
+height: 50px !important;
 }
 
 #addServiceModal .form-submit .btn.btn-primary:hover {
-  background-color: #004085 !important;
-  /* Replace with a darker shade of your primary color */
-  border-color: #004085 !important;
-  color: #fff !important;
+background-color: #004085 !important; /* Replace with a darker shade of your primary color */
+border-color: #004085 !important;
+color: #fff !important;
 }
 
 /* Ensure modal only affects elements with class .addmodal */
 .addmodal {
-  display: none;
-  /* Hidden by default */
-  position: fixed;
-  z-index: 1050;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  /* Black background with opacity */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+display: none; /* Hidden by default */
+position: fixed;
+z-index: 1050;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+display: flex;
+align-items: center;
+justify-content: center;
 }
 
 /* Modal Dialog */
 .addmodal .modal-dialog {
-  max-width: 400px;
-  /* Adjust width */
-  width: 90%;
-  margin: 65px auto 0 auto;
-  /* Add top margin of 65px */
-  position: relative;
-  z-index: 1051;
-  pointer-events: auto;
-  /* Allows clicking inside the modal */
+max-width: 400px; /* Adjust width */
+width: 90%;
+margin: 65px auto 0 auto; /* Add top margin of 65px */
+position: relative;
+z-index: 1051;
+pointer-events: auto; /* Allows clicking inside the modal */
 }
 
 /* Modal Content */
 .addmodal .modal-content {
-  background-color: #fff;
-  border: none !important;
-  border-radius: 10px;
-  padding: 0;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  position: relative;
+background-color: #fff;
+border: none !important;
+border-radius: 10px;
+padding: 0;
+box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+position: relative;
 }
 
 /* Modal Header */
 .addmodal .modal-header {
-  background-color: var(--primary-color);
-  color: #fff;
-  padding: 15px 20px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+background-color: var(--primary-color);
+color: #fff;
+padding: 15px 20px;
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+display: flex;
+justify-content: space-between;
+align-items: center;
 }
 
 .addmodal .modal-header h5 {
-  margin: 0;
-  font-size: 22px;
-  font-weight: bold;
+margin: 0;
+font-size: 22px;
+font-weight: bold;
 }
 
 .addmodal .modal-header .close {
-  color: #fff;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-  background: none;
-  border: none;
-  outline: none;
+color: #fff;
+font-size: 24px;
+font-weight: bold;
+cursor: pointer;
+background: none;
+border: none;
+outline: none;
 }
 
 .addmodal .modal-header .close:hover {
-  color: #ccc;
+color: #ccc;
 }
 
 /* Modal Body */
 .addmodal .modal-body {
-  padding: 20px;
+padding: 20px;
 }
 
 /* Form Fields */
 .addmodal .form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
+display: flex;
+flex-direction: column;
+margin-bottom: 15px;
 }
 
 .addmodal .form-group label {
-  font-weight: bold;
-  margin-bottom: 5px;
+font-weight: bold;
+margin-bottom: 5px;
 }
 
 .addmodal .form-group input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+font-size: 14px;
 }
 
 /* Align Submit Button to the Right ONLY inside .addmodal */
 .addmodal form {
-  display: flex;
-  flex-direction: column;
+display: flex;
+flex-direction: column;
 }
 
 .addmodal form .btn-primary {
-  align-self: flex-end;
-  /* Aligns the submit button to the right */
-  background-color: #2973b2 !important;
-  border: none !important;
-  color: #fff !important;
-  font-size: 16px;
-  padding: 10px 20px;
-  min-width: 150px;
-  border-radius: 5px;
-  cursor: pointer;
+align-self: flex-end; /* Aligns the submit button to the right */
+background-color: #2973b2 !important;
+border: none !important;
+color: #fff !important;
+font-size: 16px;
+padding: 10px 20px;
+min-width: 150px;
+border-radius: 5px;
+cursor: pointer;
 }
 
 .addmodal form .btn-primary:hover {
-  background-color: #004085 !important;
+background-color: #004085 !important;
 }
 
 
 .custom-modal-header {
-  background-color: var(--primary-color);
-  color: #fff;
-  padding: 15px 20px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  /* Prevents white corners */
+background-color: var(--primary-color);
+color: #fff;
+padding: 15px 20px;
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+position: relative;
+overflow: hidden; /* Prevents white corners */
 }
 
 .custom-modal-header h5 {
-  margin: 0;
-  font-size: 22px;
-  font-weight: bold;
+margin: 0;
+font-size: 22px;
+font-weight: bold;
 }
 
 .custom-modal-header .btn-close {
-  color: #fff;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-  background: none;
-  border: none;
-  outline: none;
+color: #fff;
+font-size: 24px;
+font-weight: bold;
+cursor: pointer;
+background: none;
+border: none;
+outline: none;
 }
 
 .custom-modal-header .btn-close:hover {
-  color: #ccc;
+color: #ccc;
 }
-
 /* Reduce the width of the update customer modal */
 .custom-modal .modal-dialog {
-  max-width: 400px;
-  /* Adjust as needed */
-  width: 90%;
-  /* Ensures responsiveness */
-  margin: 65px auto 0 auto;
+max-width: 400px; /* Adjust as needed */
+width: 90%; /* Ensures responsiveness */
+margin: 65px auto 0 auto;
 }
 
 /* Ensure the modal content is properly styled */
 .custom-modal .modal-content {
-  border-radius: 10px;
-  overflow: hidden;
-  border: none;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+border-radius: 10px;
+overflow: hidden;
+border: none;
+box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Styled Table */
 .table-responsive {
-  overflow-x: auto;
-  /* Enable horizontal scroll */
-  overflow-y: auto;
-  /* Enable vertical scroll */
-  border: 1px solid #ddd;
-  /* Add border for better visibility */
-  max-height: 485px;
-  /* Set a maximum height for the container */
+  overflow-x: auto; /* Enable horizontal scroll */
+  overflow-y: auto; /* Enable vertical scroll */
+  border: 1px solid #ddd; /* Add border for better visibility */
+  max-height: 485px; /* Set a maximum height for the container */
   height: auto;
-  transition: height 0.3s ease;
-  /* Smooth height transition */
+  transition: height 0.3s ease; /* Smooth height transition */
 }
-
 .table {
-  width: 100%;
-  /* Ensure table spans container width */
-  word-wrap: break-word;
-  /* Break long words */
+  width: 100%; /* Ensure table spans container width */
+  word-wrap: break-word; /* Break long words */
   white-space: normal;
   table-layout: auto;
-  border-collapse: collapse;
-  /* Prevent text wrapping for narrow columns */
+  border-collapse: collapse;/* Prevent text wrapping for narrow columns */
 }
 
 
-.table th:nth-child(2),
-.table td:nth-child(2) {
-  /* Contact Details column */
+.table th:nth-child(2), .table td:nth-child(2) { /* Contact Details column */
   min-width: 100px !important;
   max-width: 150px !important;
 }
 
-.table th:nth-child(4), .table td:nth-child(4) { /* Contact Details column */
+.table th:nth-child(5), .table td:nth-child(5) { /* Contact Details column */
   min-width: 150px !important;
   max-width: 200px !important;
 }
 
-.table th:nth-child(5), .table td:nth-child(5) { /* Contact Details column */
+.table th:nth-child(6), .table td:nth-child(6) { /* Contact Details column */
   min-width: 150px !important; /* Increase column width */
   max-width: 150px !important;
 }
 
-.table th:nth-child(8), .table td:nth-child(8) { /* Contact Details column */
+.table th:nth-child(9), .table td:nth-child(9) { /* Contact Details column */
   min-width: 150px !important;
   max-width: 180px !important;
 }
 
-.table th:nth-child(9), .table td:nth-child(9) { /* Contact Details column */
+.table th:nth-child(10), .table td:nth-child(10) { /* Contact Details column */
   min-width: 250px !important; /* Increase column width */
   max-width: 300px !important;
 }
 
-.table th:nth-child(12), .table td:nth-child(12) { /* Contact Details column */
+.table th:nth-child(13), .table td:nth-child(13) { /* Contact Details column */
   min-width: 100px !important;
   max-width: 150px !important;
 }
-.table th:nth-child(14), .table td:nth-child(14) { /* Contact Details column */
+.table th:nth-child(15), .table td:nth-child(15) { /* Contact Details column */
   min-width: 200px !important;
   max-width: 250px !important;
 }
 
 
-.table th,
-.table td {
+.table th, .table td {
   padding: 10px !important;
   text-align: left !important;
   border-bottom: 1px solid #ddd !important;
-  border-right: none !important;
-  /* Remove right border */
-  border-left: none !important;
+  border-right: none !important; /* Remove right border */
+  border-left: none !important; 
 }
-
 .table tbody tr:hover {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15) !important;
   background-color: #f9f9f9 !important;
@@ -813,17 +590,15 @@ button.btn.btn-primary.btn-sm:hover {
   list-style: none;
   padding: 0;
   margin: 0;
-  font-size: 12px;
-  /* Reduced font size */
+  font-size: 12px; /* Reduced font size */
 }
 
 .files-list li {
-  margin: 3px 0;
-  /* Reduced margin */
+  margin: 3px 0; /* Reduced margin */
 }
 
 .files-list a {
-  color: 2973B2;
+  color:2973B2;
   text-decoration: none;
 }
 
@@ -833,8 +608,7 @@ button.btn.btn-primary.btn-sm:hover {
 
 /* Icons for update/delete */
 .icon-link {
-  color: 2973B2;
-  /* Primary color */
+  color: 2973B2; /* Primary color */
   text-decoration: none;
 }
 
@@ -849,108 +623,96 @@ button.btn.btn-primary.btn-sm:hover {
 }
 
 .delete-icon:hover i {
-  color: #E53E3E;
-  /* Red for delete */
+  color: #E53E3E; /* Red for delete */
 }
 
 /* Contact details icons styling */
 .fa-phone {
-  color: #5652af;
-  /* Blue color for phone icon */
+  color:#5652af; /* Blue color for phone icon */
   margin-right: 5px;
 }
 
 .fab.fa-whatsapp {
-  color: #25D366;
-  /* WhatsApp green */
+  color: #25D366; /* WhatsApp green */
   margin-right: 5px;
 }
-
 /* Styles specific to .file-input-container */
 .file-input-container {
-  position: relative;
-  display: inline-block;
-  width: 100%;
+position: relative;
+display: inline-block;
+width: 100%;
 }
 
 .file-input-container .file-names-display {
-  position: absolute;
-  top: 0;
-  left: 98px;
-  /* Space for "Choose File" button */
-  right: 0;
-  height: 100%;
-  padding: 1px 5px;
-  overflow-x: auto;
-  /* Enable horizontal scrolling */
-  overflow-y: hidden;
-  white-space: nowrap;
-  border-left: 1px #ccc;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  scrollbar-width: thin;
-  /* For Firefox */
-  scrollbar-color: #ccc transparent;
-  /* Optional scrollbar styling */
-  font-size: 14px;
+position: absolute;
+top: 0;
+left: 98px; /* Space for "Choose File" button */
+right: 0;
+height: 100%;
+padding: 1px 5px;
+overflow-x: auto; /* Enable horizontal scrolling */
+overflow-y: hidden;
+white-space: nowrap;
+border-left: 1px  #ccc;
+display: flex;
+align-items: center;
+gap: 10px;
+scrollbar-width: thin; /* For Firefox */
+scrollbar-color: #ccc transparent; /* Optional scrollbar styling */
+font-size: 14px;
 }
 
 .file-input-container .file-item {
-  display: inline-flex;
-  align-items: center;
-  background: #eee;
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 13px;
+display: inline-flex;
+align-items: center;
+background: #eee;
+padding: 2px 6px;
+border-radius: 3px;
+font-size: 13px;
 }
 
 .file-input-container .delete-btn {
-  color: black;
-  cursor: pointer;
-  margin-left: 5px;
-  font-weight: bold;
+color: black;
+cursor: pointer;
+margin-left: 5px;
+font-weight: bold;
 }
 
 .file-input-container .delete-btn:hover {
-  color: darkred;
+color: darkred;
 }
 
 /* Hide the default "No file chosen" text */
 .file-input-container input[type="file"] {
-  color: transparent;
-  border: 1px #ccc;
-  /* Explicit border */
-  padding: 6px;
-  /* Adjust padding to match other fields */
-  width: 100%;
-  /* Ensure it stretches to match other input fields */
-  box-sizing: border-box;
-  /* Include padding & border in width */
+color: transparent;
+border: 1px  #ccc; /* Explicit border */
+padding: 6px; /* Adjust padding to match other fields */
+width: 100%; /* Ensure it stretches to match other input fields */
+box-sizing: border-box; /* Include padding & border in width */
 }
 
 /* Show the "Choose File" text */
 .file-input-container input[type="file"]::-webkit-file-upload-button {
-  color: initial;
+color: initial;
 }
 
 /* Scrollbar styles specific to .file-input-container */
 .file-input-container .file-names-display::-webkit-scrollbar {
-  height: 6px;
+height: 6px;
 }
 
 .file-input-container .file-names-display::-webkit-scrollbar-track {
-  background: #f1f1f1;
+background: #f1f1f1;
 }
 
 .file-input-container .file-names-display::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
+background: #888;
+border-radius: 3px;
 }
 
 /* Mobile Responsive Sidebar */
 @media (max-width: 768px) {
-  .topbar {
+.topbar {
     position: fixed;
     top: 0;
     left: 0;
@@ -961,30 +723,29 @@ button.btn.btn-primary.btn-sm:hover {
     display: flex;
     align-items: center;
     height: 60px;
-  }
+}
 
-  .hamburger {
+.hamburger {
     display: inline-block !important;
     position: relative;
     margin-right: 1px;
     z-index: 800;
     cursor: pointer;
-    order: -1;
-    /* Move hamburger to the start */
-  }
+    order: -1; /* Move hamburger to the start */
+}
 
-  .topbar .logo {
+.topbar .logo {
     display: flex;
     align-items: center;
     margin-left: -5px;
-  }
+}
 
-  .topbar .logo img {
+.topbar .logo img {
     height: 40px;
     width: 120px;
-  }
+}
 
-  .sidebar {
+.sidebar {
     width: 60px;
     height: 100%;
     min-height: calc(100vh - 60px);
@@ -998,17 +759,17 @@ button.btn.btn-primary.btn-sm:hover {
     align-items: center;
     background-color: var(--sidebar-color);
     overflow: hidden;
-  }
+}
 
-  .sidebar.expanded {
+.sidebar.expanded {
     width: 180px;
-  }
+}
 
-  .sidebar h2 {
+.sidebar h2 {
     display: none;
-  }
+}
 
-  .sidebar a {
+.sidebar a {
     text-align: center;
     padding: 10px;
     display: flex;
@@ -1017,26 +778,26 @@ button.btn.btn-primary.btn-sm:hover {
     position: relative;
     color: var(--text-color);
     white-space: nowrap;
-  }
+}
 
-  .sidebar a i {
+.sidebar a i {
     font-size: 18px;
     margin-right: 5px;
     transition: margin-right 0.3s ease-in-out;
-  }
+}
 
-  .sidebar a span {
+.sidebar a span {
     display: none;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
-  }
+}
 
-  .sidebar.expanded a span {
+.sidebar.expanded a span {
     display: inline;
     opacity: 1;
-  }
+}
 
-  .main-content {
+.main-content {
     margin-left: 60px;
     padding: 5px;
     margin-top: 60px;
@@ -1047,33 +808,31 @@ button.btn.btn-primary.btn-sm:hover {
     min-height: calc(100vh - 60px);
     z-index: 800;
     transition: margin-left 0.3s ease-in-out;
-  }
+}
+body {
+  position: relative;
+  z-index: auto;
+}
 
-  body {
-    position: relative;
-    z-index: auto;
-  }
-
-  .sidebar.expanded~.main-content {
+.sidebar.expanded ~ .main-content {
     margin-left: 180px;
-  }
+}
 
-  body {
-    margin-top: 60px;
-    /* Adjust according to the topbar height */
-  }
+body {
+  margin-top: 60px; /* Adjust according to the topbar height */
+}
 }
 
 /* Navbar Adjustments for Mobile */
 @media (max-width: 768px) {
-  .navbar {
+.navbar {
     display: flex;
     flex-direction: column;
     width: 100%;
     margin-left: 10px;
-  }
+}
 
-  .nav-left {
+.nav-left {
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
@@ -1082,76 +841,70 @@ button.btn.btn-primary.btn-sm:hover {
     overflow-x: auto;
     gap: 2px;
     margin-bottom: 5px;
-  }
-
-  .nav-left a {
-    margin-right: 3px;
-    padding-right: 3px;
-  }
-
-  .nav-right {
+}
+.nav-left a{
+  margin-right: 3px;
+  padding-right: 3px;
+}
+.nav-right {
     display: flex;
-    flex-wrap: nowrap;
-    /* Prevents wrapping */
+    flex-wrap: nowrap; /* Prevents wrapping */
     align-items: center;
-    justify-content: space-between;
-    /* Distributes space evenly */
+    justify-content: space-between; /* Distributes space evenly */
     width: 100%;
     margin-bottom: 5px;
-  }
+}
 
-  .dropdown {
+.dropdown {
     flex-grow: 1;
     flex: 0 0 8%;
     align-items: center;
     justify-content: flex-start;
-  }
+}
 
-  .dropdown button {
+.dropdown button {
     font-size: 13px;
     padding: 4px;
     width: 100%;
-  }
+}
 
-  #searchBar {
+#searchBar {
     flex: 1;
     min-width: 100px;
     max-width: 0px;
     font-size: 13px;
     padding: 2px 2px;
-  }
+}
 
-  #rangeFields {
+#rangeFields {
     display: flex;
     flex-wrap: nowrap;
     gap: 2px;
     align-items: center;
     flex: 0 0 auto;
-    max-width: 30%;
-    /* Ensures it doesn’t take too much space */
+    max-width: 30%; /* Ensures it doesn’t take too much space */
     overflow: hidden;
-  }
+}
 
-  #rangeFields input {
+#rangeFields input {
     width: 50px;
     font-size: 13px;
     padding: 2px;
-  }
+}
 
-  .nav-right-buttons {
+.nav-right-buttons {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: flex-end;
-    /* Keeps buttons aligned */
+    justify-content: flex-end; /* Keeps buttons aligned */
     align-items: center;
     margin-left: 0px !important;
     gap: 0 !important;
     width: auto;
     flex: 1;
-  }
+}
 
-  .nav-right-buttons .btn {
+.nav-right-buttons .btn {
     flex: 1;
     min-width: 0;
     width: auto;
@@ -1159,146 +912,126 @@ button.btn.btn-primary.btn-sm:hover {
     text-align: center;
     white-space: nowrap;
     padding: 2px !important;
-    margin: 0 !important;
+    margin: 0 !important; 
     border: none;
     outline: none;
-  }
-
-  .navbar .nav-right {
-    margin-right: 2px;
-    align-items: center;
-    display: flex;
-    gap: 0px !important;
-  }
-
+}
+.navbar .nav-right  {
+  margin-right: 2px;
+  align-items: center;
+  display: flex;
+  gap: 0px !important;
+}
+ 
   .btn-primary {
     margin-left: 0px;
-  }
-
-
-
 }
 
-
+}
 
 /* Ensure Modal Appears Above Everything */
 @media screen and (max-width: 768px) {
-
-  /* Full-Screen Mobile Modal */
-  #addServiceModal {
-    position: fixed;
-    top: 0;
-    left: 0px;
-    width: 100%;
-    height: 100vh;
-    z-index: 1000 !important;
-    /* Higher than topbar & sidebar */
-    background: rgba(0, 0, 0, 0.5);
-    /* Dark overlay */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  #addServiceModal .modal-content {
-    position: relative;
-    width: 95%;
-    height: auto;
-    max-height: 90vh;
-    background: #fff;
-    z-index: 1000 !important;
-    /* Ensure modal content is above everything */
-    border-radius: 10px;
-    overflow-y: auto;
-  }
-
-  /* Fix Topbar Inside Modal */
-  #addServiceModal .modal-topbar {
-    position: relative;
-    top: 0;
-    z-index: 1000;
-    /* Ensures it stays on top */
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-  }
-
-  /* Change Grid to Single Column */
-  #addServiceModal .modal-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px;
-  }
-
-  /* Ensure Inputs Take Full Width */
-  #addServiceModal .modal-column {
-    width: 100%;
-  }
-
-  /* Hide Sidebar & Topbar when Modal is Open */
-  body.modal-open .sidebar,
-  body.modal-open .topbar {
-    display: none;
-    /* Lower than modal */
-  }
-
-  /* Prevent Background Scroll When Modal is Open */
-  body.modal-open {
-    overflow: hidden;
-  }
-
-  /* Adjust Submit Button for Mobile */
-  #addServiceModal .form-submit {
-    text-align: center;
-    margin-top: 10px;
-  }
-
-  #addServiceModal .form-submit .btn.btn-primary {
-    width: 100%;
-    font-size: 16px;
-  }
-
-  #addServiceModal #customer_results {
-    width: 45%;
-  }
-
-  #addServiceModal #service_by {
-    font-size: 14px;
-    /* Adjust font size */
-    padding: 8px;
-    /* Adjust padding */
-    width: 100%;
-    /* Make it full width if needed */
-  }
-
-  #addServiceModal #service_by option {
-    font-size: 10px;
-    /* Adjust the option text size */
-    padding: 10px;
-    /* Adjust spacing inside options */
-    max-width: 40%;
-  }
-
-  #addServiceModal #work_type {
-    font-size: 14px;
-    /* Adjust font size */
-    padding: 8px;
-    /* Adjust padding */
-    width: 100%;
-    /* Make it full width if needed */
-  }
-
-  #addServiceModal #work_type option {
-    font-size: 10px;
-    /* Adjust the option text size */
-    padding: 10px;
-    /* Adjust spacing inside options */
-    max-width: 40%;
-  }
+/* Full-Screen Mobile Modal */
+#addServiceModal {
+  position: fixed;
+  top: 0;
+  left: 0px;
+  width: 100%;
+  height: 100vh;
+  z-index: 1000 !important; /* Higher than topbar & sidebar */
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@media (max-width: 768px) {
-  .addservicebtn {
-    display: none;
+#addServiceModal .modal-content {
+  position: relative;
+  width: 95%;
+  height: auto;
+  max-height: 90vh;
+  background: #fff;
+  z-index: 1000 !important; /* Ensure modal content is above everything */
+  border-radius: 10px;
+  overflow-y: auto;
+}
+
+/* Fix Topbar Inside Modal */
+#addServiceModal .modal-topbar {
+  position: relative;
+  top: 0;
+  z-index: 1000; /* Ensures it stays on top */
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Change Grid to Single Column */
+#addServiceModal .modal-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px;
+}
+
+/* Ensure Inputs Take Full Width */
+#addServiceModal .modal-column {
+  width: 100%;
+}
+
+/* Hide Sidebar & Topbar when Modal is Open */
+body.modal-open .sidebar,
+body.modal-open .topbar {
+  display: none;
+/* Lower than modal */
+}
+
+/* Prevent Background Scroll When Modal is Open */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Adjust Submit Button for Mobile */
+#addServiceModal .form-submit {
+  text-align: center;
+  margin-top: 10px;
+}
+
+#addServiceModal .form-submit .btn.btn-primary {
+  width: 100%;
+  font-size: 16px;
+}
+#addServiceModal #customer_results {
+  width: 45%;
+}
+#addServiceModal #service_by {
+      font-size: 14px; /* Adjust font size */
+      padding: 8px; /* Adjust padding */
+      width: 100%; /* Make it full width if needed */
   }
+  #addServiceModal #service_by option {
+    font-size: 10px; /* Adjust the option text size */
+    padding: 10px; /* Adjust spacing inside options */
+    max-width: 40%;
+}
+#addServiceModal #work_type {
+  font-size: 14px; /* Adjust font size */
+  padding: 8px; /* Adjust padding */
+  width: 100%; /* Make it full width if needed */
+}
+#addServiceModal #work_type option {
+font-size: 10px; /* Adjust the option text size */
+padding: 10px; /* Adjust spacing inside options */
+max-width: 40%;
+}
+}
+@media (max-width: 768px) {
+.addservicebtn {
+    display: none;
+}
+
+}
+.required {
+  color: red;
+  font-weight: bold;
+  margin-left: 2px;
 }
