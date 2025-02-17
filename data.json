@@ -1,0 +1,2561 @@
+[
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "admin",
+        "model": "logentry"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "auth",
+        "model": "permission"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "auth",
+        "model": "group"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "contenttypes",
+        "model": "contenttype"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "sessions",
+        "model": "session"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "loginapp",
+        "model": "customuser"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "velvetekapp",
+        "model": "customer"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "velvetekapp",
+        "model": "applyimage"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "velvetekapp",
+        "model": "apply"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "technicianapp",
+        "model": "fuelcharge"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "technicianapp",
+        "model": "foodallowance"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "technicianapp",
+        "model": "itempurchased"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "technicianapp",
+        "model": "vendorinfo"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "technicianapp",
+        "model": "currentstatus"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "2xs22i6zo2xowd0ngb9m8c2f5cvntc8m",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCQTgsu3XsGMjMMUjUlKe3KeHfbpAvdvvf-f6uI61Li2mSOY1IX5dXplxHyU6ZdpAdO96q5Tss8kt4TfdimbzXJ63q0fwcFW9nWuR8MUiBIprMuu2wROmBPXihn9gN6CcjM50TgkgUSQgsb6cFkH9TnCxH2OVM:1tjGUU:RG8lMdOpz1mEuQVu8bLKmFFnDbzDkvaCFcaE5b9uOhU",
+        "expire_date": "2025-03-01T11:37:46.708Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "3taeqpfv7826093lmpvuex5nsznlxwlf",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGln-rjElPWew1t4FB5AtxUmFuDtESgHtm5n3EgnXpaZ18JwmEiehxeF3y1ge3DZAd2y3LktvyzxluSlyp0NeOvHzvLt_BxVH_dameMUUwaIKCMUEXQCdoXikzADKkAs6emDO5EMGb425-pIDWkZHUbw_3tc4Ag:1tjGQi:Clw6qj6z3C9mxTVKFcGQFG1LvCVg88OklZr7Vk5YQpI",
+        "expire_date": "2025-03-01T11:33:52.810Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "4wz5q7iw8vie5jxqe4vjsy7ayl74d1o6",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGln-rjElPWew1t4FB5AtxUmFuDtESgHtm5n3EgnXpaZ18JwmEiehxeF3y1ge3DZAd2y3LktvyzxluSlyp0NeOvHzvLt_BxVH_dameMUUwaIKCMUEXQCdoXikzADKkAs6emDO5EMGb425-pIDWkZHUbw_3tc4Ag:1ti8k5:v_b3C4JzgaVDoRUPIoE5yu34-R7j1ac6hi8suiDQgjI",
+        "expire_date": "2025-02-26T09:09:13.729Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "6i5xtb153jqup0wl0vdj6oif3kmpzm72",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGln-rjElPWew1t4FB5AtxUmFuDtESgHtm5n3EgnXpaZ18JwmEiehxeF3y1ge3DZAd2y3LktvyzxluSlyp0NeOvHzvLt_BxVH_dameMUUwaIKCMUEXQCdoXikzADKkAs6emDO5EMGb425-pIDWkZHUbw_3tc4Ag:1thgUt:P6yVC1ke5DmhOrHIvUQjEbP6T9X2ozEtPdzVo54ctO8",
+        "expire_date": "2025-02-25T02:59:39.568Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "7p1q1wlczu4evwgobgbgu0ulq2ql581x",
+    "fields": {
+        "session_data": ".eJxVjMEOwiAQRP-FsyFAgawevfsNZNkFqRpISnsy_rs06UGPM-_NvEXAbS1h62kJM4uL0OL020WkZ6o74AfWe5PU6rrMUe6KPGiXt8bpdT3cv4OCvYw12EzJOMpoJutpRA-KrcMEOUfKTk1nQ9oBa0AFVnnPVoEZZALnkvh8Ae8AN7A:1tQnVQ:455Qpan1t1go2t8OMjm11vH_oJ5uZp78yHP0BP8ICRI",
+        "expire_date": "2025-01-09T13:02:24.576Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "b6g52pr8m0og51m68yxhyeir50a7ai7d",
+    "fields": {
+        "session_data": ".eJxVjMEOwiAQRP-FsyFAgawevfsNZNkFqRpISnsy_rs06UGPM-_NvEXAbS1h62kJM4uL0OL020WkZ6o74AfWe5PU6rrMUe6KPGiXt8bpdT3cv4OCvYw12EzJOMpoJutpRA-KrcMEOUfKTk1nQ9oBa0AFVnnPVoEZZALnkvh8Ae8AN7A:1tSqzw:nOA4A9vlZW1brWcLndC9QXlaQbiJag23N-FXAQMxzlc",
+        "expire_date": "2025-01-15T05:10:24.570Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "c9mywb6ma3n4mi83mtaflhyuwbuy8qtz",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGln-rjElPWew1t4FB5AtxUmFuDtESgHtm5n3EgnXpaZ18JwmEiehxeF3y1ge3DZAd2y3LktvyzxluSlyp0NeOvHzvLt_BxVH_dameMUUwaIKCMUEXQCdoXikzADKkAs6emDO5EMGb425-pIDWkZHUbw_3tc4Ag:1thpPu:Y0v7ZmGmVpH2dBU3TtNyTGp93dKirhQfBCSsWICMr4U",
+        "expire_date": "2025-02-25T12:31:06.580Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "cige8ox0qf81qapwri0brn73cwok7fjf",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGln-rjElPWew1t4FB5AtxUmFuDtESgHtm5n3EgnXpaZ18JwmEiehxeF3y1ge3DZAd2y3LktvyzxluSlyp0NeOvHzvLt_BxVH_dameMUUwaIKCMUEXQCdoXikzADKkAs6emDO5EMGb425-pIDWkZHUbw_3tc4Ag:1tiBDC:8gBdaDkXC2n_LfdyAsezKhFKOGOTT-qoxxJBiHIm-aY",
+        "expire_date": "2025-02-26T11:47:26.693Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ckj98utgnup0rd8swu8p3wn63h32duli",
+    "fields": {
+        "session_data": ".eJxVjM0OwiAQhN-FsyH8SCEevfsMZNldpGogKe3J-O7SpAe9Teb7Zt4iwraWuHVe4kziIoI4_XYJ8Ml1B_SAem8SW12XOcldkQft8taIX9fD_Tso0MtYe0XGOyYOGUlZYkhsMYxkzlknr_LIk9MO3ESGSVuDCDYEjYHYG_H5AgIqOFo:1tdBRI:Qop7ELdQCb2fCIyeqs6dA4WsJLEGDvs8wugO5HYj-hI",
+        "expire_date": "2025-02-12T17:01:20.885Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "jf8850qljmwu2ww1bxiq6feuv1lpvqrx",
+    "fields": {
+        "session_data": ".eJxVjMEOwiAQRP-FsyFAgawevfsNZNkFqRpISnsy_rs06UGPM-_NvEXAbS1h62kJM4uL0OL020WkZ6o74AfWe5PU6rrMUe6KPGiXt8bpdT3cv4OCvYw12EzJOMpoJutpRA-KrcMEOUfKTk1nQ9oBa0AFVnnPVoEZZALnkvh8Ae8AN7A:1tgKqA:UToLseN9Ia-lqEpNDXGvKIr6VZSCMSZv_FOoMSSj-zU",
+        "expire_date": "2025-02-21T09:40:02.884Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "la4lyumjo3ducfpwgb17kpssubj8eo7y",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCgZQCX7nsGMjBTqRqalHZlvLsh6UK3_7333yLisZd4NN7iQuIqjLj8bgnzk2sH9MB6X2Ve674tSXZFnrTJaSV-3U7376BgK71m5Y0eGNlom8miBhitJoOKrUfPkC3kgAG8c5T8oOcRnAUIaTZaOfH5At3bN04:1tR3wF:060BSnZPPoO5Af9uV_9YnNPqPeeJD5BZzZr0gwBbKKk",
+        "expire_date": "2025-01-10T06:35:11.650Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "m2803wv704v6n4ye5jxwf39swtqazoth",
+    "fields": {
+        "session_data": ".eJxVjMEOwiAQRP-FsyFAgawevfsNZNkFqRpISnsy_rs06UGPM-_NvEXAbS1h62kJM4uL0OL020WkZ6o74AfWe5PU6rrMUe6KPGiXt8bpdT3cv4OCvYw12EzJOMpoJutpRA-KrcMEOUfKTk1nQ9oBa0AFVnnPVoEZZALnkvh8Ae8AN7A:1tSCuM:XKV-QGaL55aVwwc3HfBJrqt-BLRhpLPjCE3wWWvexKg",
+        "expire_date": "2025-01-13T10:21:58.513Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "p5o00q7c2cdhm2zdlwyyuf82vmbv8ust",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGln-rjElPWew1t4FB5AtxUmFuDtESgHtm5n3EgnXpaZ18JwmEiehxeF3y1ge3DZAd2y3LktvyzxluSlyp0NeOvHzvLt_BxVH_dameMUUwaIKCMUEXQCdoXikzADKkAs6emDO5EMGb425-pIDWkZHUbw_3tc4Ag:1thV9z:oYE2ABLP6Ejl_W6kg-6Y_27oCmmKWTB9KnLrPYYgIZE",
+        "expire_date": "2025-02-24T14:53:19.236Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "s7q7lx0bqcoska12vbb85k4qnajth123",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGln-rjElPWew1t4FB5AtxUmFuDtESgHtm5n3EgnXpaZ18JwmEiehxeF3y1ge3DZAd2y3LktvyzxluSlyp0NeOvHzvLt_BxVH_dameMUUwaIKCMUEXQCdoXikzADKkAs6emDO5EMGb425-pIDWkZHUbw_3tc4Ag:1tiSD4:NSYqHcGyW2YRORMUP11gSlhfLgrP5IT8QOQYDnh1nl4",
+        "expire_date": "2025-02-27T05:56:26.424Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "sgbaxk2ybz7wja9z8e0g43a1vk456nk7",
+    "fields": {
+        "session_data": ".eJxVjMEOwiAQRP-FsyFAgawevfsNZNkFqRpISnsy_rs06UGPM-_NvEXAbS1h62kJM4uL0OL020WkZ6o74AfWe5PU6rrMUe6KPGiXt8bpdT3cv4OCvYw12EzJOMpoJutpRA-KrcMEOUfKTk1nQ9oBa0AFVnnPVoEZZALnkvh8Ae8AN7A:1tS85X:u2AE29yIDOtrnDuBxan_XwqyK423OY6fBGQYaQ00D68",
+        "expire_date": "2025-01-13T05:13:11.515Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "tr6jq7wgr97l982tx1uc3y1o3dasj7tn",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCQTgsu3XsGMjMMUjUlKe3KeHfbpAvdvvf-f6uI61Li2mSOY1IX5dXplxHyU6ZdpAdO96q5Tss8kt4TfdimbzXJ63q0fwcFW9nWuR8MUiBIprMuu2wROmBPXihn9gN6CcjM50TgkgUSQgsb6cFkH9TnCxH2OVM:1timtL:uU6c7RoWAiJVQ6_Mgt7h5t0DVEdQDAGgezFESEajGLY",
+        "expire_date": "2025-02-28T04:01:27.629Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ua0kp77kpf1hoa8cjeomi66q315c2xv2",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlkxXoxNSZ8zROv94ABypDipEHeHSCmgfTPzXmbAdSnD2mQeRjYXE83hd8tID6kb4DvW22Rpqss8ZrspdqfN9hPL87q7fwcFW9lq6s6sGiV2QKzekYcEQajTkygKKGZwx5S-ms_okg_g1AVKCOwJzfsDEO44xQ:1tdSnB:3eRe2MwRB5TmKWOasP6CZAbes5GKIjL7ylBfUYH4o9s",
+        "expire_date": "2025-02-13T11:33:05.341Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "vkb9cppqqvm06zysr3mqakvhgcyakor2",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCQTgsu3XsGMjMMUjUlKe3KeHfbpAvdvvf-f6uI61Li2mSOY1IX5dXplxHyU6ZdpAdO96q5Tss8kt4TfdimbzXJ63q0fwcFW9nWuR8MUiBIprMuu2wROmBPXihn9gN6CcjM50TgkgUSQgsb6cFkH9TnCxH2OVM:1tiyRe:p4b9aXjIAlv2GuNTgNOGVJMKiq5bEgRGMH8YBh1BNq4",
+        "expire_date": "2025-02-28T16:21:38.159Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "vquculxprerz9co53si01ejz3p57fe3c",
+    "fields": {
+        "session_data": ".eJxVjMEOwiAQRP-FsyFAgawevfsNZNkFqRpISnsy_rs06UGPM-_NvEXAbS1h62kJM4uL0OL020WkZ6o74AfWe5PU6rrMUe6KPGiXt8bpdT3cv4OCvYw12EzJOMpoJutpRA-KrcMEOUfKTk1nQ9oBa0AFVnnPVoEZZALnkvh8Ae8AN7A:1tTfFl:4y3tZ3E7IkUEE0YGuVtP86MZGWQIwyu9beTUoa7x2Ik",
+        "expire_date": "2025-01-17T10:50:05.855Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "x8t98gzek1ezvw7zsymit9f6j6rxh4ku",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hAoUAaX7j0DGYapVA0kpV0Z765NutDtf-_9l4i4rSVunZc4Z3EWXpx-t4T04LqDfMd6a5JaXZc5yV2RB-3y2jI_L4f7d1Cwl29NEyfkrAIZiwigVXDKWw86aUtDIBpohDGzChbAJGJnfNAYzJTAKSfeH_TnN7M:1tRP2p:rrX8t7is--aT7-ltqp9eFVjpJD45Lro-ZDOMIo1uqH8",
+        "expire_date": "2025-01-11T05:07:23.463Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "xgkyz8z848m610fde2wbcgy213pd9b4m",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGln-rjElPWew1t4FB5AtxUmFuDtESgHtm5n3EgnXpaZ18JwmEiehxeF3y1ge3DZAd2y3LktvyzxluSlyp0NeOvHzvLt_BxVH_dameMUUwaIKCMUEXQCdoXikzADKkAs6emDO5EMGb425-pIDWkZHUbw_3tc4Ag:1thmAc:6NJ55vnDeGAjXYJTosLF7S9s-h9L9hWnfp5flR4JW5o",
+        "expire_date": "2025-02-25T09:03:06.752Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "zdqnsbpcnn1dqphjxlkhnsw1tcxgqim1",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCQTgsu3XsGMjMMUjUlKe3KeHfbpAvdvvf-f6uI61Li2mSOY1IX5dXplxHyU6ZdpAdO96q5Tss8kt4TfdimbzXJ63q0fwcFW9nWuR8MUiBIprMuu2wROmBPXihn9gN6CcjM50TgkgUSQgsb6cFkH9TnCxH2OVM:1tjv1q:txCvrfoYsbMTAoO3PciQ0X_qdwZ3Xd3cuK720bRBtMk",
+        "expire_date": "2025-03-03T06:54:54.506Z"
+    }
+},
+{
+    "model": "velvetekapp.customer",
+    "pk": 11,
+    "fields": {
+        "name": "Aysha ",
+        "address": "padoor",
+        "contact_number": "9645858187",
+        "whatsapp_number": "9645858187",
+        "referred_by": "company"
+    }
+},
+{
+    "model": "velvetekapp.customer",
+    "pk": 12,
+    "fields": {
+        "name": "Adhil",
+        "address": "Malappuram",
+        "contact_number": "9876543212",
+        "whatsapp_number": "9876543212",
+        "referred_by": "Site"
+    }
+},
+{
+    "model": "velvetekapp.customer",
+    "pk": 28,
+    "fields": {
+        "name": "Mehar",
+        "address": "Chavakkad",
+        "contact_number": "1234567890",
+        "whatsapp_number": "1234567890",
+        "referred_by": "Site"
+    }
+},
+{
+    "model": "velvetekapp.customer",
+    "pk": 32,
+    "fields": {
+        "name": "Roshin",
+        "address": "Calicut",
+        "contact_number": "9876543214",
+        "whatsapp_number": "9876543214",
+        "referred_by": "social media"
+    }
+},
+{
+    "model": "velvetekapp.customer",
+    "pk": 33,
+    "fields": {
+        "name": "Mehar",
+        "address": "Chavakkad",
+        "contact_number": "9876543333",
+        "whatsapp_number": "9876543333",
+        "referred_by": "Site"
+    }
+},
+{
+    "model": "velvetekapp.customer",
+    "pk": 34,
+    "fields": {
+        "name": "maria rose ",
+        "address": "kunnathumkara,paravattani,thrissur",
+        "contact_number": "9852314796",
+        "whatsapp_number": "9852314796",
+        "referred_by": "Site"
+    }
+},
+{
+    "model": "velvetekapp.customer",
+    "pk": 40,
+    "fields": {
+        "name": "arya n",
+        "address": "thrissur",
+        "contact_number": "7412552369",
+        "whatsapp_number": "7412552369",
+        "referred_by": "company"
+    }
+},
+{
+    "model": "velvetekapp.customer",
+    "pk": 46,
+    "fields": {
+        "name": "aleena rose",
+        "address": "Calicut",
+        "contact_number": "9874123655",
+        "whatsapp_number": "9874123655",
+        "referred_by": "company"
+    }
+},
+{
+    "model": "technicianapp.fuelcharge",
+    "pk": 13,
+    "fields": {
+        "technician_name": "Nijiya",
+        "date": "2025-01-31",
+        "purpose": "ffffffff",
+        "kilometers": 22.0,
+        "cost": "234.00",
+        "review": null,
+        "apply": null,
+        "customer_name": "",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.fuelcharge",
+    "pk": 18,
+    "fields": {
+        "technician_name": "Nijiya",
+        "date": "2025-02-13",
+        "purpose": "purchase",
+        "kilometers": 30.0,
+        "cost": "90.00",
+        "review": null,
+        "apply": 26,
+        "customer_name": "Adhil",
+        "issue": "mouse not work properly."
+    }
+},
+{
+    "model": "technicianapp.fuelcharge",
+    "pk": 20,
+    "fields": {
+        "technician_name": "Nijiya",
+        "date": "2025-02-15",
+        "purpose": "purchase",
+        "kilometers": 30.0,
+        "cost": "90.00",
+        "review": null,
+        "apply": 25,
+        "customer_name": "Roshin",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.fuelcharge",
+    "pk": 21,
+    "fields": {
+        "technician_name": "Nijiya",
+        "date": "2025-02-14",
+        "purpose": "purchase",
+        "kilometers": 30.0,
+        "cost": "90.00",
+        "review": null,
+        "apply": 25,
+        "customer_name": "Roshin",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.fuelcharge",
+    "pk": 22,
+    "fields": {
+        "technician_name": "Nijiya",
+        "date": "2025-02-13",
+        "purpose": "purchase",
+        "kilometers": 30.0,
+        "cost": "90.00",
+        "review": null,
+        "apply": 25,
+        "customer_name": "Roshin",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.fuelcharge",
+    "pk": 23,
+    "fields": {
+        "technician_name": "Nijiya",
+        "date": "2025-02-07",
+        "purpose": "purchase",
+        "kilometers": 30.0,
+        "cost": "90.00",
+        "review": null,
+        "apply": 25,
+        "customer_name": "Roshin",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.foodallowance",
+    "pk": 7,
+    "fields": {
+        "technician_name": "Nijiya",
+        "date": "2025-01-31",
+        "purpose": "jjjjj",
+        "cost": "450.00",
+        "review": null,
+        "apply": null,
+        "customer_name": "",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.foodallowance",
+    "pk": 10,
+    "fields": {
+        "technician_name": "Nijiya",
+        "date": "2025-02-13",
+        "purpose": "repair",
+        "cost": "200.00",
+        "review": null,
+        "apply": 27,
+        "customer_name": "Adhil",
+        "issue": "keyboard not work properly."
+    }
+},
+{
+    "model": "technicianapp.itempurchased",
+    "pk": 6,
+    "fields": {
+        "date": "2025-02-13",
+        "item_name": "wire",
+        "price": "300.00",
+        "bill_photo": "itempurchased/images_JQ1E3Ru.jpg",
+        "review": null,
+        "apply": 29,
+        "customer_name": "Jebin",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.vendorinfo",
+    "pk": 8,
+    "fields": {
+        "date": "2025-02-13",
+        "vendor_name": "amazon",
+        "vendor_bill_photo": "vendorinfo/images_FCxGEcz.jpg",
+        "vendor_eta": "2025-02-14",
+        "vendor_cost": "499.00",
+        "review": null,
+        "apply": 31,
+        "customer_name": "maria rose paul",
+        "issue": "My laptop has become very slow lately. It takes a long time to start up, and even simple tasks like opening a browser or running software takes more time"
+    }
+},
+{
+    "model": "technicianapp.currentstatus",
+    "pk": 14,
+    "fields": {
+        "date": "2025-02-11",
+        "technician_name": "Nijiya",
+        "status": "Completed",
+        "apply": 25,
+        "customer_name": "Roshin",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.currentstatus",
+    "pk": 15,
+    "fields": {
+        "date": "2025-02-13",
+        "technician_name": "Nijiya",
+        "status": "Pending",
+        "apply": 26,
+        "customer_name": "Adhil",
+        "issue": "mouse not work properly."
+    }
+},
+{
+    "model": "technicianapp.currentstatus",
+    "pk": 16,
+    "fields": {
+        "date": "2025-02-11",
+        "technician_name": "Nijiya",
+        "status": "Completed",
+        "apply": 27,
+        "customer_name": "Adhil",
+        "issue": "keyboard not work properly."
+    }
+},
+{
+    "model": "technicianapp.currentstatus",
+    "pk": 18,
+    "fields": {
+        "date": "2025-02-10",
+        "technician_name": "Nijiya",
+        "status": "Completed",
+        "apply": 29,
+        "customer_name": "Jebin",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.currentstatus",
+    "pk": 19,
+    "fields": {
+        "date": "2025-02-12",
+        "technician_name": "Nijiya",
+        "status": "Pending",
+        "apply": 30,
+        "customer_name": "Adhil",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.currentstatus",
+    "pk": 20,
+    "fields": {
+        "date": "2025-02-13",
+        "technician_name": "Nijiya",
+        "status": "Pending",
+        "apply": 31,
+        "customer_name": "maria rose paul",
+        "issue": "My laptop has become very slow lately. It takes a long time to start up, and even simple tasks like opening a browser or running software takes more time"
+    }
+},
+{
+    "model": "technicianapp.currentstatus",
+    "pk": 51,
+    "fields": {
+        "date": "2025-02-19",
+        "technician_name": "Nijiya",
+        "status": "Completed",
+        "apply": 50,
+        "customer_name": "aleena rose",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.currentstatus",
+    "pk": 52,
+    "fields": {
+        "date": "2025-02-14",
+        "technician_name": "velvetek_admin",
+        "status": "Assigned",
+        "apply": 51,
+        "customer_name": "maria rose",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.currentstatus",
+    "pk": 53,
+    "fields": {
+        "date": "2025-02-19",
+        "technician_name": "velvetek_admin",
+        "status": "Assigned",
+        "apply": 52,
+        "customer_name": "arya n",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.currentstatus",
+    "pk": 54,
+    "fields": {
+        "date": "2025-02-20",
+        "technician_name": "velvetek_admin",
+        "status": "Assigned",
+        "apply": 53,
+        "customer_name": "Adhil",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.currentstatus",
+    "pk": 55,
+    "fields": {
+        "date": "2025-02-18",
+        "technician_name": "Nijiya",
+        "status": "Assigned",
+        "apply": 54,
+        "customer_name": "Aysha",
+        "issue": ""
+    }
+},
+{
+    "model": "technicianapp.currentstatus",
+    "pk": 56,
+    "fields": {
+        "date": "2025-02-19",
+        "technician_name": "Nijiya",
+        "status": "Assigned",
+        "apply": 55,
+        "customer_name": "Roshin",
+        "issue": ""
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add log entry",
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "add_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change log entry",
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "change_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete log entry",
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "delete_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view log entry",
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "view_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add permission",
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "add_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change permission",
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "change_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete permission",
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "delete_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view permission",
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "view_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add group",
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "add_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change group",
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "change_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete group",
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "delete_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view group",
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "view_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add content type",
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "add_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change content type",
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "change_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete content type",
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "delete_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view content type",
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "view_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add session",
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "add_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change session",
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "change_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete session",
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "delete_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view session",
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "view_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add user",
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "codename": "add_customuser"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change user",
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "codename": "change_customuser"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete user",
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "codename": "delete_customuser"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view user",
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "codename": "view_customuser"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add customer",
+        "content_type": [
+            "velvetekapp",
+            "customer"
+        ],
+        "codename": "add_customer"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change customer",
+        "content_type": [
+            "velvetekapp",
+            "customer"
+        ],
+        "codename": "change_customer"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete customer",
+        "content_type": [
+            "velvetekapp",
+            "customer"
+        ],
+        "codename": "delete_customer"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view customer",
+        "content_type": [
+            "velvetekapp",
+            "customer"
+        ],
+        "codename": "view_customer"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add apply image",
+        "content_type": [
+            "velvetekapp",
+            "applyimage"
+        ],
+        "codename": "add_applyimage"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change apply image",
+        "content_type": [
+            "velvetekapp",
+            "applyimage"
+        ],
+        "codename": "change_applyimage"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete apply image",
+        "content_type": [
+            "velvetekapp",
+            "applyimage"
+        ],
+        "codename": "delete_applyimage"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view apply image",
+        "content_type": [
+            "velvetekapp",
+            "applyimage"
+        ],
+        "codename": "view_applyimage"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add apply",
+        "content_type": [
+            "velvetekapp",
+            "apply"
+        ],
+        "codename": "add_apply"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change apply",
+        "content_type": [
+            "velvetekapp",
+            "apply"
+        ],
+        "codename": "change_apply"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete apply",
+        "content_type": [
+            "velvetekapp",
+            "apply"
+        ],
+        "codename": "delete_apply"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view apply",
+        "content_type": [
+            "velvetekapp",
+            "apply"
+        ],
+        "codename": "view_apply"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add fuel charge",
+        "content_type": [
+            "technicianapp",
+            "fuelcharge"
+        ],
+        "codename": "add_fuelcharge"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change fuel charge",
+        "content_type": [
+            "technicianapp",
+            "fuelcharge"
+        ],
+        "codename": "change_fuelcharge"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete fuel charge",
+        "content_type": [
+            "technicianapp",
+            "fuelcharge"
+        ],
+        "codename": "delete_fuelcharge"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view fuel charge",
+        "content_type": [
+            "technicianapp",
+            "fuelcharge"
+        ],
+        "codename": "view_fuelcharge"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add food allowance",
+        "content_type": [
+            "technicianapp",
+            "foodallowance"
+        ],
+        "codename": "add_foodallowance"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change food allowance",
+        "content_type": [
+            "technicianapp",
+            "foodallowance"
+        ],
+        "codename": "change_foodallowance"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete food allowance",
+        "content_type": [
+            "technicianapp",
+            "foodallowance"
+        ],
+        "codename": "delete_foodallowance"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view food allowance",
+        "content_type": [
+            "technicianapp",
+            "foodallowance"
+        ],
+        "codename": "view_foodallowance"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add item purchased",
+        "content_type": [
+            "technicianapp",
+            "itempurchased"
+        ],
+        "codename": "add_itempurchased"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change item purchased",
+        "content_type": [
+            "technicianapp",
+            "itempurchased"
+        ],
+        "codename": "change_itempurchased"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete item purchased",
+        "content_type": [
+            "technicianapp",
+            "itempurchased"
+        ],
+        "codename": "delete_itempurchased"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view item purchased",
+        "content_type": [
+            "technicianapp",
+            "itempurchased"
+        ],
+        "codename": "view_itempurchased"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add vendor info",
+        "content_type": [
+            "technicianapp",
+            "vendorinfo"
+        ],
+        "codename": "add_vendorinfo"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change vendor info",
+        "content_type": [
+            "technicianapp",
+            "vendorinfo"
+        ],
+        "codename": "change_vendorinfo"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete vendor info",
+        "content_type": [
+            "technicianapp",
+            "vendorinfo"
+        ],
+        "codename": "delete_vendorinfo"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view vendor info",
+        "content_type": [
+            "technicianapp",
+            "vendorinfo"
+        ],
+        "codename": "view_vendorinfo"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add current status",
+        "content_type": [
+            "technicianapp",
+            "currentstatus"
+        ],
+        "codename": "add_currentstatus"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change current status",
+        "content_type": [
+            "technicianapp",
+            "currentstatus"
+        ],
+        "codename": "change_currentstatus"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete current status",
+        "content_type": [
+            "technicianapp",
+            "currentstatus"
+        ],
+        "codename": "delete_currentstatus"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view current status",
+        "content_type": [
+            "technicianapp",
+            "currentstatus"
+        ],
+        "codename": "view_currentstatus"
+    }
+},
+{
+    "model": "loginapp.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$870000$EPyFITANxCmme0TSAzOZe8$rAixSiwhH1EIfLXG5UiXaccoFffYEpdNLCGTNYSYF6c=",
+        "last_login": "2025-02-17T06:28:02.147Z",
+        "is_superuser": true,
+        "username": "velvetek_admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "velvetek@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-12-26T08:10:56Z",
+        "role": "admin",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "loginapp.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$870000$QrRqzfY5U0w5hqaDz7lPwu$uGuvV61r1nMLXgguLCaaBxJJhzOv5gzEmvFS9uagiOw=",
+        "last_login": "2024-12-27T06:35:11.629Z",
+        "is_superuser": false,
+        "username": "Rakesh123",
+        "first_name": "Rakesh",
+        "last_name": "R",
+        "email": "rakeshramachandran22@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-12-26T08:36:22Z",
+        "role": "technician",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "loginapp.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$870000$Ixhb8YeHEhuHlXdX4zdiFl$z0mp/8WMMT+38/TQJwTq8PTwD1W2pXhSVsR7A8Tg5gQ=",
+        "last_login": "2024-12-26T12:59:03.493Z",
+        "is_superuser": false,
+        "username": "user12",
+        "first_name": "Rakesh",
+        "last_name": "R",
+        "email": "rakesh@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-12-26T08:41:03Z",
+        "role": "user",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "loginapp.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$870000$rg2pTYxF5h7YkGHaYFNkgi$qgBthmBc7hyYrfblvziRCTfA02cuGS7TzB6gvAUYcLc=",
+        "last_login": "2024-12-26T12:57:17.126Z",
+        "is_superuser": false,
+        "username": "sarath234",
+        "first_name": "Sarath",
+        "last_name": "T S",
+        "email": "Sarath@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-12-26T12:56:10Z",
+        "role": "technician",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "loginapp.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$870000$gwiN8gbIdzZnvXarTE26DI$fNGiJQiRQVRdwYPO3O7kdUEn5OX7MrCCtq9rJ3wjhFI=",
+        "last_login": "2025-02-17T06:54:54.495Z",
+        "is_superuser": false,
+        "username": "Nijiya",
+        "first_name": "",
+        "last_name": "",
+        "email": "nijiya006@gamil.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-01T11:13:16Z",
+        "role": "technician",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "loginapp.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$870000$owvMbwLj0DiZzZ3UhRPFkC$6nwvuch9ZXbAXpTXMfn+AzQ5Kh2FilgR3KnUQHBNO3M=",
+        "last_login": "2025-01-16T11:32:29.628Z",
+        "is_superuser": false,
+        "username": "Ashraf",
+        "first_name": "",
+        "last_name": "",
+        "email": "ashraf006@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-15T10:31:25.931Z",
+        "role": "technician",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "loginapp.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$870000$bqO5Ryg1ENY7UrQ8Ajyn81$5VaungR8Usl0Xn4y05tD7ayx+sXCPjS7488XzjnJ8Z0=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "Ayham",
+        "first_name": "",
+        "last_name": "",
+        "email": "ayham@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-26T14:03:29.464Z",
+        "role": "technician",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "loginapp.customuser",
+    "fields": {
+        "password": "pbkdf2_sha256$870000$mhQ18UYECtc0Fe3OW8pogG$NAaKWDSAVg/g8Vs2vuAPKIJ/AN0vDQNGE77AofWFOfQ=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "Salman",
+        "first_name": "",
+        "last_name": "",
+        "email": "salman@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-01-31T11:09:35.782Z",
+        "role": "technician",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "velvetekapp.apply",
+    "pk": 25,
+    "fields": {
+        "customer": null,
+        "name": "Roshin",
+        "address": "Calicut",
+        "contact_number": "98765432144",
+        "whatsapp_number": "98765432144",
+        "referred_by": "social media",
+        "service_by": [
+            "Nijiya"
+        ],
+        "work_type": "sale",
+        "item_name_or_number": "computer",
+        "issue": "",
+        "photos_of_item": "",
+        "estimation_document": "",
+        "estimated_price": "2000",
+        "estimated_date": "2025-02-11",
+        "any_other_comments": "",
+        "created_at": "2025-02-11",
+        "status": "Completed"
+    }
+},
+{
+    "model": "velvetekapp.apply",
+    "pk": 26,
+    "fields": {
+        "customer": null,
+        "name": "Adhil",
+        "address": "Malappuram",
+        "contact_number": "9876543212",
+        "whatsapp_number": "9876543212",
+        "referred_by": "undefined",
+        "service_by": [
+            "Nijiya"
+        ],
+        "work_type": "service",
+        "item_name_or_number": "mouse",
+        "issue": "mouse not work properly.",
+        "photos_of_item": "upload/dell.jpeg,upload/hp.jpeg",
+        "estimation_document": "pdf/tasni_y6F3fVf.pdf",
+        "estimated_price": "2000",
+        "estimated_date": "2025-02-13",
+        "any_other_comments": null,
+        "created_at": "2025-02-11",
+        "status": "Pending"
+    }
+},
+{
+    "model": "velvetekapp.apply",
+    "pk": 27,
+    "fields": {
+        "customer": null,
+        "name": "Adhil",
+        "address": "Malappuram",
+        "contact_number": "9876543212",
+        "whatsapp_number": "9876543212",
+        "referred_by": "undefined",
+        "service_by": [
+            "Nijiya"
+        ],
+        "work_type": "service",
+        "item_name_or_number": "keyboard",
+        "issue": "keyboard not work properly.",
+        "photos_of_item": "upload/hp_9Xcf7Hm.jpeg",
+        "estimation_document": "pdf/tasni_2Aajo5l.pdf",
+        "estimated_price": "2000",
+        "estimated_date": "2025-02-11",
+        "any_other_comments": null,
+        "created_at": "2025-02-11",
+        "status": "Completed"
+    }
+},
+{
+    "model": "velvetekapp.apply",
+    "pk": 29,
+    "fields": {
+        "customer": null,
+        "name": "Jebin",
+        "address": "Chavakkad",
+        "contact_number": "9876556789",
+        "whatsapp_number": "9876556789",
+        "referred_by": "undefined",
+        "service_by": [
+            "Nijiya"
+        ],
+        "work_type": "sale",
+        "item_name_or_number": "computer",
+        "issue": "",
+        "photos_of_item": "",
+        "estimation_document": "",
+        "estimated_price": "48000",
+        "estimated_date": "2025-02-10",
+        "any_other_comments": null,
+        "created_at": "2025-02-11",
+        "status": "Completed"
+    }
+},
+{
+    "model": "velvetekapp.apply",
+    "pk": 30,
+    "fields": {
+        "customer": null,
+        "name": "Adhil",
+        "address": "Malappuram",
+        "contact_number": "9876543212",
+        "whatsapp_number": "9876543212",
+        "referred_by": "undefined",
+        "service_by": [
+            "Nijiya"
+        ],
+        "work_type": "sale",
+        "item_name_or_number": "keyboard",
+        "issue": "",
+        "photos_of_item": "",
+        "estimation_document": "",
+        "estimated_price": "2000",
+        "estimated_date": "2025-02-12",
+        "any_other_comments": null,
+        "created_at": "2025-02-12",
+        "status": "Pending"
+    }
+},
+{
+    "model": "velvetekapp.apply",
+    "pk": 31,
+    "fields": {
+        "customer": null,
+        "name": "maria rose paul",
+        "address": "kunnathumkara,paravattani,thrissur",
+        "contact_number": "9852314796",
+        "whatsapp_number": "9852314796",
+        "referred_by": "Site",
+        "service_by": [
+            "Nijiya"
+        ],
+        "work_type": "service",
+        "item_name_or_number": "Samsung Galaxy Book4 Intel Core 5 Laptop",
+        "issue": "My laptop has become very slow lately. It takes a long time to start up, and even simple tasks like opening a browser or running software takes more time",
+        "photos_of_item": "upload/images_qKQKKwp.jpg",
+        "estimation_document": "pdf/hi_QriT3u4.pdf",
+        "estimated_price": "5000",
+        "estimated_date": "2025-02-13",
+        "any_other_comments": "it even freezes for a few seconds before responding. I�m not sure what�s causing this.",
+        "created_at": "2025-02-13",
+        "status": "Pending"
+    }
+},
+{
+    "model": "velvetekapp.apply",
+    "pk": 50,
+    "fields": {
+        "customer": null,
+        "name": "aleena rose",
+        "address": "Calicut",
+        "contact_number": "9874123655",
+        "whatsapp_number": "9874123655",
+        "referred_by": "company",
+        "service_by": [
+            "Nijiya"
+        ],
+        "work_type": "service",
+        "item_name_or_number": "cctv",
+        "issue": "",
+        "photos_of_item": "",
+        "estimation_document": "",
+        "estimated_price": "",
+        "estimated_date": "2025-02-19",
+        "any_other_comments": "",
+        "created_at": "2025-02-15",
+        "status": "Completed"
+    }
+},
+{
+    "model": "velvetekapp.apply",
+    "pk": 51,
+    "fields": {
+        "customer": null,
+        "name": "maria rose",
+        "address": "kunnathumkara,paravattani,thrissur",
+        "contact_number": "9852314796",
+        "whatsapp_number": "9852314796",
+        "referred_by": "Site",
+        "service_by": [
+            "Ayham"
+        ],
+        "work_type": "sale",
+        "item_name_or_number": "cctv",
+        "issue": "",
+        "photos_of_item": "",
+        "estimation_document": "",
+        "estimated_price": "",
+        "estimated_date": "2025-02-14",
+        "any_other_comments": "",
+        "created_at": "2025-02-15",
+        "status": "Assigned"
+    }
+},
+{
+    "model": "velvetekapp.apply",
+    "pk": 52,
+    "fields": {
+        "customer": null,
+        "name": "arya n",
+        "address": "thrissur",
+        "contact_number": "7412552369",
+        "whatsapp_number": "7412552369",
+        "referred_by": "company",
+        "service_by": [
+            "Salman"
+        ],
+        "work_type": "sale",
+        "item_name_or_number": "ups",
+        "issue": "",
+        "photos_of_item": "",
+        "estimation_document": "",
+        "estimated_price": "",
+        "estimated_date": "2025-02-19",
+        "any_other_comments": "",
+        "created_at": "2025-02-15",
+        "status": "Assigned"
+    }
+},
+{
+    "model": "velvetekapp.apply",
+    "pk": 53,
+    "fields": {
+        "customer": null,
+        "name": "Adhil",
+        "address": "Malappuram",
+        "contact_number": "9876543212",
+        "whatsapp_number": "9876543212",
+        "referred_by": "Site",
+        "service_by": [
+            "Ashraf"
+        ],
+        "work_type": "service",
+        "item_name_or_number": "cctv",
+        "issue": "",
+        "photos_of_item": "",
+        "estimation_document": "",
+        "estimated_price": "",
+        "estimated_date": "2025-02-20",
+        "any_other_comments": "",
+        "created_at": "2025-02-15",
+        "status": "Assigned"
+    }
+},
+{
+    "model": "velvetekapp.apply",
+    "pk": 54,
+    "fields": {
+        "customer": null,
+        "name": "Aysha",
+        "address": "padoor",
+        "contact_number": "9645858187",
+        "whatsapp_number": "9645858187",
+        "referred_by": "company",
+        "service_by": [
+            "Nijiya"
+        ],
+        "work_type": "service",
+        "item_name_or_number": "laptop",
+        "issue": "",
+        "photos_of_item": "",
+        "estimation_document": "",
+        "estimated_price": "",
+        "estimated_date": "2025-02-18",
+        "any_other_comments": "",
+        "created_at": "2025-02-15",
+        "status": "Assigned"
+    }
+},
+{
+    "model": "velvetekapp.apply",
+    "pk": 55,
+    "fields": {
+        "customer": null,
+        "name": "Roshin",
+        "address": "Calicut",
+        "contact_number": "9876543214",
+        "whatsapp_number": "9876543214",
+        "referred_by": "social media",
+        "service_by": [
+            "Nijiya"
+        ],
+        "work_type": "sale",
+        "item_name_or_number": "ups",
+        "issue": "",
+        "photos_of_item": "",
+        "estimation_document": "",
+        "estimated_price": "",
+        "estimated_date": "2025-02-19",
+        "any_other_comments": "",
+        "created_at": "2025-02-15",
+        "status": "Assigned"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+        "action_time": "2024-12-26T08:18:52.999Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "object_id": "1",
+        "object_repr": "Add User",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+        "action_time": "2024-12-26T08:19:10.918Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "object_id": "1",
+        "object_repr": "Add User",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+        "action_time": "2024-12-26T08:21:50.642Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "1",
+        "object_repr": "velvetek_admin",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+        "action_time": "2024-12-26T08:36:46.491Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "2",
+        "object_repr": "Rakesh",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+        "action_time": "2024-12-26T08:37:45.920Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "2",
+        "object_repr": "Rakesh",
+        "action_flag": 2,
+        "change_message": "[]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+        "action_time": "2024-12-26T08:38:28.357Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "2",
+        "object_repr": "Rakesh",
+        "action_flag": 2,
+        "change_message": "[]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+        "action_time": "2024-12-26T08:41:51.337Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "3",
+        "object_repr": "user12",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+        "action_time": "2024-12-26T08:53:49.035Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "3",
+        "object_repr": "user12",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Staff status\", \"Active\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 9,
+    "fields": {
+        "action_time": "2024-12-26T10:25:18.023Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "3",
+        "object_repr": "user12",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 10,
+    "fields": {
+        "action_time": "2024-12-26T10:26:56.354Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "2",
+        "object_repr": "Rakesh123",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Username\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 11,
+    "fields": {
+        "action_time": "2024-12-26T10:29:38.845Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "2",
+        "object_repr": "Rakesh123",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Staff status\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 12,
+    "fields": {
+        "action_time": "2024-12-26T10:30:15.313Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "2",
+        "object_repr": "Rakesh123",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 13,
+    "fields": {
+        "action_time": "2024-12-26T12:52:00.463Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "2",
+        "object_repr": "Rakesh123",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Role\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 14,
+    "fields": {
+        "action_time": "2024-12-26T12:53:38.937Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "2",
+        "object_repr": "Rakesh123",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"password\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 15,
+    "fields": {
+        "action_time": "2024-12-26T12:56:10.754Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "4",
+        "object_repr": "sarath234",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 16,
+    "fields": {
+        "action_time": "2024-12-26T12:56:45.610Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "4",
+        "object_repr": "sarath234",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"Email address\", \"Staff status\", \"Role\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 17,
+    "fields": {
+        "action_time": "2024-12-26T12:57:47.391Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "3",
+        "object_repr": "user12",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Active\", \"Staff status\", \"Role\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 18,
+    "fields": {
+        "action_time": "2024-12-26T12:58:52.166Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "3",
+        "object_repr": "user12",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"password\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 19,
+    "fields": {
+        "action_time": "2024-12-27T07:50:35.062Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "5",
+        "object_repr": "Nijiya",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 20,
+    "fields": {
+        "action_time": "2024-12-27T07:50:50.529Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "5",
+        "object_repr": "Nijiya",
+        "action_flag": 2,
+        "change_message": "[]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 21,
+    "fields": {
+        "action_time": "2024-12-27T07:51:52.911Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "5",
+        "object_repr": "Nijiya",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 22,
+    "fields": {
+        "action_time": "2024-12-27T07:52:25.878Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "6",
+        "object_repr": "Nijiya",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 23,
+    "fields": {
+        "action_time": "2024-12-27T07:53:00.401Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "6",
+        "object_repr": "Nijiya",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Email address\", \"Role\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 24,
+    "fields": {
+        "action_time": "2024-12-27T07:53:40.962Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "6",
+        "object_repr": "Nijiya",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 25,
+    "fields": {
+        "action_time": "2024-12-27T07:54:01.494Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "7",
+        "object_repr": "Nijiya",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 26,
+    "fields": {
+        "action_time": "2024-12-27T07:54:22.554Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "7",
+        "object_repr": "Nijiya",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Email address\", \"Staff status\", \"Role\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 27,
+    "fields": {
+        "action_time": "2024-12-27T12:02:30.977Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "velvetekapp",
+            "customer"
+        ],
+        "object_id": "6",
+        "object_repr": "Customer object (6)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 28,
+    "fields": {
+        "action_time": "2024-12-27T12:02:30.978Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "velvetekapp",
+            "customer"
+        ],
+        "object_id": "5",
+        "object_repr": "Customer object (5)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 29,
+    "fields": {
+        "action_time": "2024-12-27T12:02:30.978Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "velvetekapp",
+            "customer"
+        ],
+        "object_id": "4",
+        "object_repr": "Customer object (4)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 30,
+    "fields": {
+        "action_time": "2024-12-27T12:02:30.978Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "velvetekapp",
+            "customer"
+        ],
+        "object_id": "3",
+        "object_repr": "Customer object (3)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 31,
+    "fields": {
+        "action_time": "2024-12-27T12:02:30.978Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "velvetekapp",
+            "customer"
+        ],
+        "object_id": "2",
+        "object_repr": "Customer object (2)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 32,
+    "fields": {
+        "action_time": "2024-12-27T12:02:42.180Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "velvetekapp",
+            "customer"
+        ],
+        "object_id": "1",
+        "object_repr": "Customer object (1)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 33,
+    "fields": {
+        "action_time": "2025-01-01T11:12:56.649Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "7",
+        "object_repr": "Nijiya",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 34,
+    "fields": {
+        "action_time": "2025-01-01T11:13:18.324Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "8",
+        "object_repr": "Nijiya",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 35,
+    "fields": {
+        "action_time": "2025-01-01T11:13:43.308Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "8",
+        "object_repr": "Nijiya",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Email address\", \"Staff status\", \"Role\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 36,
+    "fields": {
+        "action_time": "2025-01-11T10:00:54.704Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "9",
+        "object_repr": "Ashraf",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 37,
+    "fields": {
+        "action_time": "2025-01-11T10:02:05.927Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "9",
+        "object_repr": "Ashraf",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Email address\", \"Staff status\", \"Role\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 38,
+    "fields": {
+        "action_time": "2025-01-13T08:02:51.167Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "10",
+        "object_repr": "Ayham",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 39,
+    "fields": {
+        "action_time": "2025-01-13T11:03:22.108Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "11",
+        "object_repr": "Ayham",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 40,
+    "fields": {
+        "action_time": "2025-01-13T11:03:22.108Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "12",
+        "object_repr": "Nuha",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 41,
+    "fields": {
+        "action_time": "2025-01-13T11:03:22.109Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "13",
+        "object_repr": "niji",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 42,
+    "fields": {
+        "action_time": "2025-01-15T06:57:58.035Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "9",
+        "object_repr": "Ashraf",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 43,
+    "fields": {
+        "action_time": "2025-01-15T06:57:58.035Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "loginapp",
+            "customuser"
+        ],
+        "object_id": "14",
+        "object_repr": "Ayham",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 44,
+    "fields": {
+        "action_time": "2025-01-15T06:59:20.209Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "velvetekapp",
+            "apply"
+        ],
+        "object_id": "2",
+        "object_repr": "Dilshadha",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 45,
+    "fields": {
+        "action_time": "2025-01-15T06:59:37.026Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "velvetekapp",
+            "apply"
+        ],
+        "object_id": "1",
+        "object_repr": "Nijiya",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 46,
+    "fields": {
+        "action_time": "2025-01-15T07:00:07.216Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "velvetekapp",
+            "customer"
+        ],
+        "object_id": "7",
+        "object_repr": "Customer object (7)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 47,
+    "fields": {
+        "action_time": "2025-02-12T11:18:16.507Z",
+        "user": [
+            "velvetek_admin"
+        ],
+        "content_type": [
+            "velvetekapp",
+            "customer"
+        ],
+        "object_id": "30",
+        "object_repr": "Customer object (30)",
+        "action_flag": 3,
+        "change_message": ""
+    }
+}
+]
