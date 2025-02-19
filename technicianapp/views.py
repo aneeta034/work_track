@@ -138,7 +138,6 @@ def switch_tasks(request, status=None):
         'MEDIA_URL': settings.MEDIA_URL, 
     }
     return render(request, 'technician_dashboard.html', context)
-# View to handle form submission
 def add_service(request):
     if request.method == 'POST':
         # Extract customer data from the form
@@ -214,15 +213,11 @@ def add_service(request):
 
     return render(request, 'admin_dashboard.html')
 
-# View to handle dynamic customer searc
 def search_customer(request):
-    query = request.GET.get('q', '').strip()  # Get the query and remove any leading/trailing spaces
-
+    query = request.GET.get('q', '').strip()  
     if query:
-        # Normalize the query by removing '+91' if present
         normalized_query = query.replace('+91', '')
 
-        # Normalize the database values and filter
         customers = Customer.objects.annotate(
             normalized_contact_number=Replace('contact_number', Value('+91'), Value(''))
         ).filter(normalized_contact_number__icontains=normalized_query)
@@ -278,18 +273,15 @@ def update_current_status(request, apply_id):
 
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
-
 def update_customer(request, customer_id):
     if request.method == 'POST':
         try:
             customer = get_object_or_404(Customer, id=customer_id)
             new_contact_number = request.POST.get('contact_number', customer.contact_number)
 
-            # Check if the contact number already exists in another customer
             if Customer.objects.filter(contact_number=new_contact_number).exclude(id=customer_id).exists():
                 return JsonResponse({"success": False, "error": "This contact number is already in use!"}, status=400)
 
-            # Update customer details
             customer.name = request.POST.get('name', customer.name)
             customer.address = request.POST.get('address', customer.address)
             customer.contact_number = new_contact_number
@@ -304,7 +296,6 @@ def update_customer(request, customer_id):
 
     return JsonResponse({"success": False, "error": "Invalid request!"}, status=400)
 
-
 def extra_work_technician(request, apply_id):
     try:
         apply_instance = Apply.objects.get(id=apply_id)
@@ -313,7 +304,6 @@ def extra_work_technician(request, apply_id):
         return redirect('apply_list')
 
     return render(request, 'extra_work_tech.html', {'apply_instance': apply_instance})
-
 
 def fuelcharge(request, apply_id):
     apply_instance = get_object_or_404(Apply, id=apply_id)
@@ -366,7 +356,6 @@ def fuelcharge(request, apply_id):
         'technician_name': technician_name,
         'current_date': current_date  # Pass current date to template
     })
-
 
 def update_fuelcharge(request, fuel_id):
     """Update an existing fuel charge entry."""
@@ -640,9 +629,7 @@ def vendor_info(request, apply_id):
         'current_date': current_date  # Pass current date to the template
     }
     return render(request, 'vendor_info.html', context)
-
-
-    
+   
 def update_vendor_info(request, vendor_id):
     vendor = get_object_or_404(VendorInfo, id=vendor_id)
     
@@ -672,7 +659,6 @@ def update_vendor_info(request, vendor_id):
             messages.error(request, f"Error: {str(e)}")
     return redirect('vendor_info', apply_id=vendor.apply.id)
 
-
 def delete_vendor_info(request, vendor_id):
     vendor = get_object_or_404(VendorInfo, id=vendor_id)
     apply_id = vendor.apply.id  
@@ -688,23 +674,6 @@ def delete_vendor_info(request, vendor_id):
     messages.error(request, "Invalid request method.")
     return redirect('vendor_info', apply_id=apply_id)
     
-def delete_current_status(request, status_id):
-
-    current_status = get_object_or_404(CurrentStatus, id=status_id)
-    apply_id = current_status.apply.id  
-
-    if request.method == "POST":
-        try:
-            current_status.delete()
-            messages.success(request, "Current status entry deleted successfully!")
-        except Exception as e:
-            messages.error(request, f"An error occurred while deleting: {str(e)}")
-        return redirect('current_status', apply_id=apply_id)  
-
-    
-    messages.error(request, "Invalid request method.")
-    return redirect('current_status', apply_id=apply_id)
-
 def pending_tasks(request):
     pending_tasks = CurrentStatus.objects.filter(
         apply__service_by=request.user, 

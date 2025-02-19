@@ -5,12 +5,13 @@ from datetime import date
 
 # Create your models here.
 class Customer(models.Model):
-    name=models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
     address = models.TextField()
-    contact_number = models.CharField(max_length=15,unique=True)
+    contact_number = models.CharField(max_length=15, unique=True)
     whatsapp_number = models.CharField(max_length=15)
-    referred_by =models.CharField(max_length=255)
+    referred_by = models.CharField(max_length=255)
 
+    
 
 class Apply(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,blank=True,null=True)

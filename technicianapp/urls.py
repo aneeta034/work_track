@@ -18,7 +18,6 @@ urlpatterns = [
         path('update-vendor-info/<int:vendor_id>/',views.update_vendor_info,name='update_vendor_info'),
         path('delete-vendor-info/<int:vendor_id>/', views.delete_vendor_info, name='delete_vendor_info'),
         path('update-status/<int:apply_id>/',views.update_current_status,name='update_current_status'),
-        path('delete-current-status/<int:status_id>/', views.delete_current_status, name='delete_current_status'),
         path('technician/pending/', views.pending_tasks, name='pending_tasks'),
         path('technician/completed/', views.completed_tasks, name='completed_tasks'),
         path('add_service/', views.add_service, name='add_service'),

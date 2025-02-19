@@ -39,27 +39,22 @@ def calculate_total_cost(request, service_id):
     return JsonResponse({'total_cost': total_cost,'service_id': service_id})
 
 def export_applied_services(request, status):
-    # Get the latest status for each Apply instance
     latest_status_subquery = CurrentStatus.objects.filter(
         apply=OuterRef('pk')
     ).order_by('-date').values('status')[:1]
 
-    # Base queryset: Get all Apply instances with the latest status
     applied_services = Apply.objects.all().annotate(
         latest_status=Subquery(latest_status_subquery)
     )
 
-    # Filter by status if not 'all'
     if status.lower() != 'all':
         applied_services = applied_services.filter(latest_status__iexact=status)
 
-    # Get search filters
     filter_type = request.GET.get('filterType', '')
     query = request.GET.get('query', '')
     start = request.GET.get('start', '')
     end = request.GET.get('end', '')
 
-    # Apply search filters
     if filter_type == "date" and query:
         applied_services = applied_services.filter(created_at=query)
 
@@ -132,27 +127,22 @@ def export_applied_services(request, status):
     return response
 
 def switch_task(request, status=None):
-    # Extract search filters
     filter_type = request.GET.get('filterType', '')
     query = request.GET.get('query', '')
     start = request.GET.get('start', '')
     end = request.GET.get('end', '')
 
-    # Get the latest status for each Apply instance
     latest_status_subquery = CurrentStatus.objects.filter(
         apply=OuterRef('pk')
     ).order_by('-date').values('status')[:1]
 
-    # Base queryset: Get all Apply instances
     services = Apply.objects.all().annotate(
         latest_status=Subquery(latest_status_subquery)
     )
 
-    # Apply task status filter
     if status and status.lower() != 'all':
         services = services.filter(latest_status__iexact=status)
 
-    # Apply additional search filters
     if filter_type == "date" and query:
         services = services.filter(created_at=query)
 
@@ -196,23 +186,19 @@ def switch_task(request, status=None):
 
     return render(request, 'admin_dashboard.html', context)
 
-# Filter applied services based on the filter type
 def filter_applied_services(request):
-    filter_type = request.GET.get('filterType', 'date')  # Default to 'date'
+    filter_type = request.GET.get('filterType', 'date')  
     query = request.GET.get('query', '')
     start = request.GET.get('start', '')
     end = request.GET.get('end', '')
 
-    # Start with all applied services
     applied_services = Apply.objects.all()
 
     
     if filter_type == "date" and query:
-        # Assuming query is a date in the format 'YYYY-MM-DD'
         applied_services = applied_services.filter(created_at=query)
         
     elif filter_type == "month" and query:
-        # Extract year and month from query (e.g., '2025-02')
         year, month = query.split('-')
         applied_services = applied_services.filter(
             created_at__year=year, created_at__month=month
@@ -256,45 +242,37 @@ def filter_applied_services(request):
     }
     return render(request, 'admin_dashboard.html', context)
 
-# View to reset the applied services filter and show all tasks
 def reset_filter_applied_services(request):
-    # Reset the filter, show all applied services
     applied_services = Apply.objects.all()
 
-    # Gather statistics for the dashboard
     customer_count = Customer.objects.count()
     total_services = Apply.objects.count()
     technician_count = CustomUser.objects.filter(role='technician').count()
 
-    # Prepare context to render all services
     context = {
         'applied_services': applied_services,
         'customer_count': customer_count,
         'total_services': total_services,
         'technician_count': technician_count,
-        'current_filter': 'all'  # No active filter
+        'current_filter': 'all' 
     }
     return render(request, 'admin_dashboard.html', context)
 
-# View to handle form submission
 def add_service(request):
 
     if request.method == 'POST':
-        # Extract customer data from the form
         name = request.POST.get('name')
         address = request.POST.get('address')
         contact_number = request.POST.get('contact_number')
         whatsapp_number = request.POST.get('whatsapp_number')
         referred_by = request.POST.get('referred_by')
 
-        # Check if the customer already exists using  parameters
         customer = Customer.objects.filter(
             contact_number=contact_number,
         ).first()
 
         is_new_customer = False
 
-        # If the customer doesn't exist, create a new one
         if not customer:
             try:
                 customer = Customer.objects.create(
@@ -342,16 +320,12 @@ def add_service(request):
 
     return render(request, 'admin_dashboard.html')
 
-# View to handle dynamic customer search
-
 def search_customer(request):
-    query = request.GET.get('q', '').strip()  # Get the query and remove any leading/trailing spaces
+    query = request.GET.get('q', '').strip()  
 
     if query:
-        # Normalize the query by removing '+91' if present
         normalized_query = query.replace('+91', '')
 
-        # Normalize the database values and filter
         customers = Customer.objects.annotate(
             normalized_contact_number=Replace('contact_number', Value('+91'), Value(''))
         ).filter(normalized_contact_number__icontains=normalized_query)
@@ -435,10 +409,9 @@ def delete_technician(request, technician_id):
     if request.method == "POST":
         technician = get_object_or_404(CustomUser, id=technician_id)
 
-        # Delete the technician
         technician.delete()
 
-        return redirect('list_technicians')  # Redirect after successful deletion
+        return redirect('list_technicians')  
 
     return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
 
@@ -486,8 +459,6 @@ def extra_work_admin(request, service_id):
     }
     return render(request, 'additional_charges.html', context)
 
-
-
 def add_customer(request):
     if request.method == "POST":
         print("Received POST Data:", request.POST.dict())  # Debugging
@@ -498,14 +469,12 @@ def add_customer(request):
         whatsapp_number = request.POST.get('whatsapp_number', '').strip()
         referred_by = request.POST.get('referred_by', '').strip()
 
-        # Validation checks
         if not name or not contact_number:
             return JsonResponse({"success": False, "error": "Name and Contact Number are required."}, status=400)
 
         if Customer.objects.filter(contact_number=contact_number).exists():
             return JsonResponse({"success": False, "error": "A customer with this contact number already exists."}, status=400)
 
-        # Create the new customer
         customer = Customer.objects.create(
             name=name,
             address=address,
@@ -515,11 +484,10 @@ def add_customer(request):
         )
         customer.save()
 
-        print("Customer Created:", customer)  # Debugging Line
+        print("Customer Created:", customer) 
         return JsonResponse({"success": True, "message": "Customer added successfully!"}, status=201)
 
     return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
-
 
 def delete_customer(request, customer_id):
     if request.method == "POST":
@@ -547,21 +515,11 @@ def new_customer(request):
 
     return render(request,'new_customer.html',context)
 
-
-
-def view_applied_services(request):
-    dict_services = {
-        'applied_services': Apply.objects.all()
-    }
-    return render(request, 'display_applied_services.html',dict_services)
-
-
-
 def update_applied_service(request, service_id):
     applied_service = get_object_or_404(Apply, id=service_id)
     
     if request.method == "POST":
-        service_by_id = request.POST.get('service_by')  # Get the selected user ID
+        service_by_id = request.POST.get('service_by')  
         work_type = request.POST.get('work_type')
         item_name_or_number = request.POST.get('item_name_or_number')
         issue = request.POST.get('issue', '')
@@ -572,7 +530,7 @@ def update_applied_service(request, service_id):
         any_other_comments = request.POST.get('any_other_comments', '')
 
         try:
-            service_by_user = CustomUser.objects.get(id=service_by_id)  # Fetch the user object
+            service_by_user = CustomUser.objects.get(id=service_by_id) 
             applied_service.service_by = service_by_user
         except CustomUser.DoesNotExist:
             return JsonResponse({"error": "Invalid user selected for service."}, status=400)
@@ -589,7 +547,6 @@ def update_applied_service(request, service_id):
         applied_service.any_other_comments = any_other_comments
         applied_service.save()
 
-        # Return updated data as JSON response
         updated_data = {
             "id": applied_service.id,
             "service_by": applied_service.service_by.username,
@@ -602,15 +559,12 @@ def update_applied_service(request, service_id):
         }
         return JsonResponse(updated_data)
 
-    # If it's a GET request, just render the modal form without any processing.
     users = CustomUser.objects.all()
     context = {
         'applied_service': applied_service,
         'users': users,
     }
     return render(request, 'admin_dashboard.html', context)
-
-
 
 def delete_applied_service(request, service_id):
     if request.method == "POST":
