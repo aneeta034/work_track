@@ -11,7 +11,7 @@ class CustomUserAdmin(UserAdmin):
         ('Custom Fields', {'fields': ('role',)}),
     )
 
-    list_display = ['username', 'email', 'role', 'is_staff']
+    list_display = ['username', 'email', 'role', 'is_staff','contact_number','whatsapp_number']
     
     list_filter = ('role',)
 

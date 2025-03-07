@@ -178,6 +178,7 @@
     </form>
       
     </div>
+    
    <!-- Add Service Modal -->
 <div id="addServiceModal" class="modal">
   <div class="modal-content">
@@ -597,6 +598,17 @@ $(document).ready(function() {
             <label for="email">Email</label>
             <input type="email" class="form-control" name="email" id="email" required>
           </div>
+
+          <div class="form-group">
+            <label for="contact_number">Contact Number</label>
+            <input type="text" class="form-control" name="contact_number" id="contact_number" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="whatsapp_number">WhatsApp Number</label>
+            <input type="text" class="form-control" name="whatsapp_number" id="whatsapp_number" required>
+          </div>
+
           <div class="form-group">
             <label for="password">Password</label>
             <div class="position-relative">
@@ -606,6 +618,7 @@ $(document).ready(function() {
                  onclick="togglePassword()"></i>
             </div>
           </div>
+
           
           <button type="submit" class="btn btn-primary">Save</button>     
         </form>
@@ -616,6 +629,7 @@ $(document).ready(function() {
     </div>
   </div>
 </div>
+
 
 <script>
   function togglePassword() {
@@ -633,6 +647,8 @@ $(document).ready(function() {
     }
   }
 </script>
+
+
 
 
 <script>

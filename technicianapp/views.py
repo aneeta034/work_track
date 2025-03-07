@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
+from django.contrib.auth.decorators import login_required
 from velvetekapp.models import Apply,Customer
 from loginapp.models import CustomUser
 from django.contrib import messages
@@ -19,6 +20,8 @@ from datetime import datetime
 from django.utils import timezone
 from django.utils.timezone import now
 import os
+from django.template.loader import render_to_string
+import urllib.parse
 
 
 
@@ -138,23 +141,18 @@ def switch_tasks(request, status=None):
         'MEDIA_URL': settings.MEDIA_URL, 
     }
     return render(request, 'technician_dashboard.html', context)
-def add_service(request):
+
+def add_service(request): 
     if request.method == 'POST':
-        # Extract customer data from the form
         name = request.POST.get('name')
         address = request.POST.get('address')
         contact_number = request.POST.get('contact_number')
         whatsapp_number = request.POST.get('whatsapp_number')
         referred_by = request.POST.get('referred_by')
 
-        # Check if the customer already exists using all parameters
-        customer = Customer.objects.filter(
-            contact_number=contact_number,
-        ).first()
-
+        customer = Customer.objects.filter(contact_number=contact_number, whatsapp_number=whatsapp_number).first()
         is_new_customer = False
 
-        # If the customer doesn't exist, create a new one
         if not customer:
             try:
                 customer = Customer.objects.create(
@@ -176,11 +174,9 @@ def add_service(request):
             for image in request.FILES.getlist('photos_of_item'):
                 image_name = default_storage.save(f'upload/{image.name}', image)
                 image_paths.append(image_name)
-    
-            # Save image paths as a comma-separated string
+
             apply_instance.photos_of_item = ",".join(image_paths)
             apply_instance.save()
-             # Create the current status entry
 
             if not apply_instance.current_status_entries.exists():
                 CurrentStatus.objects.create(
@@ -192,22 +188,82 @@ def add_service(request):
                     issue=apply_instance.issue,
                 )
 
-            if customer.whatsapp_number:
-                message = f"Dear {customer.name}, your application for '{apply_instance.work_type}' has been successfully submitted and is currently 'assigned'."
-                encoded_message = urllib.parse.quote(message)
-                whatsapp_url = f"https://whatsapimanagment.onrender.com/send-message?phoneNumber={customer.whatsapp_number}&messageBody={encoded_message}"
+            service_by = form.cleaned_data.get('service_by')
+            work_type = form.cleaned_data.get('work_type', 'N/A')
+            item_name_or_number = form.cleaned_data.get('item_name_or_number', 'N/A')
+            issue = form.cleaned_data.get('issue', 'N/A')
+            estimated_date = form.cleaned_data.get('estimated_date', 'N/A')
+            estimated_price = form.cleaned_data.get('estimated_price', 'N/A')
 
-                try:
-                    response = requests.get(whatsapp_url)
-                    if response.status_code == 200:
-                        messages.success(request, "Service request submitted and WhatsApp message sent successfully!")
-                    else:
-                        messages.warning(request, "Service request submitted, but failed to send WhatsApp message.")
-                except requests.RequestException as e:
-                    messages.warning(request, f"Service request submitted, but error sending WhatsApp message: {e}")
+            def safe_str(value):
+                return str(value) if value else "Not Provided"
+
+            service_by_name = safe_str(service_by.username if isinstance(service_by, CustomUser) else "N/A")
+            technician_whatsapp = safe_str(service_by.whatsapp_number if isinstance(service_by, CustomUser) else "")
+            customer_whatsapp_number = safe_str(customer.whatsapp_number).replace("+", "").strip()
+
+
+            estimated_date = form.cleaned_data.get('estimated_date')
+            estimated_date = estimated_date.strftime("%Y-%m-%d") if estimated_date else "N/A"
+
+            # WhatsApp API Configuration
+            ACCESS_TOKEN = "EAAbTzSfoZCw0BOy8x7iLmtjI9vwnVU52GSp40vxnYWCZAoFBZCuBkhmGhSP4r2yOJaxSVXJw5gFuc0GUhFd47eNlpnIFhI51Ml8L4ZCyfokLTH1jowNtxkZBwkvPxdeYBZAEKES4Oycek2N6YINUyaZBmJO82TMKTDa4YYqyQbu8ELaU6UONEZAMGC56wgb1faeVwkRlcwS5ydeuJdm9YwZDZD"
+            PHONE_NUMBER_ID = "374854242373692"
+            TEMPLATE_NAME = "new_service_message"
+
+            def send_whatsapp_message(phone_number):
+                if phone_number:
+                    url = f"https://graph.facebook.com/v18.0/{PHONE_NUMBER_ID}/messages"
+                    headers = {
+                        "Authorization": f"Bearer {ACCESS_TOKEN}",
+                        "Content-Type": "application/json"
+                    }
+
+                    CUSTOM_TEXT = [
+                        {"type": "text", "text": service_by_name},
+                        {"type": "text", "text": item_name_or_number},
+                        {"type": "text", "text": issue},
+                        {"type": "text", "text": estimated_date},
+                        {"type": "text", "text": estimated_price},
+                    ]
+
+                    payload = {
+                        "messaging_product": "whatsapp",
+                        "to": phone_number,
+                        "type": "template",
+                        "template": {
+                            "name": TEMPLATE_NAME,
+                            "language": {"code": "en"},
+                            "components": [
+                                {"type": "body", "parameters": CUSTOM_TEXT}
+                            ]
+                        }
+                    }
+
+                    try:
+                        response = requests.post(url, headers=headers, data=json.dumps(payload))
+                        print(f"WhatsApp response for {phone_number}:", response.status_code, response.json())
+                        return response.status_code == 200
+                    except requests.RequestException as e:
+                        print(f"Error sending WhatsApp to {phone_number}: {e}")
+                        return False
+
+            # Send WhatsApp to customer
+            customer_msg_sent = send_whatsapp_message(customer_whatsapp_number)
+
+            # Send WhatsApp to technician
+            technician_msg_sent = send_whatsapp_message(technician_whatsapp)
+
+            if customer_msg_sent and technician_msg_sent:
+                messages.success(request, "Service request submitted. WhatsApp messages sent successfully!")
+            elif customer_msg_sent:
+                messages.warning(request, "Service request submitted. WhatsApp message sent to customer, but failed for technician.")
+            elif technician_msg_sent:
+                messages.warning(request, "Service request submitted. WhatsApp message sent to technician, but failed for customer.")
+            else:
+                messages.warning(request, "Service request submitted, but WhatsApp messages failed.")
 
             return JsonResponse({'success': True, 'message': 'Service added successfully!', 'is_new_customer': is_new_customer})
-
         else:
             return JsonResponse({'success': False, 'errors': form.errors})
 
@@ -243,35 +299,131 @@ def get_users(request):
     technicians = CustomUser.objects.filter(role='technician').values('id', 'username')
     return JsonResponse(list(technicians), safe=False)
 
+import logging
+logger = logging.getLogger(__name__)
+
 def update_current_status(request, apply_id):
-    if request.method == 'POST':
-        try:
-            apply = get_object_or_404(Apply, id=apply_id)  
+    if request.method != 'POST':
+        return JsonResponse({"error": "Invalid request method"}, status=405)
 
-            # Get latest status entry
-            latest_status = apply.current_status_entries.order_by('-date').first()
+    try:
+        # Debugging: Log incoming data
+        logger.info(f"Received POST data: {request.POST}")
 
-            if latest_status:
-                new_status = request.POST.get('status', 'Pending')  # Default to "Pending"
-                status_date = request.POST.get('date', now().date())  # Use today's date if none is provided
+        # Get the Apply object
+        apply = get_object_or_404(Apply, id=apply_id)
 
-                latest_status.status = new_status
-                latest_status.date = status_date
-                latest_status.technician_name = request.user.username  # Assign logged-in user
-                latest_status.save()
+        # Extract status and date
+        new_status = request.POST.get('status')
+        status_date = request.POST.get('date')
 
-                # Also update Apply model
-                apply.status = new_status
-                apply.save()
+        if not new_status or not status_date:
+            return JsonResponse({"error": "Missing 'status' or 'date' in request"}, status=400)
 
-                return JsonResponse({"success": True, "status": new_status})
-            else:
-                return JsonResponse({"error": "No existing status entry found"}, status=400)
+        # Convert 'now' to current date
+        status_date = now().date() if status_date.lower() == 'now' else status_date
+        technician_name = request.user.username
 
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
+        # Get latest status entry
+        latest_status = apply.current_status_entries.order_by('-date').first()
 
-    return JsonResponse({"error": "Invalid request method"}, status=405)
+        if latest_status:
+            # Update latest entry
+            latest_status.status = new_status
+            latest_status.date = status_date
+            latest_status.technician_name = technician_name
+            latest_status.save()
+        else:
+            # Create a new entry if none exists
+            CurrentStatus.objects.create(
+                apply=apply,
+                date=status_date,
+                technician_name=technician_name,
+                status=new_status,
+                customer_name=apply.name if apply.name else "Unknown",
+                issue=apply.issue if apply.issue else "No issue specified"
+            )
+
+        # Update Apply model
+        apply.status = new_status
+        apply.save()
+
+        # ✅ WhatsApp Integration
+        ACCESS_TOKEN = "EAAbTzSfoZCw0BOy8x7iLmtjI9vwnVU52GSp40vxnYWCZAoFBZCuBkhmGhSP4r2yOJaxSVXJw5gFuc0GUhFd47eNlpnIFhI51Ml8L4ZCyfokLTH1jowNtxkZBwkvPxdeYBZAEKES4Oycek2N6YINUyaZBmJO82TMKTDa4YYqyQbu8ELaU6UONEZAMGC56wgb1faeVwkRlcwS5ydeuJdm9YwZDZD"
+        PHONE_NUMBER_ID = "374854242373692"
+        TEMPLATE_NAME = "new_service_message"
+
+        def safe_str(value):
+            return str(value) if value else "Not Provided"
+
+        # Get customer & technician WhatsApp numbers
+        customer_whatsapp_number = safe_str(apply.customer.whatsapp_number).replace("+", "").strip() if apply.customer else ""
+        technician_whatsapp = safe_str(request.user.whatsapp_number).replace("+", "").strip()
+
+        def send_whatsapp_message(phone_number):
+            if not phone_number:
+                return False  # Skip sending if no number is available
+
+            url = f"https://graph.facebook.com/v18.0/{PHONE_NUMBER_ID}/messages"
+            headers = {
+                "Authorization": f"Bearer {ACCESS_TOKEN}",
+                "Content-Type": "application/json"
+            }
+
+            CUSTOM_TEXT = [
+                {"type": "text", "text": apply.name if apply.name else "No Name"},
+                {"type": "text", "text": apply.issue if apply.issue else "No Issue"},
+                {"type": "text", "text": new_status},
+                {"type": "text", "text": status_date},
+                {"type": "text", "text": technician_name},
+            ]
+
+            payload = {
+                "messaging_product": "whatsapp",
+                "to": phone_number,
+                "type": "template",
+                "template": {
+                    "name": TEMPLATE_NAME,
+                    "language": {"code": "en"},
+                    "components": [
+                        {"type": "body", "parameters": CUSTOM_TEXT}
+                    ]
+                }
+            }
+
+            try:
+                response = requests.post(url, headers=headers, data=json.dumps(payload))
+                response_data = response.json()
+                logger.info(f"WhatsApp API Response for {phone_number}: {response.status_code}, {response_data}")
+
+                if response.status_code != 200:
+                    logger.error(f"WhatsApp API error: {response_data}")
+                return response.status_code == 200
+            except requests.RequestException as e:
+                logger.error(f"Error sending WhatsApp to {phone_number}: {e}")
+                return False
+
+        #  Send WhatsApp Messages
+        customer_msg_sent = send_whatsapp_message(customer_whatsapp_number) if customer_whatsapp_number else False
+        technician_msg_sent = send_whatsapp_message(technician_whatsapp) if technician_whatsapp else False
+
+        #  Generate success messages
+        if customer_msg_sent and technician_msg_sent:
+            messages.success(request, "Status updated. WhatsApp messages sent successfully!")
+        elif customer_msg_sent:
+            messages.warning(request, "Status updated. WhatsApp message sent to customer, but failed for technician.")
+        elif technician_msg_sent:
+            messages.warning(request, "Status updated. WhatsApp message sent to technician, but failed for customer.")
+        else:
+            messages.warning(request, "Status updated, but WhatsApp messages failed.")
+
+        #  Return Response
+        return JsonResponse({"success": True, "status": new_status})
+
+    except Exception as e:
+        logger.error(f"Error updating status: {e}")
+        return JsonResponse({"error": str(e)}, status=400)
+
 
 def update_customer(request, customer_id):
     if request.method == 'POST':

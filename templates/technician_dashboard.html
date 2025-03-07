@@ -55,7 +55,7 @@
   <div class="topbar">
     <div class="d-flex align-items-center">
       <!-- Logo -->
-      <a href="{% url 'admin_dashboard' %}" class="logo">
+      <a href="{% url 'technician_dashboard' %}" class="logo">
         <img src="{% static 'assets/img/velvetek.jpg' %}" alt="navbar brand" />
       </a>
       <!-- Hamburger Menu -->
@@ -72,7 +72,7 @@
     <a href="{% url 'technician_dashboard' %}"><i class="fas fa-home"></i> <span>Home</span></a>
 
 
-    <a href="#" onclick="openModal()"><i class="fas fa-tools"></i><span>Add Service</span< /a>
+    <a href="#" onclick="openModal()"><i class="fas fa-tools"></i><span>Add Service</span></a>
 
         <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
   </div>
@@ -286,20 +286,22 @@
             <td><a href="{% url 'fuelcharge' service.id %}" style="font-size: 12px;">View</a></td>
             <td>
               {% if service.current_status_entries.last %}
-              <button class="btn btn-sm rounded-pill 
-
+              <button 
+                class="btn btn-sm rounded-pill
                   {% if service.current_status_entries.last.status == 'Assigned' %}btn-outline-primary{% endif %}
                   {% if service.current_status_entries.last.status == 'Pending' %}btn-outline-danger{% endif %}
                   {% if service.current_status_entries.last.status == 'Completed' %}btn-outline-success{% endif %}"
-                onclick="openUpdateStatusModal( '{{ service.id }}' )"
-                data-estimated-date="{{ service.estimated_date|date:'Y-m-d' }}"
+                
+                onclick="openUpdateStatusModal('{{ service.id }}') "
+                data-estimated-date="{{ service.estimated_date|date:'Y-m-d' }}"  
                 data-current-status="{{ service.current_status_entries.last.status }}"
-                data-service-id="{{ service.id }}" id="statusButton{{ service.id }}">
+                data-service-id="{{ service.id }}" 
+                id="statusButton{{ service.id }}">
                 {{ service.current_status_entries.last.status }} <!-- Show current status -->
               </button>
-              {% else %}
+            {% else %}
               <span class="text-muted">No status available</span>
-              {% endif %}
+            {% endif %}
             </td>
             <td>{{ service.address }}</td>
             <td>
@@ -354,52 +356,52 @@
             <td>{{ service.any_other_comments }}</td>
           </tr>
 
-          <!-- Update Status Modal -->
-          {% if service.current_status_entries.last %}
-          <div class="modal" id="updateStatusModal{{ service.id }}">
-            <div class="addmodal">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title">Update Status</h5>
-                    <button type="button" class="close" onclick="closeUpdateStatusModal( '{{ service.id }}' )">
-                      <span>&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <form id="updateStatusForm{{ service.id }}" data-service-id="{{ service.id }}">
-                      {% csrf_token %}
-                      <div class="mb-3">
-                        <label for="technician_name{{ service.id }}" class="form-label">Technician Name</label>
-                        <input type="text" class="form-control" id="technician_name{{ service.id }}"
-                          name="technician_name" value="{{ request.user.username }}" readonly>
-                      </div>
-                      <div class="mb-3">
-                        <label for="date{{ service.id }}" class="form-label">Date</label>
-                        <input type="date" class="form-control" id="date{{ service.id }}" name="date"
-                          value="{{ service.estimated_date|date:'Y-m-d'|default:'' }}" required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="status{{ service.id }}" class="form-label">Status</label>
-                        <select class="form-control" id="status{{ service.id }}" name="status" required>
-
-                          <option value="Completed" {% if service.current_status_entries.last.status == "Completed" %}selected{% endif %}>Completed</option>
-                        </select>
-                      </div>
-                      <div class="text-end">
-                        <button type="submit" class="btn btn-primary">Update</button>
-                      </div>
-
-                    </form>
-
-                    <!-- Success/Error Messages -->
-                    <div id="statusMessage{{ service.id }}" class="mt-2"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+  <!-- Update Status Modal -->
+  {% if service.current_status_entries.last %}
+  <div class="modal" id="updateStatusModal{{ service.id }}">
+    <div class="addmodal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Update Status</h5>
+            <button type="button" class="close" onclick="closeUpdateStatusModal( '{{ service.id }}' )">
+              <span>&times;</span>
+            </button>
           </div>
-          {% endif %}
+          <div class="modal-body">
+            <form id="updateStatusForm{{ service.id }}" data-service-id="{{ service.id }}">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="technician_name{{ service.id }}" class="form-label">Technician Name</label>
+                <input type="text" class="form-control" id="technician_name{{ service.id }}"
+                  name="technician_name" value="{{ request.user.username }}" readonly>
+              </div>
+              <div class="mb-3">
+                <label for="date{{ service.id }}" class="form-label">Date</label>
+                <input type="date" class="form-control" id="date{{ service.id }}" name="date"
+                  value="{{ service.estimated_date|date:'Y-m-d'|default:'' }}" readonly>
+              </div>
+              <div class="mb-3">
+                <label for="status{{ service.id }}" class="form-label">Status</label>
+                <select class="form-control" id="status{{ service.id }}" name="status" required>
+                  <option value="Completed" {% if service.current_status_entries.last.status == "Completed" %}selected{%endif%}>Completed</option>
+                    <option value="Pending" {% if service.current_status_entries.last.status == "Pending" %}selected{%endif%}>Pending</option>
+                  </select>
+              </div>
+              <div class="text-end">
+                <button type="submit" class="btn btn-primary">Update</button>
+              </div>
+
+            </form>
+
+            <!-- Success/Error Messages -->
+            <div id="statusMessage{{ service.id }}" class="mt-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 
           {% endfor %}
         </tbody>
@@ -479,57 +481,94 @@
     </script>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const statusButtons = document.querySelectorAll('button[id^="statusButton"]');
+    document.addEventListener('DOMContentLoaded', function () {
+    const statusButtons = document.querySelectorAll('button[id^="statusButton"]');
 
-        statusButtons.forEach((button) => {
-          const estimatedDate = new Date(button.dataset.estimatedDate);
-          const currentStatus = button.dataset.currentStatus;
-          const currentDate = new Date();
-          const applyId = button.dataset.serviceId;
+    statusButtons.forEach((button) => {
+        const estimatedDate = new Date(button.dataset.estimatedDate);
+        const currentStatus = button.dataset.currentStatus;
+        const currentDate = new Date();
+        const applyId = button.dataset.serviceId;
 
-          // If status is "Assigned" and the estimated date has passed, update it to "Pending"
-          if (currentStatus === 'Assigned' && currentDate > estimatedDate) {
+        // If status is "Assigned" and the estimated date has passed, update it to "Pending"
+        if (currentStatus === 'Assigned' && currentDate > estimatedDate) {
             button.classList.remove('btn-primary');
             button.classList.add('btn-danger');
             button.textContent = 'Pending';
 
             // Send update request to backend
             fetch(`/technician/update-status/${applyId}/`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': getCSRFToken(),
-              },
-              body: new URLSearchParams({
-                status: 'Pending',
-                date: new Date().toISOString().split('T')[0],  // Convert to YYYY-MM-DD
-              }),
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCSRFToken(),
+                },
+                body: new URLSearchParams({
+                    status: 'Pending',
+                    date: new Date().toISOString().split('T')[0], 
+                }),
             })
-              .then(response => response.json())
-              .then(data => {
-                if (data.error) {
-                  console.error('Error:', data.error);
-                  alert("Error updating status: " + data.error);
-                } else {
-                  console.log("Status updated successfully:", data);
-                }
-              })
-              .catch(error => {
-                console.error('Fetch error:', error);
-                alert("Failed to update status. Please try again.");
-              });
-          }
-        });
-      });
+            .then(response => response.json())
+            .then(data => {
+                console.log("Response from backend:", data); // Debugging
 
-      // CSRF Token Helper Function
-      function getCSRFToken() {
-        const cookieValue = document.cookie.split('; ')
-          .find(row => row.startsWith('csrftoken='))
-          ?.split('=')[1];
-        return cookieValue || '';
-      }
+                if (data.success) {
+                    let message = `<strong>✅ Status Updated Successfully!</strong><br>`;
+
+                    // Append WhatsApp notification status
+                    if (data.whatsapp_status === "both") {
+                        message += "📩 WhatsApp messages sent successfully!";
+                    } else if (data.whatsapp_status === "customer") {
+                        message += "⚠️ WhatsApp message sent to the customer, but failed for the technician.";
+                    } else if (data.whatsapp_status === "technician") {
+                        message += "⚠️ WhatsApp message sent to the technician, but failed for the customer.";
+                    } else {
+                        message += "❌ However, WhatsApp messages could not be sent.";
+                    }
+
+                    // Display message in alert container
+                    messageContainer.innerHTML = `<div class="alert alert-success">${message}</div>`;
+
+                    // Close modal after showing message
+                    let modalElement = document.getElementById("updateStatusModal"); 
+                    let modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+                    setTimeout(() => {
+                        if (modalInstance) {
+                            modalInstance.hide();
+                        }
+                        messageContainer.innerHTML = ""; // Clear message
+
+                        // ✅ Reload After Modal Closes
+                        setTimeout(() => {
+                            location.reload();
+                        }, 500);
+                    }, 2000);
+                } else {
+                    let message = `<strong>❌ Error:</strong> ${data.message || JSON.stringify(data.errors)}`;
+
+                    if (data.warning_message) {
+                        message += `<br><span class="text-warning">${data.warning_message}</span>`;
+                    }
+
+                    messageContainer.innerHTML = `<div class="alert alert-danger">${message}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                messageContainer.innerHTML = `<div class="alert alert-danger">❌ An error occurred. Please try again later.</div>`;
+            });
+        }
+    });
+});
+
+// CSRF Token Helper Function
+function getCSRFToken() {
+    const cookieValue = document.cookie.split('; ')
+        .find(row => row.startsWith('csrftoken='))
+        ?.split('=')[1];
+    return cookieValue || '';
+}
 
     </script>
 
@@ -666,8 +705,7 @@
           .then(data => {
             if (data.success) {
               let message = data.is_new_customer
-                ? "Customer and service added successfully!"
-                : "Service added successfully!";
+                ? "Customer added successfully! Service request submitted and WhatsApp message sent successfully!" : "Service request submitted and WhatsApp message sent successfully!";
 
               messageContainer.innerHTML = `<div class="alert alert-success">${message}</div>`;
 

@@ -1,5 +1,6 @@
 from technicianapp.models import FuelCharge,FoodAllowance,ItemPurchased,VendorInfo,CurrentStatus
 from django.shortcuts import render,get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from .models import Customer,Apply
 from django.http import JsonResponse
 from django.contrib import messages
@@ -23,6 +24,9 @@ from .models import Apply
 from technicianapp.models import CurrentStatus
 import urllib.parse
 from django.db.models import Sum
+from django.template.loader import render_to_string  
+import json
+
 
 def calculate_total_cost(request, service_id):
     """Calculate the total cost for a given service_id and return JSON response."""
@@ -258,8 +262,7 @@ def reset_filter_applied_services(request):
     }
     return render(request, 'admin_dashboard.html', context)
 
-def add_service(request):
-
+def add_service(request): 
     if request.method == 'POST':
         name = request.POST.get('name')
         address = request.POST.get('address')
@@ -267,10 +270,7 @@ def add_service(request):
         whatsapp_number = request.POST.get('whatsapp_number')
         referred_by = request.POST.get('referred_by')
 
-        customer = Customer.objects.filter(
-            contact_number=contact_number,
-        ).first()
-
+        customer = Customer.objects.filter(contact_number=contact_number, whatsapp_number=whatsapp_number).first()
         is_new_customer = False
 
         if not customer:
@@ -294,27 +294,87 @@ def add_service(request):
             for image in request.FILES.getlist('photos_of_item'):
                 image_name = default_storage.save(f'upload/{image.name}', image)
                 image_paths.append(image_name)
-    
-            # Save image paths as a comma-separated string
-            apply_instance.photos_of_item = ",".join(image_paths)
-            apply_instance.customer = customer
-            apply_instance.save()
-            if customer.whatsapp_number:
-                message = f"Dear {customer.name}, your application for '{apply_instance.work_type}' has been successfully submitted and is currently 'assigned'."
-                encoded_message = urllib.parse.quote(message)
-                whatsapp_url = f"https://whatsapimanagment.onrender.com/send-message?phoneNumber={customer.whatsapp_number}&messageBody={encoded_message}"
 
-                try:
-                    response = requests.get(whatsapp_url)
-                    if response.status_code == 200:
-                        messages.success(request, "Service request submitted and WhatsApp message sent successfully!")
-                    else:
-                        messages.warning(request, "Service request submitted, but failed to send WhatsApp message.")
-                except requests.RequestException as e:
-                    messages.warning(request, f"Service request submitted, but error sending WhatsApp message: {e}")
+            apply_instance.photos_of_item = ",".join(image_paths)
+            apply_instance.save()
+
+            service_by = form.cleaned_data.get('service_by')
+            work_type = form.cleaned_data.get('work_type', 'N/A')
+            item_name_or_number = form.cleaned_data.get('item_name_or_number', 'N/A')
+            issue = form.cleaned_data.get('issue', 'N/A')
+            estimated_date = form.cleaned_data.get('estimated_date', 'N/A')
+            estimated_price = form.cleaned_data.get('estimated_price', 'N/A')
+
+            def safe_str(value):
+                return str(value) if value else "Not Provided"
+
+            service_by_name = safe_str(service_by.username if isinstance(service_by, CustomUser) else "N/A")
+            technician_whatsapp = safe_str(service_by.whatsapp_number if isinstance(service_by, CustomUser) else "")
+            customer_whatsapp_number = safe_str(customer.whatsapp_number).replace("+", "").strip()
+
+
+            estimated_date = form.cleaned_data.get('estimated_date')
+            estimated_date = estimated_date.strftime("%Y-%m-%d") if estimated_date else "N/A"
+
+
+            # WhatsApp API Configuration
+            ACCESS_TOKEN = "EAAbTzSfoZCw0BOy8x7iLmtjI9vwnVU52GSp40vxnYWCZAoFBZCuBkhmGhSP4r2yOJaxSVXJw5gFuc0GUhFd47eNlpnIFhI51Ml8L4ZCyfokLTH1jowNtxkZBwkvPxdeYBZAEKES4Oycek2N6YINUyaZBmJO82TMKTDa4YYqyQbu8ELaU6UONEZAMGC56wgb1faeVwkRlcwS5ydeuJdm9YwZDZD"
+            PHONE_NUMBER_ID = "374854242373692"
+            TEMPLATE_NAME = "new_service_message"
+
+            def send_whatsapp_message(phone_number):
+                if phone_number:
+                    url = f"https://graph.facebook.com/v18.0/{PHONE_NUMBER_ID}/messages"
+                    headers = {
+                        "Authorization": f"Bearer {ACCESS_TOKEN}",
+                        "Content-Type": "application/json"
+                    }
+
+                    CUSTOM_TEXT = [
+                        {"type": "text", "text": service_by_name},
+                        {"type": "text", "text": item_name_or_number},
+                        {"type": "text", "text": issue},
+                        {"type": "text", "text": estimated_date},
+                        {"type": "text", "text": estimated_price},
+                    ]
+
+                    payload = {
+                        "messaging_product": "whatsapp",
+                        "to": phone_number,
+                        "type": "template",
+                        "template": {
+                            "name": TEMPLATE_NAME,
+                            "language": {"code": "en"},
+                            "components": [
+                                {"type": "body", "parameters": CUSTOM_TEXT}
+                            ]
+                        }
+                    }
+
+                    try:
+                        response = requests.post(url, headers=headers, data=json.dumps(payload))
+                        print(f"WhatsApp response for {phone_number}:", response.status_code, response.json())
+                        return response.status_code == 200
+                    except requests.RequestException as e:
+                        print(f"Error sending WhatsApp to {phone_number}: {e}")
+                        return False
+
+            # Send WhatsApp to customer
+            customer_msg_sent = send_whatsapp_message(customer_whatsapp_number)
+
+            # Send WhatsApp to technician
+            technician_msg_sent = send_whatsapp_message(technician_whatsapp)
+
+            if customer_msg_sent and technician_msg_sent:
+                messages.success(request, "Service request submitted. WhatsApp messages sent successfully!")
+            elif customer_msg_sent:
+                messages.warning(request, "Service request submitted. WhatsApp message sent to customer, but failed for technician.")
+            elif technician_msg_sent:
+                messages.warning(request, "Service request submitted. WhatsApp message sent to technician, but failed for customer.")
+            else:
+                messages.warning(request, "Service request submitted, but WhatsApp messages failed.")
 
             return JsonResponse({'success': True, 'message': 'Service added successfully!', 'is_new_customer': is_new_customer})
-
         else:
             return JsonResponse({'success': False, 'errors': form.errors})
 
@@ -360,11 +420,13 @@ def add_technician(request):
         username = request.POST.get('username', '').strip()
         email = request.POST.get('email', '').strip()
         password = request.POST.get('password', '').strip()
+        contact_number = request.POST.get('contact_number', '').strip()
+        whatsapp_number = request.POST.get('whatsapp_number', '').strip()
 
-        print("Received data:", username, email)  # Debugging
+        print("Received data:", username, email, contact_number, whatsapp_number)  # Debugging
 
         # Validation
-        if not username or not email or not password:
+        if not username or not email or not password or not contact_number or not whatsapp_number:
             return JsonResponse({"success": False, "error": "All fields are required."}, status=400)
 
         if CustomUser.objects.filter(username=username).exists():
@@ -378,6 +440,8 @@ def add_technician(request):
             role='technician',
             is_staff=True
         )
+        technician.contact_number = contact_number
+        technician.whatsapp_number = whatsapp_number
         technician.save()
 
         print("Technician saved:", technician.username)  # Debugging
@@ -385,11 +449,16 @@ def add_technician(request):
         return JsonResponse({
             "success": True,
             "message": "Technician added successfully!",
-            "technician": {"username": technician.username, "email": technician.email}
+            "technician": {
+                "username": technician.username,
+                "email": technician.email,
+                "contact_number": technician.contact_number,
+                "whatsapp_number": technician.whatsapp_number
+            }
         })
 
     return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
-
+@login_required
 def list_technicians(request):
     technicians = CustomUser.objects.filter(role='technician')
     customer_count = Customer.objects.count()
@@ -499,7 +568,8 @@ def delete_customer(request, customer_id):
         except Customer.DoesNotExist:
             messages.error(request, "Customer not found.")
         return redirect('new_customer')
-
+    
+@login_required
 def new_customer(request):
     customers=Customer.objects.all()
     customer_count = Customer.objects.count()
