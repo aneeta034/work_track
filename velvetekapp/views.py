@@ -1,29 +1,18 @@
-from technicianapp.models import FuelCharge,FoodAllowance,ItemPurchased,VendorInfo,CurrentStatus
-from django.shortcuts import render,get_object_or_404, redirect
+from technicianapp.models import FuelCharge, FoodAllowance, ItemPurchased, VendorInfo, CurrentStatus
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Customer,Apply
-from django.http import JsonResponse
+from .models import Customer, Apply
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from loginapp.models import CustomUser
 import urllib
+import urllib.parse
 import requests
-from django.http import HttpResponseRedirect
 from datetime import datetime
 from django.core.files.storage import default_storage
 from technicianapp.forms import AppliedServiceForm
 from django.db.models.functions import Replace
-from django.db.models import Value
-from django.db.models import Q
-import pandas as pd
-from django.http import HttpResponse
-from django.db.models import OuterRef, Subquery
-import pandas as pd
-from django.http import HttpResponse
-from django.db.models import Q, OuterRef, Subquery
-from .models import Apply
-from technicianapp.models import CurrentStatus
-import urllib.parse
-from django.db.models import Sum
+from django.db.models import Value, Q, OuterRef, Subquery, Sum
 from django.template.loader import render_to_string  
 import json
 
